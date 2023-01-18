@@ -53,7 +53,7 @@ $$
 \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n})-\lambda^k F^{ext}
 $$
 
-In this case the tangential stiffness matrix $\mathcal{K}_T$ can be contructed using just the internal energy (i.e. $\mathcal{K}_T = \frac{\partial F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}$)
+In this case the tangential stiffness matrix $K_T$ can be contructed using just the internal energy (i.e. $K_T = \frac{\partial F^{int}(\mathbf u_{n+1};\mathbf u_n)}{\partial \mathbf{u}_n}$)
 
 #### Non-conservative loading
 In the case where the external force depends on the solution $u$, the above assumption cannot be made and the whole residual must be taken into account when constructing the tangential stiffness matrix $K_T$. As a result, $K_T$ will be non-symmetric. Examples of these specific special cases are applied moments around a fixed axis, follower loads (i.e. loads that change direction based on the deformed configuration), pressure loads, etc.

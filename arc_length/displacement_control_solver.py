@@ -180,7 +180,7 @@ class displacement_control:
             temp = self.C_mat.copy().transpose().matMult(K_mat)
             K_star_mat = temp.matMult(self.C_mat) 
             K_star = Matrix(PETScMatrix(K_star_mat)) # reduced stiffness matrix
-            PETScMatrix(temp).mult(-self.u_p, self.Q) # vector of Dirichlet BCs
+            PETScMatrix(temp).mult(self.u_p, self.Q) # vector of Dirichlet BCs
             self.C.transpmult(R, R_star) # reduced residual vector
             
             QQ = self.Q.inner(self.Q)
@@ -200,7 +200,7 @@ class displacement_control:
             du_f_1 = Vector()
             du_f_2 = Vector()
 
-            solve(K_star, du_f_1, -self.Q, self.solver)
+            solve(K_star, du_f_1, self.Q, self.solver)
             solve(K_star, du_f_2, R_star, self.solver)
 
             dlmbda = (a.inner(du_f_2) - A) / (b + a.inner(du_f_1))

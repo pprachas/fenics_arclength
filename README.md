@@ -30,33 +30,43 @@ To use our arc-length solver, download and append this repository to the python 
 Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.
 ### Nonlinear Finite Elements
 A nonlinear finite element problem seeks to minimize the residual vector that comes from discretizing the weak form of the energy balance equation (e.g. continuum for beam balance equations). In general the residual cannot be solved exactly and must be approximated through linearization. A common method to solve nonlinear finite element problems uses the Newton-Raphson method:
+
  $$
-\mathcal{R}(\mathbf{u}_{n+1}) = \mathcal{R}(\mathbf{u}_{n})+\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}(\Delta u)
+\mathcal{R}(\mathbf{u}_{n+1}) = \mathcal{R}(\mathbf{u}_{n})+\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}\Delta u
  $$
-where $\Delta u = \mathbf{u}_{n+1}-\mathbf{u}_{n}$.
-Newton's method is solved incrementally until the desired convergence criterion. The term $\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}$ is typically called the tangential stiffness matrix $\mathbf{K}_T$. The first term $\mathcal{R}(\mathbf{u}_{n})$ is the externally applied force $F^{ext}$, while the second term $\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}(\mathbf{u}_{n+1}-\mathbf{u}_{n})$ is the internal force $F^{int}$ the nonlinear problem is too difficult for the Newton solver to converge. As such, the the external load is applied incrementally with the load factor $\lambda_{k}$. Putting it all together, the nonlinear problem can be written as:
+ 
+ 
+where $\Delta u = \mathbf{u}_{n+1}-\mathbf{u}_n$.
+
+Newton's method is solved incrementally until the desired convergence criterion. The term $\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}$
+is typically called the tangential stiffness matrix $K_T$. The first term $\mathcal R(\mathbf u_n)$ is the externally applied force $F^{ext}$, while the second term
+$\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta u$ is the internal force $F^{int}$ the nonlinear problem is too difficult for the Newton solver to converge. As such, the the external load is applied incrementally with the load factor $\lambda^k$ where $k$ is the increment. Putting it all together, the nonlinear problem can be written as:
+
 $$
 \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n},\lambda_{n+1})-\lambda_{n+1} F^{ext}(\mathbf{u}_{n})
 $$
+
 #### Conservative Loading
-In most cases the external force does not depend on the solution $u$ (i.e.$F^{ext}(u_{k}) = F^{ext}$). These cases are called conservative loading. The problem than can be simplified to:
+In most cases the external force does not depend on the solution $u$ (i.e. $F^{ext} (u_n) = F^{ext}$ ). These cases are called conservative loading. The problem than can be simplified to:
 
 $$
-\mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n})-\lambda_{n+1} F^{ext}
+\mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n})-\lambda^k F^{ext}
 $$
 
 In this case the tangential stiffness matrix $\mathcal{K}_T$ can be contructed using just the internal energy (i.e. $\mathcal{K}_T = \frac{\partial F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}$)
 
 #### Non-conservative loading
-In the case where the external force depends on the solution $u$, the above assumption cannot be made and the whole residual must be taken into account when constructing the tangential stiffness matrix $\mathcal{K}_T$. As a result, $\mathcal{K}_T$ will be non-symmetric. Examples of these specific special cases are applied moments around a fixed axis, follower loads (i.e. loads that change direction based on the deformed configuration), pressure loads, etc.
+In the case where the external force depends on the solution $u$, the above assumption cannot be made and the whole residual must be taken into account when constructing the tangential stiffness matrix $K_T$. As a result, $K_T$ will be non-symmetric. Examples of these specific special cases are applied moments around a fixed axis, follower loads (i.e. loads that change direction based on the deformed configuration), pressure loads, etc.
 
 ### The Arc-length method
 One of the main drawbacks of Newton's method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter $\lambda_n$ is now also an unknown parameter at each inrement, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
 #### Force Control
 The additional arc-length contraint for force control is:
+
 $$
 \mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-\Delta s
 $$
+
 where $\Delta s$ determines how far to search for the next equilibrium point and $\psi$ is the arc length parameter that gives you different arc-length solver schemes. When $\psi = 1$ (as like the examples in this repository), the arc-length equation is also known as the *spherical arc-length method*, and when $\psi = 0$ the *cylindrical arc-length* method is recovered.
 
 #### Displacement Control
@@ -65,6 +75,7 @@ Sometimes instead of prescribing traction, the problem has a boundary contition 
 $$
 \mathbf{u} = C\mathbf{u}_f+\lambda \mathbf{u}_p
 $$
+
 where $u_f$ and $u_p$ are the free and prescribed displacement nodes respectively, and $\lambda$ is the incremental displacement factor.
 
 
@@ -78,14 +89,17 @@ $$Q = C^TK_T\mathbf{u}_p$$
 
 ### Predictor-Corrector Scheme
 The predictor our arc-length implementation for both the force and displacement control scheme follows the implementation from Ref.3. The prediction step takes in the previous solution and extrapolates where:
+
 $$
 \mathbf{u}_{n+1}^{predicted} = [1+\alpha] \mathbf{u}_{n} -\alpha u_{n-1} \\
 \lambda_{n+1}^{predicted} = [1+\alpha] \lambda_n -\alpha \lambda_{n-1}
 $$
+
 where $\alpha=\frac{\Delta s_n}{\Delta s_{n-1}}$ is the extrapolation parameter that depends on the arc-length parameter for the previous and current step. Using this extrapolation scheme both provides a good initial guess for the next equilibrium solution as well as identifies the correct direction for the next point in the equilibrium path. Our implementation allows for easy modification of this extrapolation scheme, as seen in the 3D beam example.
 
 The following Ref.3 and Ref.4, force control corrector scheme solves the augmented matrix equation:
-$$
+
+```math
 \begin{bmatrix}
 K_T & -F^{ext} \\
 \frac{\partial \mathcal{A}}{\partial u} & \frac{\partial \mathcal{A}}{\partial \lambda}
@@ -97,19 +111,21 @@ K_T & -F^{ext} \\
 \begin{bmatrix}
 \mathcal{R} \\ \mathcal{A}
 \end{bmatrix}
-$$
+```
 
 where 
 
 $$
 \Delta \mathbf{u}_{n+1} = \Delta \mathbf{u}_n + \delta \mathbf{u}  
-\\
+$$
+
+$$
 \Delta \lambda_{n+1} = \Delta \lambda_n + \delta \lambda
 $$
 
 The displacement control corrector scheme modifies the above equation to:
 
-$$
+```math
 \begin{bmatrix}
 C^\top K_T C & C^\top K \mathbf{u}_p \\
 \frac{\partial \mathcal{A}}{\partial u_f} & \frac{\partial \mathcal{A}}{\partial \lambda}
@@ -121,6 +137,6 @@ C^\top K_T C & C^\top K \mathbf{u}_p \\
 \begin{bmatrix}
 \mathcal{R} \\ \mathcal{A}
 \end{bmatrix}
-$$
+```
 
-Similar to Ref. 3 and Ref. 4, we used the Shur complement to solve the system of equations. For more details refer to the two references. 
+Similar to Ref. 3 and Ref. 4, we used the Shur complement to solve the system of equations. For more details refer to the Ref 3 and Ref 4. 

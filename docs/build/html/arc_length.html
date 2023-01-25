@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Arc-Length Displacement Control &#8212; fenics-arclength 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/agogo.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Displacement Control" href="nb_examples.html" />
+    <link rel="prev" title="All Solvers" href="modules.html" /> 
+  </head><body>
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="index.html">fenics-arclength 0.0.1 documentation</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="modules.html" title="All Solvers"
+             accesskey="P">previous</a> |
+          <a href="nb_examples.html" title="Displacement Control"
+             accesskey="N">next</a> |
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="arc-length-displacement-control">
+<h1>Arc-Length Displacement Control<a class="headerlink" href="#arc-length-displacement-control" title="Permalink to this heading">¶</a></h1>
+<p>This module is solves a nonlinear FEA problem using the arc-length solver with prescribed displacements (i.e. non-homogenous Dirichlet boundary conditions).</p>
+<section id="module-arc_length.displacement_control_solver">
+<span id="arc-length-displacement-control-solver"></span><h2>arc_length.displacement_control_solver<a class="headerlink" href="#module-arc_length.displacement_control_solver" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="arc_length.displacement_control_solver.displacement_control">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">arc_length.displacement_control_solver.</span></span><span class="sig-name descname"><span class="pre">displacement_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmbda0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_ext</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">displacement_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/arc_length/displacement_control_solver.html#displacement_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#arc_length.displacement_control_solver.displacement_control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The arc-length displacement control solver of this library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi</strong> – the scalar arc-length parameter. When psi = 1, the method becomes the shperical arc-length method and when psi = 0 the method becomes the cylindrical arc-length method</p></li>
+<li><p><strong>tol</strong> – tolerance for the linear solver</p></li>
+<li><p><strong>lmbda0</strong> – the initial load parameter</p></li>
+<li><p><strong>max_iter</strong> – maximum number of iterations for the linear solver</p></li>
+<li><p><strong>u</strong> – the solution function</p></li>
+<li><p><strong>F_int</strong> – First variation of strain energy (internal nodal forces)</p></li>
+<li><p><strong>F_ext</strong> – Externally applied load (external applied force)</p></li>
+<li><p><strong>J</strong> – The Jacobian of the residual with respect to the deformation (tangential stiffness matrix)</p></li>
+<li><p><strong>displacement_factor</strong> – The incremental load factor</p></li>
+<li><p><strong>solver</strong> – (optional): type of linear solver for the FEniCS linear solve function – default FEniCS linear solver is used if no argument is used.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="arc_length.displacement_control_solver.displacement_control.initial_step">
+<span class="sig-name descname"><span class="pre">initial_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/arc_length/displacement_control_solver.html#displacement_control.initial_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#arc_length.displacement_control_solver.displacement_control.initial_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inital step of the arc-length method.
+For the displacement control formulation, this function constructs the constraint matrix and the initial arc-length step size.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="arc_length.displacement_control_solver.displacement_control.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/arc_length/displacement_control_solver.html#displacement_control.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#arc_length.displacement_control_solver.displacement_control.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function to increment through the arc-length scheme.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="arc_length.displacement_control_solver.displacement_control.update_nodal_values">
+<span class="sig-name descname"><span class="pre">update_nodal_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_new</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/arc_length/displacement_control_solver.html#displacement_control.update_nodal_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#arc_length.displacement_control_solver.displacement_control.update_nodal_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to update solution (i.e. displacement) vector after each solver iteration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u_new</strong> – updated solution</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="arc-length-force-control">
+<h1>Arc-Length Force Control<a class="headerlink" href="#arc-length-force-control" title="Permalink to this heading">¶</a></h1>
+<p>This module solves the nonlinear FEA problem using the arc-length solver with prescribed forces (i.e. traction Nuemann boundary conditions).</p>
+<section id="module-arc_length.force_control_solver">
+<span id="arc-length-force-control-solver"></span><h2>arc_length.force_control_solver<a class="headerlink" href="#module-arc_length.force_control_solver" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="arc_length.force_control_solver.force_control">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">arc_length.force_control_solver.</span></span><span class="sig-name descname"><span class="pre">force_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmbda0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_ext</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/arc_length/force_control_solver.html#force_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#arc_length.force_control_solver.force_control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The arc-length displacement control solver of this library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi</strong> – the scalar arc-length parameter. When psi = 1, the method becomes the shperical arc-length method and when psi = 0 the method becomes the cylindrical arc-length method</p></li>
+<li><p><strong>tol</strong> – tolerance for the linear solver</p></li>
+<li><p><strong>lmbda0</strong> – the initial load parameter</p></li>
+<li><p><strong>max_iter</strong> – maximum number of iterations for the linear solver</p></li>
+<li><p><strong>u</strong> – the solution function</p></li>
+<li><p><strong>F_int</strong> – First variation of strain energy (internal nodal forces)</p></li>
+<li><p><strong>F_ext</strong> – Externally applied load (external applied force)</p></li>
+<li><p><strong>J</strong> – The Jacobian of the residual with respect to the deformation (tangential stiffness matrix)</p></li>
+<li><p><strong>displacement_factor</strong> – The incremental load factor</p></li>
+<li><p><strong>solver</strong> – (optional): type of linear solver for the FEniCS linear solve function – default FEniCS linear solver is used if no argument is used.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="arc_length.force_control_solver.force_control.initial_step">
+<span class="sig-name descname"><span class="pre">initial_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/arc_length/force_control_solver.html#force_control.initial_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#arc_length.force_control_solver.force_control.initial_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inital step of the arc-length method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="arc_length.force_control_solver.force_control.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/arc_length/force_control_solver.html#force_control.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#arc_length.force_control_solver.force_control.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function to increment through the arc-length scheme.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="arc_length.force_control_solver.force_control.update_nodal_values">
+<span class="sig-name descname"><span class="pre">update_nodal_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_new</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/arc_length/force_control_solver.html#force_control.update_nodal_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#arc_length.force_control_solver.force_control.update_nodal_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to update solution (i.e. displacement) vector after each solver iteration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u_new</strong> – updated solution</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          
+          <h3>Table of Contents</h3>
+          <ul>
+<li class="toctree-l1"><a class="reference internal" href="math_prelim.html">Math Preliminaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="math_prelim.html#additional-resources">Additional Resources</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">All Solvers</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Arc-Length Displacement Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#arc-length-force-control">Arc-Length Force Control</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nb_examples.html">Displacement Control</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+            </form>
+          </div>
+
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="modules.html" title="All Solvers"
+              >previous</a> |
+            <a href="nb_examples.html" title="Displacement Control"
+              >next</a> |
+            <a href="py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+              <br/>
+              <a href="_sources/arc_length.rst.txt"
+                rel="nofollow">Show Source</a>
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Peerasait Prachaseree, Saeed Mohammadzadeh, Emma Lejeune.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

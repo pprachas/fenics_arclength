@@ -1,0 +1,380 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>arc_length.displacement_control_solver &#8212; fenics-arclength 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/agogo.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../../index.html">fenics-arclength 0.0.1 documentation</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for arc_length.displacement_control_solver</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dolfin</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">An FEniCS based arc-length with prescribed non-zero displacement. The prefdictor-corrector step is heavily based on the paper:</span>
+
+<span class="sd">Kadapa, Chennakesava. &quot;A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics.&quot; Engineering Structures 234 (2021): 111755.</span>
+<span class="sd"> </span>
+<span class="sd">and the displacement-based formulation is heavily based on:</span>
+<span class="sd">Verhoosel, Clemens V., Joris JC Remmers, and Miguel A. Gutiérrez. &quot;A dissipation‐based arc‐length method for robust simulation of brittle and ductile failure.&quot; International journal for numerical methods in engineering 77.9 (2009): 1290-1321.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="displacement_control"><a class="viewcode-back" href="../../arc_length.html#arc_length.displacement_control_solver.displacement_control">[docs]</a><span class="k">class</span> <span class="nc">displacement_control</span><span class="p">:</span> 
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; The arc-length displacement control solver of this library</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        psi: the scalar arc-length parameter. When psi = 1, the method becomes the shperical arc-length method and when psi = 0 the method becomes the cylindrical arc-length method</span>
+<span class="sd">        tol : tolerance for the linear solver</span>
+<span class="sd">        lmbda0 : the initial load parameter</span>
+<span class="sd">        max_iter : maximum number of iterations for the linear solver</span>
+<span class="sd">        u : the solution function</span>
+<span class="sd">        F_int : First variation of strain energy (internal nodal forces)</span>
+<span class="sd">        F_ext : Externally applied load (external applied force)</span>
+<span class="sd">        J : The Jacobian of the residual with respect to the deformation (tangential stiffness matrix)</span>
+<span class="sd">        displacement_factor : The incremental load factor</span>
+<span class="sd">        solver : (optional): type of linear solver for the FEniCS linear solve function -- default FEniCS linear solver is used if no argument is used.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">lmbda0</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">F_int</span><span class="p">,</span> <span class="n">F_ext</span><span class="p">,</span> <span class="n">bcs</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">displacement_factor</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
+        <span class="c1"># Initialize Variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="n">psi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span> <span class="o">=</span> <span class="n">lmbda0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">F_int</span> <span class="o">=</span> <span class="n">F_int</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">F_ext</span> <span class="o">=</span> <span class="n">F_ext</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">J</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bcs</span> <span class="o">=</span> <span class="n">bcs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displacement_factor</span> <span class="o">=</span> <span class="n">displacement_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">residual</span> <span class="o">=</span> <span class="n">F_int</span><span class="o">-</span><span class="n">F_ext</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converged</span> <span class="o">=</span> <span class="kc">True</span>
+    
+<div class="viewcode-block" id="displacement_control.update_nodal_values"><a class="viewcode-back" href="../../arc_length.html#arc_length.displacement_control_solver.displacement_control.update_nodal_values">[docs]</a>    <span class="k">def</span> <span class="nf">update_nodal_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_new</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Function to update solution (i.e. displacement) vector after each solver iteration</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            u_new: updated solution</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1"># Function to update displacements</span>
+        <span class="n">u_nodal_values</span> <span class="o">=</span> <span class="n">u_new</span><span class="o">.</span><span class="n">get_local</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">set_local</span><span class="p">(</span><span class="n">u_nodal_values</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="displacement_control.initial_step"><a class="viewcode-back" href="../../arc_length.html#arc_length.displacement_control_solver.displacement_control.initial_step">[docs]</a>    <span class="k">def</span> <span class="nf">initial_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Inital step of the arc-length method. </span>
+<span class="sd">        For the displacement control formulation, this function constructs the constraint matrix and the initial arc-length step size.</span>
+<span class="sd">        &#39;&#39;&#39;</span>    
+
+        <span class="n">ii</span><span class="o">=</span><span class="mi">0</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Starting initial Displacement Control Control with Newton Method:&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Find DoFs for homogenous and nonhomogenous Dirichlet BCs:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displacement_factor</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1">#set nonhomogenous DoFs to 1 </span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">dofs_hom</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># list of DoFs with homogenous DoFs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dofs_nonhom</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># list of DoFs with nonhomogenous DoFs</span>
+        <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">dof</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bc</span><span class="o">.</span><span class="n">get_boundary_values</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dofs_hom</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dof</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dofs_nonhom</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dof</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">dofs_free</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()))</span>
+                              
+        <span class="bp">self</span><span class="o">.</span><span class="n">dofs_free</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dofs_free</span><span class="p">,(</span><span class="bp">self</span><span class="o">.</span><span class="n">dofs_hom</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">dofs_nonhom</span><span class="p">))</span> <span class="c1"># vector of free DoF</span>
+        
+        <span class="c1"># set up DoF vector of Dirchlet BCs:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_p</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_p</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+        <span class="n">u_p_temp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs_nonhom</span><span class="p">:</span>
+            <span class="n">u_p_temp</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_p</span><span class="o">.</span><span class="n">set_local</span><span class="p">(</span><span class="n">u_p_temp</span><span class="p">)</span>
+        
+                                  
+        
+        <span class="c1"># Construct Constraint Matrix C</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">PETScMatrix</span><span class="p">()</span>
+        <span class="n">C_mat</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">mat</span><span class="p">()</span> <span class="c1"># use petsc interface</span>
+        <span class="n">C_mat</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+        <span class="n">C_mat</span><span class="o">.</span><span class="n">setSizes</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dofs_free</span><span class="p">)))</span>
+        <span class="n">C_mat</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;aij&#39;</span><span class="p">)</span>
+        <span class="n">C_mat</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dofs_free</span><span class="p">):</span>
+            <span class="n">C_mat</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">C_mat</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="n">PETScMatrix</span><span class="p">(</span><span class="n">C_mat</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_f</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">init_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_f</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize reduced residual vector</span>
+        <span class="n">R_star</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">init_vector</span><span class="p">(</span><span class="n">R_star</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize Q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">init_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="n">du</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">init_vector</span><span class="p">(</span><span class="n">du</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">mat</span><span class="p">()</span>
+
+        <span class="c1"># Apply all Dirichlet (both homogenous and non-homogenous) BCs to u:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displacement_factor</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span>
+        <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcs</span><span class="p">:</span>
+            <span class="n">bc</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">())</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># Assemble K and R</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="p">)</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">residual</span><span class="p">)</span>
+
+            <span class="c1"># Get K*, F*, and R* (reduced matrices and vectors)</span>
+            <span class="n">K_mat</span> <span class="o">=</span> <span class="n">as_backend_type</span><span class="p">(</span><span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">mat</span><span class="p">()</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_mat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">matMult</span><span class="p">(</span><span class="n">K_mat</span><span class="p">)</span>
+            <span class="n">K_star_mat</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">matMult</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C_mat</span><span class="p">)</span> <span class="c1"># Reduced stiffness matrix</span>
+            <span class="n">K_star</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">PETScMatrix</span><span class="p">(</span><span class="n">K_star_mat</span><span class="p">))</span>
+            <span class="n">PETScMatrix</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span><span class="o">.</span><span class="n">mult</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">)</span> <span class="c1"># vector of Dirichlet BCs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">transpmult</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">R_star</span><span class="p">)</span> <span class="c1"># reduced residual vector</span>
+
+
+            <span class="n">norm</span> <span class="o">=</span> <span class="n">R_star</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="s1">&#39;l2&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration </span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s1">: </span><span class="se">\n</span><span class="s1">Residual error: </span><span class="si">{</span><span class="n">norm</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">norm</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_f</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_f</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">break</span>
+
+            <span class="n">ii</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="k">assert</span> <span class="n">ii</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="s1">&#39;Newton Solver not converging&#39;</span>
+
+            <span class="n">du_f</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+            <span class="n">du</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+            <span class="n">solve</span><span class="p">(</span><span class="n">K_star</span><span class="p">,</span> <span class="n">du_f</span><span class="p">,</span> <span class="n">R_star</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">)</span> <span class="c1"># solve reduced problem</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">mult</span><span class="p">(</span><span class="n">du_f</span><span class="p">,</span> <span class="n">du</span><span class="p">)</span> <span class="c1"># convert to global displacement vector</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_nodal_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">-</span><span class="n">du</span><span class="p">)</span> <span class="c1"># update solution</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_f</span> <span class="o">-=</span> <span class="n">du_f</span> <span class="c1"># update free DoFs for calculation of s</span></div>
+        
+<div class="viewcode-block" id="displacement_control.solve"><a class="viewcode-back" href="../../arc_length.html#arc_length.displacement_control_solver.displacement_control.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Main function to increment through the arc-length scheme. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Arc-Length Step&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter</span><span class="p">,</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+        <span class="c1"># initialization</span>
+        <span class="n">u_update</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+        <span class="n">u_update</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+        
+        <span class="n">R_star</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">init_vector</span><span class="p">(</span><span class="n">R_star</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">converged</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_f_n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_f_n_1</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(),</span> <span class="n">Vector</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_f_n</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_f</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_f_n_1</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_f</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lmbda_n</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lmbda_n_1</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Predictor Step: </span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s_n</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_f</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_f_n</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_f_n_1</span> <span class="c1"># update the free nodes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">mult</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_f</span><span class="p">,</span> <span class="n">u_update</span><span class="p">)</span> <span class="c1"># free nodes to global displacement vector</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_nodal_values</span><span class="p">(</span><span class="n">u_update</span><span class="p">)</span>            
+            <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda_n</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda_n_1</span> <span class="c1"># update displacement factor</span>
+            
+        <span class="c1"># Apply boundary conditions (both homogenous and nonhomogenous)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displacement_factor</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span>
+        <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcs</span><span class="p">:</span>
+            <span class="n">bc</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">())</span>
+                    
+        <span class="n">delta_u_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_f</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_f_n</span>
+        <span class="n">delta_lmbda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda_n</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">converged_prev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converged</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converged</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="c1"># Corrector Step(i.e. arc-length solver):</span>
+        <span class="n">solver_iter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">norm</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="ow">and</span> <span class="n">solver_iter</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">:</span>
+            <span class="n">solver_iter</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="c1"># Assemble K and R</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="p">)</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">residual</span><span class="p">)</span>
+
+            <span class="c1">#Get K*, F*, and R* (reduced matrices and vectors)</span>
+            <span class="n">K_mat</span> <span class="o">=</span> <span class="n">as_backend_type</span><span class="p">(</span><span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">mat</span><span class="p">()</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_mat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">matMult</span><span class="p">(</span><span class="n">K_mat</span><span class="p">)</span>
+            <span class="n">K_star_mat</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">matMult</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C_mat</span><span class="p">)</span> 
+            <span class="n">K_star</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">PETScMatrix</span><span class="p">(</span><span class="n">K_star_mat</span><span class="p">))</span> <span class="c1"># reduced stiffness matrix</span>
+            <span class="n">PETScMatrix</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span><span class="o">.</span><span class="n">mult</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">)</span> <span class="c1"># vector of Dirichlet BCs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">transpmult</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">R_star</span><span class="p">)</span> <span class="c1"># reduced residual vector</span>
+            
+            <span class="n">QQ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">)</span>
+
+            <span class="c1"># solve for d_lmbda, d_u:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">delta_u_f</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">*</span> <span class="n">delta_lmbda</span> <span class="o">*</span> <span class="n">QQ</span>
+
+            <span class="n">A</span> <span class="o">=</span> <span class="n">delta_u_f</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">delta_u_f</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">*</span> <span class="n">delta_lmbda</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">QQ</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">R_star_norm</span> <span class="o">=</span> <span class="n">R_star</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="s1">&#39;l2&#39;</span><span class="p">)</span>
+            <span class="n">norm</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">R_star_norm</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">A</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration: </span><span class="si">{</span><span class="n">solver_iter</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">|Total Norm: </span><span class="si">{</span><span class="n">norm</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1"> |Residual Norm: </span><span class="si">{</span><span class="n">R_star_norm</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1"> |A: </span><span class="si">{</span><span class="n">A</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1">|&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">norm</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">converged</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+
+            <span class="n">du_f_1</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+            <span class="n">du_f_2</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+
+            <span class="n">solve</span><span class="p">(</span><span class="n">K_star</span><span class="p">,</span> <span class="n">du_f_1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">)</span>
+            <span class="n">solve</span><span class="p">(</span><span class="n">K_star</span><span class="p">,</span> <span class="n">du_f_2</span><span class="p">,</span> <span class="n">R_star</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">)</span>
+
+            <span class="n">dlmbda</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">du_f_2</span><span class="p">)</span> <span class="o">-</span> <span class="n">A</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">a</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">du_f_1</span><span class="p">))</span>
+            <span class="n">du_f</span> <span class="o">=</span> <span class="o">-</span><span class="n">du_f_2</span> <span class="o">+</span> <span class="n">dlmbda</span> <span class="o">*</span> <span class="n">du_f_1</span>
+
+            <span class="c1"># update delta_u, delta_lmbda, u, lmbda</span>
+            <span class="n">delta_lmbda</span> <span class="o">+=</span> <span class="n">dlmbda</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span> <span class="o">+=</span> <span class="n">dlmbda</span>
+            <span class="n">delta_u_f</span> <span class="o">+=</span> <span class="n">du_f</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_f</span> <span class="o">+=</span> <span class="n">du_f</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">mult</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_f</span><span class="p">,</span> <span class="n">u_update</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_nodal_values</span><span class="p">(</span><span class="n">u_update</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">displacement_factor</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span>
+            <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcs</span><span class="p">:</span>
+                <span class="n">bc</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">())</span>
+            
+
+         <span class="c1"># Solution Update</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delta_s_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delta_s_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span> <span class="o">/</span> <span class="mf">1024.0</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">delta_s_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span>
+                
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_f_n_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_f_n</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lmbda_n_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda_n</span>
+        
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_f_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_f</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lmbda_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span>
+                
+            <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span><span class="mi">1</span> 
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">converged_prev</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s_min</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s_max</span><span class="p">)</span>
+                
+                
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">converged_prev</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s_min</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s_min</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          
+          <h3>Table of Contents</h3>
+          <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../math_prelim.html">Math Preliminaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../math_prelim.html#additional-resources">Additional Resources</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">All Solvers</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../nb_examples.html">Displacement Control</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+            </form>
+          </div>
+
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="../../py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="../../genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Peerasait Prachaseree, Saeed Mohammadzadeh, Emma Lejeune.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

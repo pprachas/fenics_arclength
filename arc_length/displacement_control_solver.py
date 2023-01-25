@@ -11,8 +11,24 @@ and the displacement-based formulation is heavily based on:
 Verhoosel, Clemens V., Joris JC Remmers, and Miguel A. Gutiérrez. "A dissipation‐based arc‐length method for robust simulation of brittle and ductile failure." International journal for numerical methods in engineering 77.9 (2009): 1290-1321.
 
 '''
-class displacement_control:    
-    def __init__(self, psi, tol, lmbda0, max_iter, u, F_int, F_ext, bcs, J, displacement_factor,solver='default'):
+
+class displacement_control: 
+    ''' The arc-length displacement control solver of this library
+    
+    Args:
+        psi: the scalar arc-length parameter. When psi = 1, the method becomes the shperical arc-length method and when psi = 0 the method becomes the cylindrical arc-length method
+        tol : tolerance for the linear solver
+        lmbda0 : the initial load parameter
+        max_iter : maximum number of iterations for the linear solver
+        u : the solution function
+        F_int : First variation of strain energy (internal nodal forces)
+        F_ext : Externally applied load (external applied force)
+        J : The Jacobian of the residual with respect to the deformation (tangential stiffness matrix)
+        displacement_factor : The incremental load factor
+        solver : (optional): type of linear solver for the FEniCS linear solve function -- default FEniCS linear solver is used if no argument is used.
+    '''
+
+    def __init__(self, psi, tol, lmbda0, max_iter, u, F_int, F_ext, bcs, J, displacement_factor, solver='default'):
         # Initialize Variables
         self.psi = psi
         self.tol = tol
@@ -29,11 +45,24 @@ class displacement_control:
         self.converged = True
     
     def update_nodal_values(self, u_new):
+        '''
+        Function to update solution (i.e. displacement) vector after each solver iteration
+        
+        Args:
+            u_new: updated solution
+
+        '''
+
         # Function to update displacements
         u_nodal_values = u_new.get_local()
         self.u.vector().set_local(u_nodal_values)
     
-    def initial_step(self):    
+    def initial_step(self):
+        '''
+        Inital step of the arc-length method. 
+        For the displacement control formulation, this function constructs the constraint matrix and the initial arc-length step size.
+        '''    
+
         ii=0
         print('Starting initial Displacement Control Control with Newton Method:')
         
@@ -129,6 +158,10 @@ class displacement_control:
             self.u_f -= du_f # update free DoFs for calculation of s
         
     def solve(self):
+        '''
+        Main function to increment through the arc-length scheme. 
+        '''
+        
         print('\nArc-Length Step', self.counter,':')
         # initialization
         u_update = Vector()

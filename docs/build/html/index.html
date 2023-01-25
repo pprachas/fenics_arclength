@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Fenics-arclength Documentation &#8212; fenics-arclength 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/agogo.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Math Preliminaries" href="math_prelim.html" /> 
+  </head><body>
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="#">fenics-arclength 0.0.1 documentation</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="math_prelim.html" title="Math Preliminaries"
+             accesskey="N">next</a> |
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="fenics-arclength-documentation">
+<h1>Fenics-arclength Documentation<a class="headerlink" href="#fenics-arclength-documentation" title="Permalink to this heading">¶</a></h1>
+<p><strong>fenics-arclength</strong> is a Python implementation of the arclength Riks solver built on top of FEniCS.
+The library aims to keep the usage as similiar to <a class="reference external" href="https://fenicsproject.org/download/archive/">FEniCS</a> (version 2019.1.0) as possible except for the solver part.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
+<section id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading">¶</a></h3>
+<p>This package solely depends on FEniCS 2019.1.0. It is not tested on other packages.
+<a class="reference external" href="https://fenicsproject.org/download/archive/">Instructions to install FEniCS can be found here</a></p>
+</section>
+<section id="package-installation">
+<h3>Package Installation<a class="headerlink" href="#package-installation" title="Permalink to this heading">¶</a></h3>
+<p>To use our arc-length solver, download and append this repository to the python path. This can be done by:</p>
+<ul class="simple">
+<li><p>Add directory to <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span>PYTHONPATH<span class="w"> </span>&lt;path/to/fenics_arclength&gt;:<span class="nv">$PYTHONPATH</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Append directory to path in python script:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;path/to/fenics_arclength&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="math_prelim.html">Math Preliminaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="math_prelim.html#additional-resources">Additional Resources</a></li>
+</ul>
+</div>
+</section>
+<section id="arc-length-solvers-in-this-package">
+<h2>Arc-Length solvers in this package<a class="headerlink" href="#arc-length-solvers-in-this-package" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">All Solvers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="arc_length.html">Arc-Length Displacement Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arc_length.html#arc-length-force-control">Arc-Length Force Control</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="notebook-examples">
+<h2>Notebook Examples<a class="headerlink" href="#notebook-examples" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nb_examples.html">Displacement Control</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Bilayer.html">Bilayer Wrinkling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/fiber_network.html">Fiber Network</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          
+          <h3>Table of Contents</h3>
+          <ul>
+<li class="toctree-l1"><a class="reference internal" href="math_prelim.html">Math Preliminaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="math_prelim.html#additional-resources">Additional Resources</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">All Solvers</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nb_examples.html">Displacement Control</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+            </form>
+          </div>
+
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="math_prelim.html" title="Math Preliminaries"
+              >next</a> |
+            <a href="py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+              <br/>
+              <a href="_sources/index.rst.txt"
+                rel="nofollow">Show Source</a>
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Peerasait Prachaseree, Saeed Mohammadzadeh, Emma Lejeune.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

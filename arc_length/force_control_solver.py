@@ -7,8 +7,23 @@ An FEniCS based arc-length with prescribed traction. The code is heavily based o
 Kadapa, Chennakesava. "A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics." Engineering Structures 234 (2021): 111755.
 
 '''
-class force_control:    
-    def __init__(self, psi, tol, lmbda0, max_iter, u, F_int, F_ext, bcs, J, load_factor,solver='default'):
+class force_control:
+    ''' The arc-length displacement control solver of this library
+    
+    Args:
+        psi: the scalar arc-length parameter. When psi = 1, the method becomes the shperical arc-length method and when psi = 0 the method becomes the cylindrical arc-length method
+        tol : tolerance for the linear solver
+        lmbda0 : the initial load parameter
+        max_iter : maximum number of iterations for the linear solver
+        u : the solution function
+        F_int : First variation of strain energy (internal nodal forces)
+        F_ext : Externally applied load (external applied force)
+        J : The Jacobian of the residual with respect to the deformation (tangential stiffness matrix)
+        displacement_factor : The incremental load factor
+        solver : (optional): type of linear solver for the FEniCS linear solve function -- default FEniCS linear solver is used if no argument is used.
+    '''
+
+    def __init__(self, psi, tol, lmbda0, max_iter, u, F_int, F_ext, bcs, J, load_factor, solver='default'):
         # Initialize Variables
         self.psi = psi
         self.tol = tol
@@ -25,11 +40,23 @@ class force_control:
         self.converged = True
     
     def update_nodal_values(self, u_new):
+        '''
+        Function to update solution (i.e. displacement) vector after each solver iteration
+        
+        Args:
+            u_new: updated solution
+
+        '''
+
         # Function to update displacements
         u_nodal_values = u_new.get_local()
         self.u.vector().set_local(u_nodal_values)
 
     def initial_step(self):
+        '''
+        Inital step of the arc-length method. 
+        '''        
+        
         ii=0
         print('Starting initial Force Control with Newton Method:')
         
@@ -62,6 +89,10 @@ class force_control:
             self.update_nodal_values(self.u.vector()-du)
         
     def solve(self):
+        '''
+        Main function to increment through the arc-length scheme. 
+        '''
+        
         print('\nArc-Length Step', self.counter,':')
         # initialization
         if self.counter == 1:

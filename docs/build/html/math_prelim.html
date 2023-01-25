@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Math Preliminaries &#8212; fenics-arclength 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/agogo.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="All Solvers" href="modules.html" />
+    <link rel="prev" title="Fenics-arclength Documentation" href="index.html" /> 
+  </head><body>
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="index.html">fenics-arclength 0.0.1 documentation</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="index.html" title="Fenics-arclength Documentation"
+             accesskey="P">previous</a> |
+          <a href="modules.html" title="All Solvers"
+             accesskey="N">next</a> |
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="math-preliminaries">
+<h1>Math Preliminaries<a class="headerlink" href="#math-preliminaries" title="Permalink to this heading">¶</a></h1>
+<p>Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.</p>
+<section id="nonlinear-finite-elements">
+<h2>Nonlinear Finite Elements<a class="headerlink" href="#nonlinear-finite-elements" title="Permalink to this heading">¶</a></h2>
+<p>A nonlinear finite element problem seeks to minimize the residual vector that comes from discretizing the weak form of the energy balance equation (e.g. continuum for beam balance equations). In general the residual cannot be solved exactly and must be approximated through linearization. A common method to solve nonlinear finite element problems uses the Newton-Raphson method:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{R}(\mathbf{u}_{n+1}) = \mathcal{R}(\mathbf{u}_{n})+\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}\Delta u\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta u = \mathbf{u}_{n+1}-\mathbf{u}_n\)</span>.</p>
+<p>Newton’s method is solved incrementally until the desired convergence criterion. The term <span class="math notranslate nohighlight">\(\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\)</span>
+is typically called the tangential stiffness matrix <span class="math notranslate nohighlight">\(K_T\)</span>. The first term <span class="math notranslate nohighlight">\(\mathcal R(\mathbf u_n)\)</span> is the externally applied force <span class="math notranslate nohighlight">\(F^{ext}\)</span>, while the second term
+<span class="math notranslate nohighlight">\(\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta u\)</span> is the internal force <span class="math notranslate nohighlight">\(F^{int}\)</span> the nonlinear problem is too difficult for the Newton solver to converge. As such, the the external load is applied incrementally with the load factor <span class="math notranslate nohighlight">\(\lambda^k\)</span> where <span class="math notranslate nohighlight">\(k\)</span> is the increment. Putting it all together, the nonlinear problem can be written as:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n},\lambda_{n+1})-\lambda_{n+1} F^{ext}(\mathbf{u}_{n})\]</div>
+<section id="conservative-loading">
+<h3>Conservative Loading<a class="headerlink" href="#conservative-loading" title="Permalink to this heading">¶</a></h3>
+<p>In most cases the external force does not depend on the solution <span class="math notranslate nohighlight">\(u\)</span> (i.e. <span class="math notranslate nohighlight">\(F^{ext} (u_n) = F^{ext}\)</span> ). These cases are called conservative loading. The problem than can be simplified to:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n})-\lambda^k F^{ext}\]</div>
+<p>In this case the tangential stiffness matrix <span class="math notranslate nohighlight">\(K_T\)</span> can be contructed using just the internal energy (i.e. <span class="math notranslate nohighlight">\(K_T = \frac{\partial F^{int}(\mathbf u_{n+1};\mathbf u_n)}{\partial \mathbf{u}_n}\)</span>)</p>
+</section>
+<section id="non-conservative-loading">
+<h3>Non-conservative loading<a class="headerlink" href="#non-conservative-loading" title="Permalink to this heading">¶</a></h3>
+<p>In the case where the external force depends on the solution <span class="math notranslate nohighlight">\(u\)</span>, the above assumption cannot be made and the whole residual must be taken into account when constructing the tangential stiffness matrix <span class="math notranslate nohighlight">\(K_T\)</span>. As a result, <span class="math notranslate nohighlight">\(K_T\)</span> will be non-symmetric. Examples of these specific special cases are applied moments around a fixed axis, follower loads (i.e. loads that change direction based on the deformed configuration), pressure loads, etc.</p>
+</section>
+</section>
+<section id="the-arc-length-method">
+<h2>The Arc-length method<a class="headerlink" href="#the-arc-length-method" title="Permalink to this heading">¶</a></h2>
+<p>One of the main drawbacks of Newton’s method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter <span class="math notranslate nohighlight">\(\lambda_n\)</span> is now also an unknown parameter at each inrement, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
+#### Force Control
+The additional arc-length contraint for force control is:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-\Delta s\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta s\)</span> determines how far to search for the next equilibrium point and <span class="math notranslate nohighlight">\(\psi\)</span> is the arc length parameter that gives you different arc-length solver schemes. When <span class="math notranslate nohighlight">\(\psi = 1\)</span> (as like the examples in this repository), the arc-length equation is also known as the <em>spherical arc-length method</em>, and when <span class="math notranslate nohighlight">\(\psi = 0\)</span> the <em>cylindrical arc-length</em> method is recovered.</p>
+<section id="displacement-control">
+<h3>Displacement Control<a class="headerlink" href="#displacement-control" title="Permalink to this heading">¶</a></h3>
+<p>Sometimes instead of prescribing traction, the problem has a boundary contition with presecribed non-zero displacement (i.e. nonhomogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and formulate a constraint matrix <span class="math notranslate nohighlight">\(C\)</span> such that:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{u} = C\mathbf{u}_f+\lambda \mathbf{u}_p\]</div>
+<p>where <span class="math notranslate nohighlight">\(u_f\)</span> and <span class="math notranslate nohighlight">\(u_p\)</span> are the free and prescribed displacement nodes respectively, and <span class="math notranslate nohighlight">\(\lambda\)</span> is the incremental displacement factor.</p>
+<p>The arc length equation needs to be modified and now becomes:</p>
+<p>where:</p>
+<div class="math notranslate nohighlight">
+\[Q = C^TK_T\mathbf{u}_p\]</div>
+</section>
+</section>
+<section id="predictor-corrector-scheme">
+<h2>Predictor-Corrector Scheme<a class="headerlink" href="#predictor-corrector-scheme" title="Permalink to this heading">¶</a></h2>
+<p>The predictor our arc-length implementation for both the force and displacement control scheme follows the implementation from Ref.3. The prediction step takes in the previous solution and extrapolates where:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{u}_{n+1}^{predicted} = [1+\alpha] \mathbf{u}_{n} -\alpha u_{n-1} \\ \lambda_{n+1}^{predicted} = [1+\alpha] \lambda_n -\alpha \lambda_{n-1}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha=\frac{\Delta s_n}{\Delta s_{n-1}}\)</span> is the extrapolation parameter that depends on the arc-length parameter for the previous and current step. Using this extrapolation scheme both provides a good initial guess for the next equilibrium solution as well as identifies the correct direction for the next point in the equilibrium path. Our implementation allows for easy modification of this extrapolation scheme, as seen in the 3D beam example.</p>
+<p>Following Ref.3 and Ref.4 (see below), force control corrector scheme solves the augmented matrix equation:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+K_T &amp; -F^{ext} \\
+\frac{\partial \mathcal{A}}{\partial u} &amp; \frac{\partial \mathcal{A}}{\partial \lambda}
+ \end{bmatrix} \begin{bmatrix} \delta \mathbf{u} \\ \delta \lambda \end{bmatrix} = \begin{bmatrix} \mathcal{R} \\ \mathcal{A} \end{bmatrix}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\Delta \mathbf{u}_{n+1} = \Delta \mathbf{u}_n + \delta \mathbf{u}\]</div>
+<div class="math notranslate nohighlight">
+\[\Delta \lambda_{n+1} = \Delta \lambda_n + \delta \lambda\]</div>
+<p>The displacement control corrector scheme modifies the above equation to:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+C^\top K_T C &amp; C^\top K \mathbf{u}_p \\
+\frac{\partial \mathcal{A}}{\partial u_f} &amp; \frac{\partial \mathcal{A}}{\partial \lambda}
+\end{bmatrix}
+\begin{bmatrix}
+\delta \mathbf{u} \\ \delta \lambda
+\end{bmatrix}
+=
+\begin{bmatrix}
+\mathcal{R} \\ \mathcal{A}
+\end{bmatrix}\end{split}\]</div>
+<p>Similar to Ref. 3 and Ref. 4, we used the Shur complement to solve the system of equations. For more details refer to the Ref 3 and Ref 4.</p>
+</section>
+</section>
+<section id="additional-resources">
+<h1>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this heading">¶</a></h1>
+<p>More information on the arc-length method and the solution approach can be found in:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://scholar.harvard.edu/files/vasios/files/ArcLength.pdf">Nonlinear Analysis of Structures: The Arc Length Method</a></p></li>
+<li><p><a class="reference external" href="https://onlinelibrary.wiley.com/doi/10.1002/nme.1620140811">Incremental displacement algorithms for nonlinear problems</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2005.10192">A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics</a></p></li>
+<li><p><a class="reference external" href="https://onlinelibrary.wiley.com/doi/10.1002/nme.2447">A dissipation-based arc-length method for robust simulation of brittle and ductile failure</a></p></li>
+</ol>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          
+          <h3>Table of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Math Preliminaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">All Solvers</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nb_examples.html">Displacement Control</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+            </form>
+          </div>
+
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="index.html" title="Fenics-arclength Documentation"
+              >previous</a> |
+            <a href="modules.html" title="All Solvers"
+              >next</a> |
+            <a href="py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+              <br/>
+              <a href="_sources/math_prelim.rst.txt"
+                rel="nofollow">Show Source</a>
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Peerasait Prachaseree, Saeed Mohammadzadeh, Emma Lejeune.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

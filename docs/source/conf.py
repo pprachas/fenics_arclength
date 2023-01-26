@@ -23,9 +23,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
-    'myst_parser',
-    'nbsphinx', 
-    'nbsphinx_link'
+    'myst_nb'
 ]
 
 myst_enable_extensions = [
@@ -34,7 +32,19 @@ myst_enable_extensions = [
     'html_image',
     'substitution'
 ]
-source_suffix = ['.rst', '.md']
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.ipynb': 'myst-nb',
+    '.myst': 'myst-nb',
+}
+
+html_theme_options = {
+    'repository_url': 'https://github.com/pprachas/fenics_arclength',
+    'use_repository_button': True 
+}
+nb_execution_mode = 'off'
+nb_number_source_lines = True
+nb_render_markdown_format = 'myst'
 templates_path = ['_templates']
 exclude_patterns = []
 
@@ -43,9 +53,10 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'agogo'
-html_sidebars = {
-   '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],
-   'using/windows': ['windowssidebar.html', 'searchbox.html'],
-}
+html_theme = 'sphinx_book_theme'
+
+# html_sidebars = {
+#    '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html']
+# }
+
 html_static_path = ['_static']

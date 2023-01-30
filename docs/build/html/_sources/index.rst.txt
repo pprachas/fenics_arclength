@@ -12,6 +12,18 @@ with complex equilibrium paths.
 The library aims to keep the usage as similiar to `FEniCS <https://fenicsproject.org/download/archive/>`_ (version 2019.1.0) to allow
 for off-the-shelf usage.
 
+
+.. button-link:: https://github.com/pprachas/fenics_arclength
+   :color: secondary
+   :expand:
+
+   Github Repository of Package
+
+
+.. image:: imgs/fenics_project.png
+   :align: center
+   :width: 700
+
 Usage
 -----
 
@@ -42,12 +54,14 @@ To use our arc-length solver, download and append this `repository <https://gith
 Theory
 --------------------------
 The general idea of non-linear finite element analysis (FEA) is introduced here. We also 
-briefly describe the implementation of arclength solvers in our package.
+briefly describe the implementation of arclength solvers in our package. We also provide an example
+on modifying the arc-length predictor scheme for geometrically exact beams.
 
 .. toctree::
    :maxdepth: 1
 
    math_prelim
+   examples/force_control/beam/README
 
 Arc-Length solvers in this package
 ----------------------------------

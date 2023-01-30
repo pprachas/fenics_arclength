@@ -23,7 +23,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
-    'myst_nb'
+    'myst_nb', 
+    'sphinx_design'
 ]
 
 myst_enable_extensions = [

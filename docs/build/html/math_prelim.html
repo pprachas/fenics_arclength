@@ -23,6 +23,7 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
@@ -32,11 +33,12 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="_static/design-tabs.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="All Solvers" href="modules.html" />
+    <link rel="next" title="Geometrically Exact Beams (Simo-Reissner beams) for FEniCS Arclength" href="examples/force_control/beam/README.html" />
     <link rel="prev" title="Fenics-arclength Documentation" href="index.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -88,6 +90,11 @@
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Math Preliminaries
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="examples/force_control/beam/README.html">
+   Geometrically Exact Beams (Simo-Reissner beams) for FEniCS Arclength
   </a>
  </li>
 </ul>
@@ -167,7 +174,7 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="examples/force_control/beam/beam_2D/leeframe_fenics_arclength_New.html">
-     Lees Frame
+     Lee’s Frame
     </a>
    </li>
    <li class="toctree-l2">
@@ -322,48 +329,41 @@ title="Print to PDF"
     </div>
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Math Preliminaries
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#nonlinear-finite-elements">
+   Nonlinear Finite Elements
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#nonlinear-finite-elements">
-     Nonlinear Finite Elements
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#conservative-loading">
+     Conservative Loading
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#conservative-loading">
-       Conservative Loading
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#non-conservative-loading">
-       Non-conservative loading
-      </a>
-     </li>
-    </ul>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#the-arc-length-method">
-     The Arc-length method
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#displacement-control">
-       Displacement Control
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#predictor-corrector-scheme">
-     Predictor-Corrector Scheme
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#non-conservative-loading">
+     Non-conservative loading
     </a>
    </li>
   </ul>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-arc-length-method">
+   The Arc-length method
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#displacement-control">
+     Displacement Control
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#predictor-corrector-scheme">
+   Predictor-Corrector Scheme
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#additional-resources">
    Additional Resources
   </a>
@@ -387,48 +387,41 @@ title="Print to PDF"
                         </div>
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Math Preliminaries
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#nonlinear-finite-elements">
+   Nonlinear Finite Elements
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#nonlinear-finite-elements">
-     Nonlinear Finite Elements
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#conservative-loading">
+     Conservative Loading
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#conservative-loading">
-       Conservative Loading
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#non-conservative-loading">
-       Non-conservative loading
-      </a>
-     </li>
-    </ul>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#the-arc-length-method">
-     The Arc-length method
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#displacement-control">
-       Displacement Control
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#predictor-corrector-scheme">
-     Predictor-Corrector Scheme
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#non-conservative-loading">
+     Non-conservative loading
     </a>
    </li>
   </ul>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-arc-length-method">
+   The Arc-length method
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#displacement-control">
+     Displacement Control
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#predictor-corrector-scheme">
+   Predictor-Corrector Scheme
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#additional-resources">
    Additional Resources
   </a>
@@ -521,9 +514,8 @@ C^\top K_T C &amp; C^\top K \mathbf{u}_p \\
 \end{bmatrix}\end{split}\]</div>
 <p>Similar to Ref. 3 and Ref. 4, we used the Shur complement to solve the system of equations. For more details refer to the Ref 3 and Ref 4.</p>
 </section>
-</section>
 <section id="additional-resources">
-<h1>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">#</a></h1>
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">#</a></h2>
 <p>More information on the arc-length method and the solution approach can be found in:</p>
 <ol class="arabic simple">
 <li><p><a class="reference external" href="https://scholar.harvard.edu/files/vasios/files/ArcLength.pdf">Nonlinear Analysis of Structures: The Arc Length Method</a></p></li>
@@ -531,6 +523,7 @@ C^\top K_T C &amp; C^\top K \mathbf{u}_p \\
 <li><p><a class="reference external" href="https://arxiv.org/abs/2005.10192">A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics</a></p></li>
 <li><p><a class="reference external" href="https://onlinelibrary.wiley.com/doi/10.1002/nme.2447">A dissipation-based arc-length method for robust simulation of brittle and ductile failure</a></p></li>
 </ol>
+</section>
 </section>
 
 
@@ -548,10 +541,10 @@ C^\top K_T C &amp; C^\top K \mathbf{u}_p \\
             <p class="prev-next-title">Fenics-arclength Documentation</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="modules.html" title="next page">
+    <a class='right-next' id="next-link" href="examples/force_control/beam/README.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">All Solvers</p>
+        <p class="prev-next-title">Geometrically Exact Beams (Simo-Reissner beams) for FEniCS Arclength</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

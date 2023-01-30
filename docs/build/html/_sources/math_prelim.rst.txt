@@ -103,7 +103,7 @@ The displacement control corrector scheme modifies the above equation to:
 Similar to Ref. 3 and Ref. 4, we used the Shur complement to solve the system of equations. For more details refer to the Ref 3 and Ref 4. 
 
 Additional Resources
-====================
+--------------------
 More information on the arc-length method and the solution approach can be found in:
 
 #. `Nonlinear Analysis of Structures: The Arc Length Method <https://scholar.harvard.edu/files/vasios/files/ArcLength.pdf>`_  

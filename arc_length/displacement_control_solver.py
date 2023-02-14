@@ -16,7 +16,7 @@ class displacement_control:
     ''' The arc-length displacement control solver of this library
     
     Args:
-        psi: the scalar arc-length parameter. When psi = 1, the method becomes the shperical arc-length method and when psi = 0 the method becomes the cylindrical arc-length method
+        psi: the scalar arc-length parameter. When psi = 1, the method becomes the spherical arc-length method and when psi = 0 the method becomes the cylindrical arc-length method
         tol : tolerance for the linear solver
         lmbda0 : the initial load parameter
         max_iter : maximum number of iterations for the linear solver
@@ -136,7 +136,7 @@ class displacement_control:
             temp = self.C_mat.copy().transpose().matMult(K_mat)
             K_star_mat = temp.matMult(self.C_mat) # Reduced stiffness matrix
             K_star = Matrix(PETScMatrix(K_star_mat))
-            PETScMatrix(temp).mult(self.u_p, self.Q) # vector of Dirichlet BCs
+            PETScMatrix(temp).mult(-self.u_p, self.Q) # vector of Dirichlet BCs
             self.C.transpmult(R, R_star) # reduced residual vector
 
 
@@ -213,7 +213,7 @@ class displacement_control:
             temp = self.C_mat.copy().transpose().matMult(K_mat)
             K_star_mat = temp.matMult(self.C_mat) 
             K_star = Matrix(PETScMatrix(K_star_mat)) # reduced stiffness matrix
-            PETScMatrix(temp).mult(self.u_p, self.Q) # vector of Dirichlet BCs
+            PETScMatrix(temp).mult(-self.u_p, self.Q) # vector of Dirichlet BCs
             self.C.transpmult(R, R_star) # reduced residual vector
             
             QQ = self.Q.inner(self.Q)

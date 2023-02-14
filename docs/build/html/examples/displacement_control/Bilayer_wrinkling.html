@@ -497,8 +497,8 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fd6ef6346a0&gt;,
- &lt;matplotlib.lines.Line2D at 0x7fd6ef634b50&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fc86dd21c70&gt;,
+ &lt;matplotlib.lines.Line2D at 0x7fc86dd2f160&gt;]
 </pre></div>
 </div>
 <img alt="../../_images/7598a87b46fa750f4bfa3c08b23dc4ebbc79690562e70ee3110e09effd13aeef.png" src="../../_images/7598a87b46fa750f4bfa3c08b23dc4ebbc79690562e70ee3110e09effd13aeef.png" />
@@ -533,7 +533,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7fd714132700&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7fc86dd896d0&gt;
 </pre></div>
 </div>
 <img alt="../../_images/9543c1b688b3a843cd3d2d1bdfdce9df2bf178f6de045fdd789e0fe6253075da.png" src="../../_images/9543c1b688b3a843cd3d2d1bdfdce9df2bf178f6de045fdd789e0fe6253075da.png" />
@@ -542,6 +542,17 @@ title="Print to PDF"
 </section>
 <section id="define-dirichlet-boundary-conditions">
 <h2>Define Dirichlet Boundary Conditions<a class="headerlink" href="#define-dirichlet-boundary-conditions" title="Permalink to this headline">#</a></h2>
+<p><strong>Note that for the case of displacement control, the FEniCS expression for the applied displacement mujst have be positive to prevent convergence issues.</strong></p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apply_disp</span> <span class="o">=</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">degree</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>is valid and will not have convergence issues while</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apply_disp</span> <span class="o">=</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">degree</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>can cause convergence issues.</p>
+<p>The direction of applied loading will be determined by the initial load step.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Dirichlet boundary conditions</span>
@@ -555,7 +566,7 @@ title="Print to PDF"
 <span class="linenos"> 9</span>        <span class="k">return</span> <span class="n">on_boundary</span> <span class="ow">and</span> <span class="n">near</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span>
 <span class="linenos">10</span>
 <span class="linenos">11</span><span class="c1">#-----------------Applied Displacement-----------------------#</span>
-<span class="linenos">12</span><span class="n">apply_disp</span> <span class="o">=</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span><span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">degree</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> 
+<span class="linenos">12</span><span class="n">apply_disp</span> <span class="o">=</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">,</span><span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">degree</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> 
 <span class="linenos">13</span><span class="c1">#--------------Nonhomogenous Dirichlet Boundary Conditions------------------------------#</span>
 <span class="linenos">14</span><span class="n">bc1</span> <span class="o">=</span> <span class="n">DirichletBC</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">Constant</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">Left</span><span class="p">)</span>
 <span class="linenos">15</span><span class="n">bc2</span> <span class="o">=</span> <span class="n">DirichletBC</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">apply_disp</span><span class="p">,</span> <span class="n">Right</span><span class="p">)</span>
@@ -677,7 +688,7 @@ title="Print to PDF"
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># Solver Parameters</span>
 <span class="linenos">2</span><span class="n">psi</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="linenos">3</span><span class="n">tol</span> <span class="o">=</span> <span class="mf">1.0e-9</span>
-<span class="linenos">4</span><span class="n">lmbda0</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="linenos">4</span><span class="n">lmbda0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.01</span>
 <span class="linenos">5</span><span class="n">max_iter</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="linenos">6</span>
 <span class="linenos">7</span><span class="c1"># Set up arc-length solver</span>
@@ -1659,7 +1670,7 @@ Iteration: 5
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
-<span class="linenos">2</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lmbda</span><span class="p">,</span> <span class="n">f_reac</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lmbda</span><span class="p">),</span> <span class="n">f_reac</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
 <span class="linenos">3</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Applied Displacement&#39;</span><span class="p">)</span>
 <span class="linenos">4</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Force&#39;</span><span class="p">)</span>
 <span class="linenos">5</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Equilibrium path&#39;</span><span class="p">)</span>
@@ -1891,39 +1902,39 @@ input[type=range].anim-slider {
 </style>
 
 <div class="animation">
-  <img id="_anim_img150b4ea64dcd487f8881ef35067f9f32">
+  <img id="_anim_img291331837b0d46a68b188146e0514dcc">
   <div class="anim-controls">
-    <input id="_anim_slider150b4ea64dcd487f8881ef35067f9f32" type="range" class="anim-slider"
+    <input id="_anim_slider291331837b0d46a68b188146e0514dcc" type="range" class="anim-slider"
            name="points" min="0" max="1" step="1" value="0"
-           oninput="anim150b4ea64dcd487f8881ef35067f9f32.set_frame(parseInt(this.value));"></input>
+           oninput="anim291331837b0d46a68b188146e0514dcc.set_frame(parseInt(this.value));"></input>
     <div class="anim-buttons">
-      <button onclick="anim150b4ea64dcd487f8881ef35067f9f32.slower()"><i class="fa fa-minus"></i></button>
-      <button onclick="anim150b4ea64dcd487f8881ef35067f9f32.first_frame()"><i class="fa fa-fast-backward">
+      <button onclick="anim291331837b0d46a68b188146e0514dcc.slower()"><i class="fa fa-minus"></i></button>
+      <button onclick="anim291331837b0d46a68b188146e0514dcc.first_frame()"><i class="fa fa-fast-backward">
           </i></button>
-      <button onclick="anim150b4ea64dcd487f8881ef35067f9f32.previous_frame()">
+      <button onclick="anim291331837b0d46a68b188146e0514dcc.previous_frame()">
           <i class="fa fa-step-backward"></i></button>
-      <button onclick="anim150b4ea64dcd487f8881ef35067f9f32.reverse_animation()">
+      <button onclick="anim291331837b0d46a68b188146e0514dcc.reverse_animation()">
           <i class="fa fa-play fa-flip-horizontal"></i></button>
-      <button onclick="anim150b4ea64dcd487f8881ef35067f9f32.pause_animation()"><i class="fa fa-pause">
+      <button onclick="anim291331837b0d46a68b188146e0514dcc.pause_animation()"><i class="fa fa-pause">
           </i></button>
-      <button onclick="anim150b4ea64dcd487f8881ef35067f9f32.play_animation()"><i class="fa fa-play"></i>
+      <button onclick="anim291331837b0d46a68b188146e0514dcc.play_animation()"><i class="fa fa-play"></i>
           </button>
-      <button onclick="anim150b4ea64dcd487f8881ef35067f9f32.next_frame()"><i class="fa fa-step-forward">
+      <button onclick="anim291331837b0d46a68b188146e0514dcc.next_frame()"><i class="fa fa-step-forward">
           </i></button>
-      <button onclick="anim150b4ea64dcd487f8881ef35067f9f32.last_frame()"><i class="fa fa-fast-forward">
+      <button onclick="anim291331837b0d46a68b188146e0514dcc.last_frame()"><i class="fa fa-fast-forward">
           </i></button>
-      <button onclick="anim150b4ea64dcd487f8881ef35067f9f32.faster()"><i class="fa fa-plus"></i></button>
+      <button onclick="anim291331837b0d46a68b188146e0514dcc.faster()"><i class="fa fa-plus"></i></button>
     </div>
-    <form action="#n" name="_anim_loop_select150b4ea64dcd487f8881ef35067f9f32" class="anim-state">
-      <input type="radio" name="state" value="once" id="_anim_radio1_150b4ea64dcd487f8881ef35067f9f32"
+    <form action="#n" name="_anim_loop_select291331837b0d46a68b188146e0514dcc" class="anim-state">
+      <input type="radio" name="state" value="once" id="_anim_radio1_291331837b0d46a68b188146e0514dcc"
              >
-      <label for="_anim_radio1_150b4ea64dcd487f8881ef35067f9f32">Once</label>
-      <input type="radio" name="state" value="loop" id="_anim_radio2_150b4ea64dcd487f8881ef35067f9f32"
+      <label for="_anim_radio1_291331837b0d46a68b188146e0514dcc">Once</label>
+      <input type="radio" name="state" value="loop" id="_anim_radio2_291331837b0d46a68b188146e0514dcc"
              checked>
-      <label for="_anim_radio2_150b4ea64dcd487f8881ef35067f9f32">Loop</label>
-      <input type="radio" name="state" value="reflect" id="_anim_radio3_150b4ea64dcd487f8881ef35067f9f32"
+      <label for="_anim_radio2_291331837b0d46a68b188146e0514dcc">Loop</label>
+      <input type="radio" name="state" value="reflect" id="_anim_radio3_291331837b0d46a68b188146e0514dcc"
              >
-      <label for="_anim_radio3_150b4ea64dcd487f8881ef35067f9f32">Reflect</label>
+      <label for="_anim_radio3_291331837b0d46a68b188146e0514dcc">Reflect</label>
     </form>
   </div>
 </div>
@@ -1933,9 +1944,9 @@ input[type=range].anim-slider {
   /* Instantiate the Animation class. */
   /* The IDs given should match those used in the template above. */
   (function() {
-    var img_id = "_anim_img150b4ea64dcd487f8881ef35067f9f32";
-    var slider_id = "_anim_slider150b4ea64dcd487f8881ef35067f9f32";
-    var loop_select_id = "_anim_loop_select150b4ea64dcd487f8881ef35067f9f32";
+    var img_id = "_anim_img291331837b0d46a68b188146e0514dcc";
+    var slider_id = "_anim_slider291331837b0d46a68b188146e0514dcc";
+    var loop_select_id = "_anim_loop_select291331837b0d46a68b188146e0514dcc";
     var frames = new Array(81);
     
   frames[0] = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA2AAAAFoCAYAAAAxXpjgAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz\
@@ -46164,7 +46175,7 @@ AAAAFYGAAQAAAAAAVMT/AVs4/fnMLfTiAAAAAElFTkSuQmCC\
     /* set a timeout to make sure all the above elements are created before
        the object is initialized. */
     setTimeout(function() {
-        anim150b4ea64dcd487f8881ef35067f9f32 = new Animation(frames, img_id, slider_id, 40.0,
+        anim291331837b0d46a68b188146e0514dcc = new Animation(frames, img_id, slider_id, 40.0,
                                  loop_select_id);
     }, 0);
   })()

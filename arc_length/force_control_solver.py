@@ -11,7 +11,7 @@ class force_control:
     ''' The arc-length displacement control solver of this library
     
     Args:
-        psi: the scalar arc-length parameter. When psi = 1, the method becomes the shperical arc-length method and when psi = 0 the method becomes the cylindrical arc-length method
+        psi: the scalar arc-length parameter. When psi = 1, the method becomes the spherical arc-length method and when psi = 0 the method becomes the cylindrical arc-length method
         tol : tolerance for the linear solver
         lmbda0 : the initial load parameter
         max_iter : maximum number of iterations for the linear solver

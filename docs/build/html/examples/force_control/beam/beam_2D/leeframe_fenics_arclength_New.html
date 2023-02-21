@@ -688,13 +688,12 @@ title="Print to PDF"
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">disp</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">vector</span><span class="p">()[:]]</span>
 <span class="linenos">2</span><span class="n">lmbda</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">3</span><span class="n">solver</span><span class="o">.</span><span class="n">initial_step</span><span class="p">()</span>
-<span class="linenos">4</span>
-<span class="linenos">5</span><span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">47</span><span class="p">):</span>
-<span class="linenos">6</span>    <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
-<span class="linenos">7</span>    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span> <span class="c1"># We only want to save the solution step if the solver coverges       </span>
-<span class="linenos">8</span>        <span class="n">disp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">vector</span><span class="p">()[:])</span>
-<span class="linenos">9</span>        <span class="n">lmbda</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">load</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">47</span><span class="p">):</span>
+<span class="linenos">5</span>    <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+<span class="linenos">6</span>    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span> <span class="c1"># We only want to save the solution step if the solver coverges       </span>
+<span class="linenos">7</span>        <span class="n">disp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">vector</span><span class="p">()[:])</span>
+<span class="linenos">8</span>        <span class="n">lmbda</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">load</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

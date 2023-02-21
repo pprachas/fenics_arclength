@@ -37,9 +37,10 @@ class force_control:
         self.load_factor = load_factor
         self.residual = F_int-F_ext
         self.solver = solver
+        self.counter = 0
         self.converged = True
     
-    def update_nodal_values(self, u_new):
+    def __update_nodal_values(self, u_new):
         '''
         Function to update solution (i.e. displacement) vector after each solver iteration
         
@@ -52,7 +53,7 @@ class force_control:
         u_nodal_values = u_new.get_local()
         self.u.vector().set_local(u_nodal_values)
 
-    def initial_step(self):
+    def __initial_step(self):
         '''
         Inital step of the arc-length method. 
         '''        
@@ -86,12 +87,16 @@ class force_control:
 
             du = Vector()
             solve(K, du, R, self.solver)
-            self.update_nodal_values(self.u.vector()-du)
+            self.__update_nodal_values(self.u.vector()-du)
         
     def solve(self):
         '''
         Main function to increment through the arc-length scheme. 
         '''
+        if self.counter == 0:
+            print('Initializing solver parameters...')
+            self.__initial_step()
+
         
         print('\nArc-Length Step', self.counter,':')
         # initialization
@@ -107,7 +112,7 @@ class force_control:
         # Predictor Step:
         else:
             alpha = self.delta_s / self.delta_s_n
-            self.update_nodal_values((1+alpha) * self.u_n - alpha * self.u_n_1)
+            self.__update_nodal_values((1+alpha) * self.u_n - alpha * self.u_n_1)
             self.lmbda = (1+alpha) * self.lmbda_n - alpha * self.lmbda_n_1
          
         self.load_factor.t = self.lmbda
@@ -150,7 +155,7 @@ class force_control:
             # update delta_u, delta_lmbda, u, lmbda
             delta_u += du
             delta_lmbda += dlmbda
-            self.update_nodal_values(self.u.vector() + du)
+            self.__update_nodal_values(self.u.vector() + du)
 
             self.lmbda += dlmbda
             self.load_factor.t = self.lmbda

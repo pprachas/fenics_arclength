@@ -42,9 +42,10 @@ class displacement_control:
         self.displacement_factor = displacement_factor
         self.residual = F_int-F_ext
         self.solver = solver
+        self.counter = 0
         self.converged = True
     
-    def update_nodal_values(self, u_new):
+    def __update_nodal_values(self, u_new):
         '''
         Function to update solution (i.e. displacement) vector after each solver iteration
         
@@ -57,7 +58,7 @@ class displacement_control:
         u_nodal_values = u_new.get_local()
         self.u.vector().set_local(u_nodal_values)
     
-    def initial_step(self):
+    def __initial_step(self):
         '''
         Inital step of the arc-length method. 
         For the displacement control formulation, this function constructs the constraint matrix and the initial arc-length step size.
@@ -154,14 +155,16 @@ class displacement_control:
             du = Vector()
             solve(K_star, du_f, R_star, self.solver) # solve reduced problem
             self.C.mult(du_f, du) # convert to global displacement vector
-            self.update_nodal_values(self.u.vector()-du) # update solution
+            self.__update_nodal_values(self.u.vector()-du) # update solution
             self.u_f -= du_f # update free DoFs for calculation of s
         
     def solve(self):
         '''
         Main function to increment through the arc-length scheme. 
         '''
-        
+        if self.counter == 0:
+            print('Initializing solver parameters...')
+            self.__initial_step()
         print('\nArc-Length Step', self.counter,':')
         # initialization
         u_update = Vector()
@@ -184,7 +187,7 @@ class displacement_control:
             alpha = self.delta_s / self.delta_s_n
             self.u_f = (1+alpha) * self.u_f_n - alpha * self.u_f_n_1 # update the free nodes
             self.C.mult(self.u_f, u_update) # free nodes to global displacement vector
-            self.update_nodal_values(u_update)            
+            self.__update_nodal_values(u_update)            
             self.lmbda = (1+alpha) * self.lmbda_n - alpha * self.lmbda_n_1 # update displacement factor
             
         # Apply boundary conditions (both homogenous and nonhomogenous)
@@ -245,7 +248,7 @@ class displacement_control:
             delta_u_f += du_f
             self.u_f += du_f
             self.C.mult(self.u_f, u_update)
-            self.update_nodal_values(u_update)
+            self.__update_nodal_values(u_update)
             self.displacement_factor.t = self.lmbda
             for bc in self.bcs:
                 bc.apply(self.u.vector())

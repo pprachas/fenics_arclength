@@ -320,9 +320,10 @@ title="Source repository"
         <span class="bp">self</span><span class="o">.</span><span class="n">load_factor</span> <span class="o">=</span> <span class="n">load_factor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">residual</span> <span class="o">=</span> <span class="n">F_int</span><span class="o">-</span><span class="n">F_ext</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converged</span> <span class="o">=</span> <span class="kc">True</span>
     
-<div class="viewcode-block" id="force_control.update_nodal_values"><a class="viewcode-back" href="../../arc_length_force.html#arc_length.force_control_solver.force_control.update_nodal_values">[docs]</a>    <span class="k">def</span> <span class="nf">update_nodal_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_new</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__update_nodal_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_new</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Function to update solution (i.e. displacement) vector after each solver iteration</span>
 <span class="sd">        </span>
@@ -333,9 +334,9 @@ title="Source repository"
 
         <span class="c1"># Function to update displacements</span>
         <span class="n">u_nodal_values</span> <span class="o">=</span> <span class="n">u_new</span><span class="o">.</span><span class="n">get_local</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">set_local</span><span class="p">(</span><span class="n">u_nodal_values</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">set_local</span><span class="p">(</span><span class="n">u_nodal_values</span><span class="p">)</span>
 
-<div class="viewcode-block" id="force_control.initial_step"><a class="viewcode-back" href="../../arc_length_force.html#arc_length.force_control_solver.force_control.initial_step">[docs]</a>    <span class="k">def</span> <span class="nf">initial_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__initial_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Inital step of the arc-length method. </span>
 <span class="sd">        &#39;&#39;&#39;</span>        
@@ -369,12 +370,16 @@ title="Source repository"
 
             <span class="n">du</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
             <span class="n">solve</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">du</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">update_nodal_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">-</span><span class="n">du</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__update_nodal_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">-</span><span class="n">du</span><span class="p">)</span>
         
 <div class="viewcode-block" id="force_control.solve"><a class="viewcode-back" href="../../arc_length_force.html#arc_length.force_control_solver.force_control.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Main function to increment through the arc-length scheme. </span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Initializing solver parameters...&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__initial_step</span><span class="p">()</span>
+
         
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Arc-Length Step&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter</span><span class="p">,</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
         <span class="c1"># initialization</span>
@@ -390,7 +395,7 @@ title="Source repository"
         <span class="c1"># Predictor Step:</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_s_n</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">update_nodal_values</span><span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_n</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_n_1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__update_nodal_values</span><span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_n</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_n_1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda_n</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda_n_1</span>
          
         <span class="bp">self</span><span class="o">.</span><span class="n">load_factor</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span>
@@ -433,7 +438,7 @@ title="Source repository"
             <span class="c1"># update delta_u, delta_lmbda, u, lmbda</span>
             <span class="n">delta_u</span> <span class="o">+=</span> <span class="n">du</span>
             <span class="n">delta_lmbda</span> <span class="o">+=</span> <span class="n">dlmbda</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">update_nodal_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span> <span class="o">+</span> <span class="n">du</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__update_nodal_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span> <span class="o">+</span> <span class="n">du</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span> <span class="o">+=</span> <span class="n">dlmbda</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_factor</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmbda</span>

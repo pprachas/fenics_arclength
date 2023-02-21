@@ -939,7 +939,6 @@
    "source": [
     "disp = [v.vector()[:]]\n",
     "lmbda = [0]\n",
-    "solver.initial_step()\n",
     "\n",
     "for ii in range(47):\n",
     "    solver.solve()\n",

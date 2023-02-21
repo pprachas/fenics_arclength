@@ -497,8 +497,8 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fc86dd21c70&gt;,
- &lt;matplotlib.lines.Line2D at 0x7fc86dd2f160&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7feb5f51ebb0&gt;,
+ &lt;matplotlib.lines.Line2D at 0x7feb5f5320a0&gt;]
 </pre></div>
 </div>
 <img alt="../../_images/7598a87b46fa750f4bfa3c08b23dc4ebbc79690562e70ee3110e09effd13aeef.png" src="../../_images/7598a87b46fa750f4bfa3c08b23dc4ebbc79690562e70ee3110e09effd13aeef.png" />
@@ -533,7 +533,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7fc86dd896d0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7feb5f75e250&gt;
 </pre></div>
 </div>
 <img alt="../../_images/9543c1b688b3a843cd3d2d1bdfdce9df2bf178f6de045fdd789e0fe6253075da.png" src="../../_images/9543c1b688b3a843cd3d2d1bdfdce9df2bf178f6de045fdd789e0fe6253075da.png" />
@@ -683,7 +683,7 @@ title="Print to PDF"
 <li><p>Initialize the solver by calling solver.initialize()</p></li>
 <li><p>Iteratively call solver.solve() until desired stopping condition</p></li>
 </ol>
-<div class="cell docutils container">
+<div class="cell tag_output_scoll docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># Solver Parameters</span>
 <span class="linenos">2</span><span class="n">psi</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -706,23 +706,23 @@ title="Print to PDF"
 <span class="linenos"> 4</span><span class="n">v_reac</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
 <span class="linenos"> 5</span><span class="n">bcRx</span> <span class="o">=</span> <span class="n">DirichletBC</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">Constant</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">Left</span><span class="p">)</span> <span class="c1"># take reaction force from the left boundary</span>
 <span class="linenos"> 6</span><span class="n">f_reac</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
-<span class="linenos"> 7</span><span class="n">solver</span><span class="o">.</span><span class="n">initial_step</span><span class="p">()</span>
-<span class="linenos"> 8</span><span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">80</span><span class="p">):</span>
-<span class="linenos"> 9</span>    <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
-<span class="linenos">10</span>    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
-<span class="linenos">11</span>        <span class="c1"># Store whole displacement field</span>
-<span class="linenos">12</span>        <span class="n">disp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
-<span class="linenos">13</span>        <span class="c1"># Store displacement factor</span>
-<span class="linenos">14</span>        <span class="n">lmbda</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">apply_disp</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
-<span class="linenos">15</span>        <span class="c1"># Compute and store reaction force</span>
-<span class="linenos">16</span>        <span class="n">bcRx</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">v_reac</span><span class="o">.</span><span class="n">vector</span><span class="p">())</span>
-<span class="linenos">17</span>        <span class="n">f_reac</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">assemble</span><span class="p">(</span><span class="n">action</span><span class="p">(</span><span class="n">residual</span><span class="p">,</span><span class="n">v_reac</span><span class="p">)))</span>
-<span class="linenos">18</span>        
+<span class="linenos"> 7</span><span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">80</span><span class="p">):</span>
+<span class="linenos"> 8</span>    <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+<span class="linenos"> 9</span>    <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+<span class="linenos">10</span>        <span class="c1"># Store whole displacement field</span>
+<span class="linenos">11</span>        <span class="n">disp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+<span class="linenos">12</span>        <span class="c1"># Store displacement factor</span>
+<span class="linenos">13</span>        <span class="n">lmbda</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">apply_disp</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos">14</span>        <span class="c1"># Compute and store reaction force</span>
+<span class="linenos">15</span>        <span class="n">bcRx</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">v_reac</span><span class="o">.</span><span class="n">vector</span><span class="p">())</span>
+<span class="linenos">16</span>        <span class="n">f_reac</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">assemble</span><span class="p">(</span><span class="n">action</span><span class="p">(</span><span class="n">residual</span><span class="p">,</span><span class="n">v_reac</span><span class="p">)))</span>
+<span class="linenos">17</span>        
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting initial Displacement Control Control with Newton Method:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing solver parameters...
+Starting initial Displacement Control Control with Newton Method:
 Iteration 0: 
 Residual error: 2.8374e+02
 Iteration 1: 
@@ -1902,39 +1902,39 @@ input[type=range].anim-slider {
 </style>
 
 <div class="animation">
-  <img id="_anim_img291331837b0d46a68b188146e0514dcc">
+  <img id="_anim_img1be2db62e2d94f5290b38344b2e82dee">
   <div class="anim-controls">
-    <input id="_anim_slider291331837b0d46a68b188146e0514dcc" type="range" class="anim-slider"
+    <input id="_anim_slider1be2db62e2d94f5290b38344b2e82dee" type="range" class="anim-slider"
            name="points" min="0" max="1" step="1" value="0"
-           oninput="anim291331837b0d46a68b188146e0514dcc.set_frame(parseInt(this.value));"></input>
+           oninput="anim1be2db62e2d94f5290b38344b2e82dee.set_frame(parseInt(this.value));"></input>
     <div class="anim-buttons">
-      <button onclick="anim291331837b0d46a68b188146e0514dcc.slower()"><i class="fa fa-minus"></i></button>
-      <button onclick="anim291331837b0d46a68b188146e0514dcc.first_frame()"><i class="fa fa-fast-backward">
+      <button onclick="anim1be2db62e2d94f5290b38344b2e82dee.slower()"><i class="fa fa-minus"></i></button>
+      <button onclick="anim1be2db62e2d94f5290b38344b2e82dee.first_frame()"><i class="fa fa-fast-backward">
           </i></button>
-      <button onclick="anim291331837b0d46a68b188146e0514dcc.previous_frame()">
+      <button onclick="anim1be2db62e2d94f5290b38344b2e82dee.previous_frame()">
           <i class="fa fa-step-backward"></i></button>
-      <button onclick="anim291331837b0d46a68b188146e0514dcc.reverse_animation()">
+      <button onclick="anim1be2db62e2d94f5290b38344b2e82dee.reverse_animation()">
           <i class="fa fa-play fa-flip-horizontal"></i></button>
-      <button onclick="anim291331837b0d46a68b188146e0514dcc.pause_animation()"><i class="fa fa-pause">
+      <button onclick="anim1be2db62e2d94f5290b38344b2e82dee.pause_animation()"><i class="fa fa-pause">
           </i></button>
-      <button onclick="anim291331837b0d46a68b188146e0514dcc.play_animation()"><i class="fa fa-play"></i>
+      <button onclick="anim1be2db62e2d94f5290b38344b2e82dee.play_animation()"><i class="fa fa-play"></i>
           </button>
-      <button onclick="anim291331837b0d46a68b188146e0514dcc.next_frame()"><i class="fa fa-step-forward">
+      <button onclick="anim1be2db62e2d94f5290b38344b2e82dee.next_frame()"><i class="fa fa-step-forward">
           </i></button>
-      <button onclick="anim291331837b0d46a68b188146e0514dcc.last_frame()"><i class="fa fa-fast-forward">
+      <button onclick="anim1be2db62e2d94f5290b38344b2e82dee.last_frame()"><i class="fa fa-fast-forward">
           </i></button>
-      <button onclick="anim291331837b0d46a68b188146e0514dcc.faster()"><i class="fa fa-plus"></i></button>
+      <button onclick="anim1be2db62e2d94f5290b38344b2e82dee.faster()"><i class="fa fa-plus"></i></button>
     </div>
-    <form action="#n" name="_anim_loop_select291331837b0d46a68b188146e0514dcc" class="anim-state">
-      <input type="radio" name="state" value="once" id="_anim_radio1_291331837b0d46a68b188146e0514dcc"
+    <form action="#n" name="_anim_loop_select1be2db62e2d94f5290b38344b2e82dee" class="anim-state">
+      <input type="radio" name="state" value="once" id="_anim_radio1_1be2db62e2d94f5290b38344b2e82dee"
              >
-      <label for="_anim_radio1_291331837b0d46a68b188146e0514dcc">Once</label>
-      <input type="radio" name="state" value="loop" id="_anim_radio2_291331837b0d46a68b188146e0514dcc"
+      <label for="_anim_radio1_1be2db62e2d94f5290b38344b2e82dee">Once</label>
+      <input type="radio" name="state" value="loop" id="_anim_radio2_1be2db62e2d94f5290b38344b2e82dee"
              checked>
-      <label for="_anim_radio2_291331837b0d46a68b188146e0514dcc">Loop</label>
-      <input type="radio" name="state" value="reflect" id="_anim_radio3_291331837b0d46a68b188146e0514dcc"
+      <label for="_anim_radio2_1be2db62e2d94f5290b38344b2e82dee">Loop</label>
+      <input type="radio" name="state" value="reflect" id="_anim_radio3_1be2db62e2d94f5290b38344b2e82dee"
              >
-      <label for="_anim_radio3_291331837b0d46a68b188146e0514dcc">Reflect</label>
+      <label for="_anim_radio3_1be2db62e2d94f5290b38344b2e82dee">Reflect</label>
     </form>
   </div>
 </div>
@@ -1944,9 +1944,9 @@ input[type=range].anim-slider {
   /* Instantiate the Animation class. */
   /* The IDs given should match those used in the template above. */
   (function() {
-    var img_id = "_anim_img291331837b0d46a68b188146e0514dcc";
-    var slider_id = "_anim_slider291331837b0d46a68b188146e0514dcc";
-    var loop_select_id = "_anim_loop_select291331837b0d46a68b188146e0514dcc";
+    var img_id = "_anim_img1be2db62e2d94f5290b38344b2e82dee";
+    var slider_id = "_anim_slider1be2db62e2d94f5290b38344b2e82dee";
+    var loop_select_id = "_anim_loop_select1be2db62e2d94f5290b38344b2e82dee";
     var frames = new Array(81);
     
   frames[0] = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA2AAAAFoCAYAAAAxXpjgAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz\
@@ -46175,7 +46175,7 @@ AAAAFYGAAQAAAAAAVMT/AVs4/fnMLfTiAAAAAElFTkSuQmCC\
     /* set a timeout to make sure all the above elements are created before
        the object is initialized. */
     setTimeout(function() {
-        anim291331837b0d46a68b188146e0514dcc = new Animation(frames, img_id, slider_id, 40.0,
+        anim1be2db62e2d94f5290b38344b2e82dee = new Animation(frames, img_id, slider_id, 40.0,
                                  loop_select_id);
     }, 0);
   })()

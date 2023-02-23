@@ -21,7 +21,7 @@ Useful FEniCS tutorials:
 #. `Linear Elastic Geometrically exact beams with finite rotations <https://comet-fenics.readthedocs.io/en/latest/demo/finite_rotation_beam/finite_rotation_nonlinear_beam.html>`_
 #. `3D Linear Timoshenko Beams: <https://comet-fenics.readthedocs.io/en/latest/demo/beams_3D/beams_3D.html>`_
 
-This code is based off 2D geometrically exact formulations.
+`We note that the code for rotation parameterization is obtained here <https://comet-fenics.readthedocs.io/en/latest/demo/finite_rotation_beam/rotation_parametrization_description.html>`_
 
 3D Geometrically Exact Beams
 =============================

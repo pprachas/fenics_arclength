@@ -3,8 +3,6 @@ formats: all
 
 formats:
   - htmlzip
-  - pdf
-  - epub
   
 python:
   version: 3

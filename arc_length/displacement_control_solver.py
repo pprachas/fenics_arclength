@@ -3,7 +3,7 @@ import numpy as np
 from math import sqrt
 
 '''
-An FEniCS based arc-length with prescribed non-zero displacement. The prefdictor-corrector step is heavily based on the paper:
+An FEniCS based arc-length with prescribed non-zero displacement. The predictor-corrector step is heavily based on the paper:
 
 Kadapa, Chennakesava. "A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics." Engineering Structures 234 (2021): 111755.
  

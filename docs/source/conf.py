@@ -49,6 +49,9 @@ nb_render_markdown_format = 'myst'
 templates_path = ['_templates']
 exclude_patterns = []
 
+autodoc_mock_imports = ['dolfin', 'numpy', 'math']
+
+
 
 
 # -- Options for HTML output -------------------------------------------------

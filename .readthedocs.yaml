@@ -8,3 +8,7 @@ python:
   version: 3
   install:
     - requirements: docs/requirements.txt
+
+build:
+  apt_packages:
+    - fenics

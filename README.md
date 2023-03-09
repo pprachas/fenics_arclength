@@ -1,4 +1,8 @@
 # FEniCS Implementation of the Arc-length Method
+[![Documentation Status](https://readthedocs.org/projects/fenics-arclength/badge/?version=latest)](https://fenics-arclength.readthedocs.io/en/latest/?badge=latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
+
 This repository contains the arc-length Riks solver written with FEniCS.
 [**Additional documentation and example usage can be found here.**](https://fenics-arclength.readthedocs.io/en/latest/)
 

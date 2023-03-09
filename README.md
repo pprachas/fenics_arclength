@@ -55,8 +55,7 @@ To use our arc-length solver, download and append this repository to the python 
 |[arc_length](arc_length)| contains the code for our arc-length implementation; both force and displacement control solvers are contained there |
 |[docs](docs)| the build and source files for our [readthedocs documentation](https://fenics-arclength.readthedocs.io/en/latest/) |
 |[examples](examples) | contains Jupyter notebook examples to use our arc-length implementation. Note that Jupyter notebooks has to be installed in the FEniCS environment for the notebooks to run. | 
-|[validation](validation)| contains python scripts to compare our solver with analytical solutions/solutions in literature. <br> To run the scripts run: ``python3 validation/validate_xx.py`` 
-from the project root directory.  |
+|[validation](validation)| contains python scripts to compare our solver with analytical solutions/solutions in literature. <br><br> To run the scripts run: <br> <br> ``python3 validation/validate_xx.py`` <br><br> from the project root directory.  |
 
 ## Theory
 Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.

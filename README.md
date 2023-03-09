@@ -45,7 +45,7 @@ You also can start the Docker container with the following command:
         docker run -ti -p 127.0.0.1:8000:8000 -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
         
 ## Usage
-To use our arc-length solver, download and append this repository to the python path. This can be done by:
+To use this arc-length solver, download and append this repository to the python path. Two common methods to do this are:
 
 1. Add directory to `PYTHONPATH`
 

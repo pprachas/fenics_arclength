@@ -2,9 +2,14 @@
 [![Documentation Status](https://readthedocs.org/projects/fenics-arclength/badge/?version=latest)](https://fenics-arclength.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
+This repository contains the arc-length Riks solver written with FEniCS. Addtional information, documentation, and example problems can be found our ReadTheDocs documentation:
 
-This repository contains the arc-length Riks solver written with FEniCS.
-[**Additional documentation and example usage can be found here.**](https://fenics-arclength.readthedocs.io/en/latest/)
+<div align="center">
+
+ |[ **Link to ReadTheDocs Documentation** ](fenics-arclength.readthedocs.io)|
+ |--------------------------------------------------------------------------|
+ 
+<div align = "left">
 
 More information on the arc-length method and the solution approach can be found in:  
 1. [Nonlinear Analysis of Structures: The Arc Length Method](https://scholar.harvard.edu/files/vasios/files/ArcLength.pdf)  

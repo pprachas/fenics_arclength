@@ -17,7 +17,7 @@ for off-the-shelf implementation and integration with other FEniCS workflows..
    :color: secondary
    :expand:
 
-   Github Repository of Package
+   Link to Github Repository
 
 
 .. image:: imgs/fenics_project.png

@@ -18,7 +18,7 @@ More information on the arc-length method and the solution approach can be found
 4. [A dissipation-based arc-length method for robust simulation of brittle and ductile failure](https://onlinelibrary.wiley.com/doi/10.1002/nme.2447)
 
 ## Dependencies
-This package relies on FEniCS 2019.1.0. (Note that this is the klegacy version NOT FEniCSx). Brief installation instructions are outline below. For mopre information see the [offical FEniCS installation instructions.](https://fenicsproject.org/download/archive/)
+This package relies on FEniCS 2019.1.0. (Note that this is the legacy version NOT FEniCSx). Brief installation instructions are outline below. For mopre information see the [offical FEniCS installation instructions.](https://fenicsproject.org/download/archive/)
 
 ### FEniCS on Windows
 The simplest way to install FEniCS on Windows 10 is to install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) with Ubuntu distribution. Then you can follow the FEniCS installation instructions for a Linux machine.

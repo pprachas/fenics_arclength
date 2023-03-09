@@ -10,7 +10,7 @@ Fenics-arclength Documentation
 The Arc Length Method, sometimes referred to as the Riks Method, is a method used to solve solid mechanics problems with geometric nonlinearity. 
 with complex equilibrium paths. 
 The library aims to keep the usage as similiar to `FEniCS <https://fenicsproject.org/download/archive/>`_ (version 2019.1.0) to allow
-for off-the-shelf implementation and integration with other FEniCS workflows..
+for off-the-shelf implementation and integration with other FEniCS workflows.
 
 
 .. button-link:: https://github.com/pprachas/fenics_arclength

@@ -1,5 +1,6 @@
 # FEniCS Implementation of the Arc-length Method
 This repository contains the arc-length Riks solver written with FEniCS.
+[**Additional documentation and example usage can be found here.**](https://fenics-arclength.readthedocs.io/en/latest/)
 
 More information on the arc-length method and the solution approach can be found in:  
 1. [Nonlinear Analysis of Structures: The Arc Length Method](https://scholar.harvard.edu/files/vasios/files/ArcLength.pdf)  
@@ -8,7 +9,32 @@ More information on the arc-length method and the solution approach can be found
 4. [A dissipation-based arc-length method for robust simulation of brittle and ductile failure](https://onlinelibrary.wiley.com/doi/10.1002/nme.2447)
 
 ## Dependencies
-This package relies on FEniCS 2019.1.0
+This package relies on FEniCS 2019.1.0. (Note that this is the klegacy version NOT FEniCSx). Brief installation instructions are outline below. For mopre information see the [offical FEniCS installation instructions.](https://fenicsproject.org/download/archive/)
+
+### FEniCS on Windows
+The simplest way to install FEniCS on Windows 10 is to install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) with Ubuntu distribution. Then you can follow the FEniCS installation instructions for a Linux machine.
+
+### FEniCS on Ubuntu
+ To install FEniCS on Ubuntu, run these commands:
+ 
+        sudo apt-get install software-properties-common
+        sudo add-apt-repository ppa:fenics-packages/fenics
+        sudo apt-get update
+        sudo apt-get install fenics
+        
+### FEniCS on Anaconda (Linux and Mac only):
+
+        conda create -n fenicsproject -c conda-forge fenics
+        source activate fenicsproject
+
+### FEniCS on Docker (Windows, Mac, Linux)
+First install [Docker Desktop](https://fenicsproject.org/download/archive/) then run the followng command:
+
+        curl -s https://get.fenicsproject.org | bash
+You also can start the Docker container with the following command:
+
+        docker run -ti -p 127.0.0.1:8000:8000 -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
+        
 ## Usage
 To use our arc-length solver, download and append this repository to the python path. This can be done by:
 
@@ -22,10 +48,16 @@ To use our arc-length solver, download and append this repository to the python 
         sys.path.append('path/to/fenics_arclength')
 
 
-## Contents
-* [arc_length](arc_length): contains the code for our arc-length implementation; both force and displacement control solvers are contained there
+## Contents in this repository
 
-* [examples](examples) contains Jupyter notebook examples to use our arc-length implementation
+| Folder| Contents of the folder|
+|-------|--------|
+|[arc_length](arc_length)| contains the code for our arc-length implementation; both force and displacement control solvers are contained there |
+|[docs](docs)| the build and source files for our [readthedocs documentation](https://fenics-arclength.readthedocs.io/en/latest/) |
+|[examples](examples) | contains Jupyter notebook examples to use our arc-length implementation. Note that Jupyter notebooks has to be installed in the FEniCS environment for the notebooks to run. | 
+|[validation](validation)| contains python scripts to compare our solver with analytical solutions/solutions in literature. <br> To run the scripts run: ``python3 validation/validate_xx.py`` 
+from the project root directory.  |
+
 ## Theory
 Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.
 ### Nonlinear Finite Elements

@@ -3,7 +3,7 @@
 Math Preliminaries
 ==================
 
-Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.
+Here is the outline for the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.
 
 Nonlinear Finite Elements
 -------------------------
@@ -15,7 +15,7 @@ where `\Delta u = \mathbf{u}_{n+1}-\mathbf{u}_n`.
 
 Newton's method is solved incrementally until the desired convergence criterion. The term `\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}`
 is typically called the tangential stiffness matrix `K_T`. The first term `\mathcal R(\mathbf u_n)` is the externally applied force `F^{ext}`, while the second term
-`\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta u` is the internal force `F^{int}` the nonlinear problem is too difficult for the Newton solver to converge. As such, the the external load is applied incrementally with the load factor `\lambda^k` where `k` is the increment. Putting it all together, the nonlinear problem can be written as:
+`\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta u` is the internal force `F^{int}` the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor `\lambda^k` where `k` is the increment. Putting it all together, the nonlinear problem can be written as:
 
 .. math:: \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n},\lambda_{n+1})-\lambda_{n+1} F^{ext}(\mathbf{u}_{n})
 

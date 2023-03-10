@@ -11,6 +11,8 @@ This repository contains the arc-length Riks solver written with FEniCS. Addtion
  
 <div align = "left">
 
+Link to the preprint in coming soon!
+
 More information on the arc-length method and the solution approach can be found in:  
 1. [Nonlinear Analysis of Structures: The Arc Length Method](https://scholar.harvard.edu/files/vasios/files/ArcLength.pdf)  
 2. [Incremental displacement algorithms for nonlinear problems](https://onlinelibrary.wiley.com/doi/10.1002/nme.1620140811)  

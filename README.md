@@ -99,7 +99,7 @@ In this case the tangential stiffness matrix $K_T$ can be contructed using just 
 In the case where the external force depends on the solution $u$, the above assumption cannot be made and the whole residual must be taken into account when constructing the tangential stiffness matrix $K_T$. As a result, $K_T$ will be non-symmetric. Examples of these specific special cases are applied moments around a fixed axis, follower loads (i.e. loads that change direction based on the deformed configuration), pressure loads, etc.
 
 ### The Arc-length method
-One of the main drawbacks of Newton's method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter $\lambda_n$ is now also an unknown parameter at each inrement, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
+One of the main drawbacks of Newton's method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter $\lambda_n$ is now also an unknown parameter at each increment, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
 #### Force Control
 The additional arc-length contraint for force control is:
 
@@ -110,7 +110,7 @@ $$
 where $\Delta s$ determines how far to search for the next equilibrium point and $\psi$ is the arc length parameter that gives you different arc-length solver schemes. When $\psi = 1$ (as like the examples in this repository), the arc-length equation is also known as the *spherical arc-length method*, and when $\psi = 0$ the *cylindrical arc-length* method is recovered.
 
 #### Displacement Control
-Sometimes instead of prescribing traction, the problem has a boundary contition with presecribed non-zero displacement (i.e. nonhomogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and formulate a constraint matrix $C$ such that: 
+Sometimes instead of prescribing traction, the problem has a boundary contition with presecribed non-zero displacement (i.e. nonhomogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and we construct a constraint matrix $C$ such that: 
 
 $$
 \mathbf{u} = C\mathbf{u}_f+\lambda \mathbf{u}_p

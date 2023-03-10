@@ -426,11 +426,11 @@ title="Print to PDF"
   <section id="fenics-arclength-documentation">
 <h1>Fenics-arclength Documentation<a class="headerlink" href="#fenics-arclength-documentation" title="Permalink to this headline">#</a></h1>
 <p><strong>fenics-arclength</strong> is a Python implementation of the arclength solver built on top of FEniCS.
-The arclength method, or the Riks method, is a method to generally used to solve solid mechanics problems
+The Arc Length Method, sometimes referred to as the Riks Method, is a method used to solve solid mechanics problems with geometric nonlinearity.
 with complex equilibrium paths.
 The library aims to keep the usage as similiar to <a class="reference external" href="https://fenicsproject.org/download/archive/">FEniCS</a> (version 2019.1.0) to allow
-for off-the-shelf usage.</p>
-<p><span class="sd-d-grid"><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary reference external" href="https://github.com/pprachas/fenics_arclength"><span>Github Repository of Package</span></a></span></p>
+for off-the-shelf implementation and integration with other FEniCS workflows.</p>
+<p><span class="sd-d-grid"><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary reference external" href="https://github.com/pprachas/fenics_arclength"><span>Link to Github Repository</span></a></span></p>
 <a class="reference internal image-reference" href="_images/fenics_project.png"><img alt="_images/fenics_project.png" class="align-center" src="_images/fenics_project.png" style="width: 700px;" /></a>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">#</a></h2>
@@ -441,7 +441,7 @@ for off-the-shelf usage.</p>
 </section>
 <section id="package-installation">
 <h3>Package Installation<a class="headerlink" href="#package-installation" title="Permalink to this headline">#</a></h3>
-<p>To use our arc-length solver, download and append this <a class="reference external" href="https://github.com/pprachas/fenics_arclength">repository</a> to the python path. This can be done by:</p>
+<p>To use our arc-length solver, download and append our <a class="reference external" href="https://github.com/pprachas/fenics_arclength">repository</a> to the python path. Common methods to do this are:</p>
 <ul class="simple">
 <li><p>Add directory to <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>:</p></li>
 </ul>
@@ -459,9 +459,7 @@ for off-the-shelf usage.</p>
 </section>
 <section id="theory">
 <h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">#</a></h2>
-<p>The general idea of non-linear finite element analysis (FEA) is introduced here. We also
-briefly describe the implementation of arclength solvers in our package. We also provide an example
-on modifying the arc-length predictor scheme for geometrically exact beams.</p>
+<p>The general concepts behind non-linear finite element analysis (FEA) are introduced here for both educational purposes and completeness. In addition, we briefly describe the implementation of both arclength solvers in our package. We also provide an example on modifying the arc-length predictor scheme for geometrically exact beams. The links below contain significant additional detail.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="math_prelim.html">Math Preliminaries</a></li>

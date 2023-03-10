@@ -35,7 +35,7 @@ In the case where the external force depends on the solution `u`, the above assu
 The Arc-length method
 ---------------------
 
-One of the main drawbacks of Newton's method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter `\lambda_n` is now also an unknown parameter at each inrement, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
+One of the main drawbacks of Newton's method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter `\lambda_n` is now also an unknown parameter at each increment, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
 #### Force Control
 The additional arc-length contraint for force control is:
 
@@ -46,7 +46,7 @@ where `\Delta s` determines how far to search for the next equilibrium point and
 Displacement Control
 #####################
 
-Sometimes instead of prescribing traction, the problem has a boundary contition with presecribed non-zero displacement (i.e. nonhomogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and formulate a constraint matrix `C` such that: 
+Sometimes instead of prescribing traction, the problem has a boundary contition with presecribed non-zero displacement (i.e. nonhomogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and we construct a constraint matrix `C` such that: 
 
 .. math:: \mathbf{u} = C\mathbf{u}_f+\lambda \mathbf{u}_p
 

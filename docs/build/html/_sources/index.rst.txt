@@ -7,17 +7,17 @@ Fenics-arclength Documentation
 ============================================
 
 **fenics-arclength** is a Python implementation of the arclength solver built on top of FEniCS. 
-The arclength method, or the Riks method, is a method to generally used to solve solid mechanics problems
+The Arc Length Method, sometimes referred to as the Riks Method, is a method used to solve solid mechanics problems with geometric nonlinearity. 
 with complex equilibrium paths. 
 The library aims to keep the usage as similiar to `FEniCS <https://fenicsproject.org/download/archive/>`_ (version 2019.1.0) to allow
-for off-the-shelf usage.
+for off-the-shelf implementation and integration with other FEniCS workflows.
 
 
 .. button-link:: https://github.com/pprachas/fenics_arclength
    :color: secondary
    :expand:
 
-   Github Repository of Package
+   Link to Github Repository
 
 
 .. image:: imgs/fenics_project.png
@@ -35,7 +35,7 @@ This package solely depends on FEniCS 2019.1.0. It is not tested on other packag
 
 Package Installation
 ####################
-To use our arc-length solver, download and append this `repository <https://github.com/pprachas/fenics_arclength>`_ to the python path. This can be done by:
+To use our arc-length solver, download and append our `repository <https://github.com/pprachas/fenics_arclength>`_ to the python path. Common methods to do this are:
 
 * Add directory to ``PYTHONPATH``:
 
@@ -53,9 +53,7 @@ To use our arc-length solver, download and append this `repository <https://gith
 
 Theory
 --------------------------
-The general idea of non-linear finite element analysis (FEA) is introduced here. We also 
-briefly describe the implementation of arclength solvers in our package. We also provide an example
-on modifying the arc-length predictor scheme for geometrically exact beams.
+The general concepts behind non-linear finite element analysis (FEA) are introduced here for both educational purposes and completeness. In addition, we briefly describe the implementation of both arclength solvers in our package. We also provide an example on modifying the arc-length predictor scheme for geometrically exact beams. The links below contain significant additional detail.
 
 .. toctree::
    :maxdepth: 1

@@ -551,8 +551,10 @@ Therefore, the motion of the beam can be expressed as:</p>
 </section>
 <section id="constructing-initial-beam-triads">
 <h3>Constructing Initial Beam Triads<a class="headerlink" href="#constructing-initial-beam-triads" title="Permalink to this headline">#</a></h3>
-<p>The inital beam traids are constructed as follows.
-#. The first direction is the beam tangent direction:</p>
+<dl class="simple">
+<dt>The inital beam traids are constructed as follows.</dt><dd><p>The first direction is the beam tangent direction:</p>
+</dd>
+</dl>
 <div class="math notranslate nohighlight">
 \[\mathbf{g}_{01} = \mathbf{r}_{0,s}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\dots_{,s}\)</span> is the directional derivative with respect to the beam tangent <span class="math notranslate nohighlight">\(s\)</span>.</p>
@@ -667,7 +669,7 @@ EA &amp; 0 &amp; 0 \\
 <h3>Weak Form<a class="headerlink" href="#weak-form" title="Permalink to this headline">#</a></h3>
 <p>The internal hyperelastic energy of the beam is:</p>
 <div class="math notranslate nohighlight">
-\[\Pi_{int} = \frac{1}{2} \int_L \mathbf{\epsilon} \cdot \mathbf{C}_N \mathbf{\epsilon} + \mathbf{\chi} \cdot \mathbf{C}_M \mathbf{\chi} \; ds\]</div>
+\[\Pi_{int} = \frac{1}{2} \int_L \mathbf{\epsilon} \cdot \mathbf{C}_{N} \mathbf{\epsilon} + \mathbf{\chi} \cdot \mathbf{C}_{M} \mathbf{\chi} \; ds\]</div>
 <p>Where <span class="math notranslate nohighlight">\(L\)</span> is the domain of the element.</p>
 <p>The variation of work of the external loads are:</p>
 <div class="math notranslate nohighlight">
@@ -678,7 +680,7 @@ EA &amp; 0 &amp; 0 \\
 \[\delta \Pi_{int} - \delta \Pi_{ext} = 0\]</div>
 <p>Note that the forces and moments are applied in the reference frame. See Cristfields paper for formulations where the forces and moments are applied on the material (e.g. moving) frame of reference. Also note that the moment in this case in non-conservative (e.g. is path dependent) and must be taken into account when constructing the tangential stiffness matrix. See reference number 7 section 2.3.1 for a more detailed explaination.</p>
 <p><strong>Note on FEniCS implementation</strong>
-In the FEniCS implementation <span class="math notranslate nohighlight">\(dx\)</span> is used for line elements, <span class="math notranslate nohighlight">\(ds\)</span> is used for the point loads on the boundaries and <span class="math notranslate nohighlight">\(dS\)</span> is used for point loads not on the boundaries. This is because the element is a line element so <span class="math notranslate nohighlight">\(dx\)</span> acts as integrating over the curve instead of volume, and <span class="math notranslate nohighlight">\(ds\)</span>/<span class="math notranslate nohighlight">\(dS\)</span> “integrates” over the point.</p>
+In the FEniCS implementation <span class="math notranslate nohighlight">\(dx\)</span> is used for line elements, <span class="math notranslate nohighlight">\(ds\)</span> is used for the point loads on the boundaries and <span class="math notranslate nohighlight">\(dS\)</span> is used for point loads not on the boundaries. This is because the element is a line element so <span class="math notranslate nohighlight">\(dx\)</span> acts as integrating over the curve instead of volume, and <span class="math notranslate nohighlight">\(ds\)</span> and <span class="math notranslate nohighlight">\(dS\)</span> “integrates” over the point.</p>
 </section>
 <section id="the-2d-case">
 <h3>The 2D case<a class="headerlink" href="#the-2d-case" title="Permalink to this headline">#</a></h3>
@@ -727,7 +729,7 @@ EA &amp; 0 \\
 </section>
 <section id="arc-length-implementation">
 <h2>Arc-length Implementation<a class="headerlink" href="#arc-length-implementation" title="Permalink to this headline">#</a></h2>
-<p>The predictor and corrector step of our arc-length implementation follows the paper [A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics](<a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S014102962034356X">https://www.sciencedirect.com/science/article/pii/S014102962034356X</a>).</p>
+<p>The predictor and corrector step of our arc-length implementation follows the paper <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S014102962034356X">A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics</a> .</p>
 <p>In brief, the predictor step proposed in the paper above is an extrapolator that takes in the previous two converged solution <span class="math notranslate nohighlight">\(u_{n}\)</span> and <span class="math notranslate nohighlight">\(u_{n-1}\)</span> to predict the new equilibrium configuration <span class="math notranslate nohighlight">\(u_{n+1}\)</span> such that:</p>
 <div class="math notranslate nohighlight">
 \[u_{n+1}^{predicted} = [1+\alpha] u_n -\alpha u_{n-1}\]</div>

@@ -438,16 +438,16 @@ title="Print to PDF"
                 
   <section id="math-preliminaries">
 <h1>Math Preliminaries<a class="headerlink" href="#math-preliminaries" title="Permalink to this headline">#</a></h1>
-<p>Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.</p>
+<p>Here is the outline for the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.</p>
 <section id="nonlinear-finite-elements">
 <h2>Nonlinear Finite Elements<a class="headerlink" href="#nonlinear-finite-elements" title="Permalink to this headline">#</a></h2>
-<p>A nonlinear finite element problem seeks to minimize the residual vector that comes from discretizing the weak form of the energy balance equation (e.g. continuum for beam balance equations). In general the residual cannot be solved exactly and must be approximated through linearization. A common method to solve nonlinear finite element problems uses the Newton-Raphson method:</p>
+<p>A nonlinear finite element problem seeks to minimize the residual vector that comes from discretizing the weak form of the energy balance equation (e.g. continuum or beam balance equations). In general the residual cannot be solved exactly and must be approximated through linearization. A common method to solve nonlinear finite element problems uses the Newton-Raphson method:</p>
 <div class="math notranslate nohighlight">
 \[\mathcal{R}(\mathbf{u}_{n+1}) = \mathcal{R}(\mathbf{u}_{n})+\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}\Delta u\]</div>
 <p>where <span class="math notranslate nohighlight">\(\Delta u = \mathbf{u}_{n+1}-\mathbf{u}_n\)</span>.</p>
 <p>Newton’s method is solved incrementally until the desired convergence criterion. The term <span class="math notranslate nohighlight">\(\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\)</span>
 is typically called the tangential stiffness matrix <span class="math notranslate nohighlight">\(K_T\)</span>. The first term <span class="math notranslate nohighlight">\(\mathcal R(\mathbf u_n)\)</span> is the externally applied force <span class="math notranslate nohighlight">\(F^{ext}\)</span>, while the second term
-<span class="math notranslate nohighlight">\(\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta u\)</span> is the internal force <span class="math notranslate nohighlight">\(F^{int}\)</span> the nonlinear problem is too difficult for the Newton solver to converge. As such, the the external load is applied incrementally with the load factor <span class="math notranslate nohighlight">\(\lambda^k\)</span> where <span class="math notranslate nohighlight">\(k\)</span> is the increment. Putting it all together, the nonlinear problem can be written as:</p>
+<span class="math notranslate nohighlight">\(\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta u\)</span> is the internal force <span class="math notranslate nohighlight">\(F^{int}\)</span> the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor <span class="math notranslate nohighlight">\(\lambda^k\)</span> where <span class="math notranslate nohighlight">\(k\)</span> is the increment. Putting it all together, the nonlinear problem can be written as:</p>
 <div class="math notranslate nohighlight">
 \[\mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n},\lambda_{n+1})-\lambda_{n+1} F^{ext}(\mathbf{u}_{n})\]</div>
 <section id="conservative-loading">
@@ -464,7 +464,7 @@ is typically called the tangential stiffness matrix <span class="math notranslat
 </section>
 <section id="the-arc-length-method">
 <h2>The Arc-length method<a class="headerlink" href="#the-arc-length-method" title="Permalink to this headline">#</a></h2>
-<p>One of the main drawbacks of Newton’s method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter <span class="math notranslate nohighlight">\(\lambda_n\)</span> is now also an unknown parameter at each inrement, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
+<p>One of the main drawbacks of Newton’s method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter <span class="math notranslate nohighlight">\(\lambda_n\)</span> is now also an unknown parameter at each increment, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
 #### Force Control
 The additional arc-length contraint for force control is:</p>
 <div class="math notranslate nohighlight">
@@ -472,7 +472,7 @@ The additional arc-length contraint for force control is:</p>
 <p>where <span class="math notranslate nohighlight">\(\Delta s\)</span> determines how far to search for the next equilibrium point and <span class="math notranslate nohighlight">\(\psi\)</span> is the arc length parameter that gives you different arc-length solver schemes. When <span class="math notranslate nohighlight">\(\psi = 1\)</span> (as like the examples in this repository), the arc-length equation is also known as the <em>spherical arc-length method</em>, and when <span class="math notranslate nohighlight">\(\psi = 0\)</span> the <em>cylindrical arc-length</em> method is recovered.</p>
 <section id="displacement-control">
 <h3>Displacement Control<a class="headerlink" href="#displacement-control" title="Permalink to this headline">#</a></h3>
-<p>Sometimes instead of prescribing traction, the problem has a boundary contition with presecribed non-zero displacement (i.e. nonhomogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and formulate a constraint matrix <span class="math notranslate nohighlight">\(C\)</span> such that:</p>
+<p>Sometimes instead of prescribing traction, the problem has a boundary contition with presecribed non-zero displacement (i.e. nonhomogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and we construct a constraint matrix <span class="math notranslate nohighlight">\(C\)</span> such that:</p>
 <div class="math notranslate nohighlight">
 \[\mathbf{u} = C\mathbf{u}_f+\lambda \mathbf{u}_p\]</div>
 <p>where <span class="math notranslate nohighlight">\(u_f\)</span> and <span class="math notranslate nohighlight">\(u_p\)</span> are the free and prescribed displacement nodes respectively, and <span class="math notranslate nohighlight">\(\lambda\)</span> is the incremental displacement factor.</p>

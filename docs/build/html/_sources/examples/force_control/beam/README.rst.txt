@@ -64,7 +64,7 @@ and the rotation of the material triads are:
 Constructing Initial Beam Triads
 --------------------------------
 The inital beam traids are constructed as follows.
-#. The first direction is the beam tangent direction:
+ The first direction is the beam tangent direction:
 
 .. math::
     \mathbf{g}_{01} = \mathbf{r}_{0,s}
@@ -238,7 +238,7 @@ Weak Form
 The internal hyperelastic energy of the beam is:
 
 .. math::
-    \Pi_{int} = \frac{1}{2} \int_L \mathbf{\epsilon} \cdot \mathbf{C}_N \mathbf{\epsilon} + \mathbf{\chi} \cdot \mathbf{C}_M \mathbf{\chi} \; ds
+    \Pi_{int} = \frac{1}{2} \int_L \mathbf{\epsilon} \cdot \mathbf{C}_{N} \mathbf{\epsilon} + \mathbf{\chi} \cdot \mathbf{C}_{M} \mathbf{\chi} \; ds
 
 Where `L` is the domain of the element. 
 
@@ -257,7 +257,7 @@ The equilibrium solution is obtained by finding the stationary points of the tot
 Note that the forces and moments are applied in the reference frame. See Cristfields paper for formulations where the forces and moments are applied on the material (e.g. moving) frame of reference. Also note that the moment in this case in non-conservative (e.g. is path dependent) and must be taken into account when constructing the tangential stiffness matrix. See reference number 7 section 2.3.1 for a more detailed explaination.
 
 **Note on FEniCS implementation**
-In the FEniCS implementation `dx` is used for line elements, `ds` is used for the point loads on the boundaries and `dS` is used for point loads not on the boundaries. This is because the element is a line element so `dx` acts as integrating over the curve instead of volume, and `ds`/`dS` "integrates" over the point.
+In the FEniCS implementation `dx` is used for line elements, `ds` is used for the point loads on the boundaries and `dS` is used for point loads not on the boundaries. This is because the element is a line element so `dx` acts as integrating over the curve instead of volume, and `ds` and `dS` "integrates" over the point.
 
 The 2D case
 -----------
@@ -329,7 +329,7 @@ The basis functions used in this code are Lagrange elements. To ensure lock-free
 Arc-length Implementation
 ==========================
 
-The predictor and corrector step of our arc-length implementation follows the paper [A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics](https://www.sciencedirect.com/science/article/pii/S014102962034356X). 
+The predictor and corrector step of our arc-length implementation follows the paper `A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics <https://www.sciencedirect.com/science/article/pii/S014102962034356X>`_ . 
 
 In brief, the predictor step proposed in the paper above is an extrapolator that takes in the previous two converged solution `u_{n}` and `u_{n-1}` to predict the new equilibrium configuration `u_{n+1}` such that:
 
@@ -351,7 +351,3 @@ While the continuum problems and 2D beam formulations are able to use the predic
 where `u_n` smd `\Lambda_n` denotes the solution of the previous step and `u` and `\Lambda` are now the incremental solution (that we are solving for) with respect to the previous solution.
 
 To take into account the incremental solution in the arc-length update scheme, `u_{n-1} = 0` while `u_n` stays the same. This is analougous to zeroing the solution after each converged Newton iteration.
-
-
-
-

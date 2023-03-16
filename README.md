@@ -6,7 +6,7 @@ This repository contains the arc-length Riks solver written with FEniCS. Addtion
 
 <div align="center">
 
- |[ **Link to ReadTheDocs Documentation** ](fenics-arclength.readthedocs.io)|
+ |[ **Link to ReadTheDocs Documentation** ](https://fenics-arclength.readthedocs.io/en/latest/index.html)|
  |--------------------------------------------------------------------------|
  
 <div align = "left">

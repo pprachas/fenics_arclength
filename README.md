@@ -6,10 +6,12 @@ This repository contains the arc-length Riks solver written with FEniCS. Addtion
 
 <div align="center">
 
- |[ **Link to ReadTheDocs Documentation** ](fenics-arclength.readthedocs.io)|
+ |[ **Link to ReadTheDocs Documentation** ](https://fenics-arclength.readthedocs.io/en/latest/index.html)|
  |--------------------------------------------------------------------------|
  
 <div align = "left">
+
+Link to the preprint in coming soon!
 
 More information on the arc-length method and the solution approach can be found in:  
 1. [Nonlinear Analysis of Structures: The Arc Length Method](https://scholar.harvard.edu/files/vasios/files/ArcLength.pdf)  
@@ -49,7 +51,13 @@ To use this arc-length solver, download and append this repository to the python
 
 1. Add directory to `PYTHONPATH`
 
+- On Ubuntu or Mac:
+
         export PYTHONPATH <path/to/fenics_arclength>:$PYTHONPATH
+
+- On Windows:
+
+        set PYTHONPATH=<path/to/fenics_arclength>;%PYTHONPATH%
 
 2. Append directory to path in python script:
 

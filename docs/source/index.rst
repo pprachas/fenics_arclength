@@ -39,9 +39,19 @@ To use our arc-length solver, download and append our `repository <https://githu
 
 * Add directory to ``PYTHONPATH``:
 
-.. code-block:: bash
+   * On Ubuntu or Mac:
 
-   export PYTHONPATH <path/to/fenics_arclength>:$PYTHONPATH
+   .. code-block:: bash
+
+      export PYTHONPATH <path/to/fenics_arclength>:$PYTHONPATH
+
+
+   * On Windows:
+
+   .. code-block:: bash
+
+      set PYTHONPATH=<path/to/fenics_arclength>;%PYTHONPATH%
+
 
 * Append directory to path in python script:
 
@@ -78,7 +88,7 @@ the notebook directly will not guarantee that the examples will run since the fi
 missing other components (i.e. meshes, other scripts).  
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    nb_displacement
    

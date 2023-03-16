@@ -442,13 +442,23 @@ for off-the-shelf implementation and integration with other FEniCS workflows.</p
 <section id="package-installation">
 <h3>Package Installation<a class="headerlink" href="#package-installation" title="Permalink to this headline">#</a></h3>
 <p>To use our arc-length solver, download and append our <a class="reference external" href="https://github.com/pprachas/fenics_arclength">repository</a> to the python path. Common methods to do this are:</p>
-<ul class="simple">
-<li><p>Add directory to <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>:</p></li>
+<ul>
+<li><p>Add directory to <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>On Ubuntu or Mac:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span>PYTHONPATH<span class="w"> </span>&lt;path/to/fenics_arclength&gt;:<span class="nv">$PYTHONPATH</span>
 </pre></div>
 </div>
 <ul class="simple">
+<li><p>On Windows:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span>&lt;path/to/fenics_arclength&gt;<span class="p">;</span>%PYTHONPATH%
+</pre></div>
+</div>
+</div></blockquote>
+</li>
 <li><p>Append directory to path in python script:</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
@@ -488,8 +498,14 @@ missing other components (i.e. meshes, other scripts).</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="nb_displacement.html">Displacement Control</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/displacement_control/Bilayer_wrinkling.html">Bilayer Wrinkling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/displacement_control/fiber_network.html">Fiber Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nb_displacement.html#continuum">Continuum</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/displacement_control/Bilayer_wrinkling.html">Bilayer Wrinkling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nb_displacement.html#beams">Beams</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/displacement_control/fiber_network.html">Fiber Network</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

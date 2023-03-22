@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from ufl import diag, Jacobian, shape
 import sys
 sys.path.append('.')
-from arc_length.rotation_parametrization import ExponentialMap # import rotation paramitrization for 3D beams
+from arc_length.rotation_parametrization import ExponentialMap # import rotation parameterization for 3D beams
 from arc_length.force_control_solver import force_control # import force control formulation of arc-length solver
 
 parameters["form_compiler"]["cpp_optimize"] = True

@@ -191,7 +191,7 @@ our_critical = np.max(lmbda)
 lit_critical = np.max(paper_eq[:,0])
 
 diff_critical = np.abs((lit_critical-our_critical)/lit_critical)
-print(f'\n\nPercent Difference in Critical Buckling Load: {diff_critical*100:.4f}')
+print(f'\n\nPercent Difference in Critical Buckling Load: {diff_critical*100:.4f} %')
 if diff_critical*100 < 0.1:
     val = [True]
 else:
@@ -231,4 +231,4 @@ else:
     print('Lee\'s frame did not pass validation test')
     print('Passed test:', val)
 
-plt.show()
+plt.savefig('validation/validate_leeframe.png')

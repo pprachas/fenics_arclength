@@ -168,7 +168,7 @@ percent_difference = np.abs((curve_e2-curve_ana)/curve_ana)*100
 print('\n\nComparing analytical and FEA beam curvature (e2 direction)')
 print(f'FEA solution: {curve_e2:.4f}')
 print(f'Analytical Solution: {curve_ana:.4f}')
-print(f'Percent difference: {percent_difference: .4e}')
+print(f'Percent difference: {percent_difference: .4e} %')
 
 if percent_difference < 1.0:
     print('Large deformation 3D beam validation complete!')

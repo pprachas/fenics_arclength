@@ -85,14 +85,14 @@ To use this arc-length solver, download and append this repository to the python
 ## Validation <a name="validation"></a>
 To validate that our arc-length solver works we provide 3 validation examples. To run the examples go to the root directory and run ``python3 validate/validate_xx.py``. The available python scripts are:
 * ``validate_3Dbeamsmall.py``
-    * This script solves a clamped cantilever beam with a small applied force and moment at the free end. The solution (i.e. the reuslt shear, moment, and curvature) of from the arc-length solver is compared with linear beam theory.
+    * This script solves a clamped cantilever beam with a small applied force and moment at the free end. The solution (i.e. the reaction shear, moment, and curvature) of from the arc-length solver is compared with linear beam theory.
     * *Outputs:* The outputs of the script is the percent differences between the analytical solution and arc-length solution for reaction shear, reaction moment, and beam curvature. If the solutions are within 1% difference, then the validation is complete.
 * ``validate_3Dbeamlarge.py``
     * This script solves a clamped cantilever beam with a large applied force and moment at the free end. The curvature of the beam in the same direction of the applied moment is compared with the moment-curvature relation ($\\kappa = \frac{M}{EI}$) since the beam constitutive model is linear elastic and does not couple deformation modes. 
     * *Outputs:* The outputs of the script is the percent differences between the analytical solution and arc-length solution for beam curvature. If the solutions are within 1% difference, then the validation is complete.
 * ``validate_leeframe.py``
     * This scripts solves Lee's frame, a popular benchmarking problem in nonlinear solid mechanics. The resulting equilibrium path and critical buckling mode is compared with literature obtained [here](https://www.sciencedirect.com/science/article/pii/S014102962034356X).
-    * *Outputs:* The outputs of the script are the Pearson correlation coefficient of the equilibrium paths between our arc-length solver and solution from literature. Both of the equilibrium paths are also plotted and saved in ``valiation/validation_leeframe.png``.
+    * *Outputs:* The outputs of the script are the Pearson correlation coefficient of the equilibrium paths between our arc-length solver and the solution from literature. Both of the equilibrium paths are also plotted and saved in ``valiation/validation_leeframe.png``.
     
  **Note that the validation scripts should be fast to run (~5 secs for small deformation and Lee's frame, ~ 1 min for large deformation).**
 

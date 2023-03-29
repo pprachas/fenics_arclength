@@ -19,7 +19,15 @@ More information on the arc-length method and the solution approach can be found
 3. [A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics](https://arxiv.org/abs/2005.10192)  
 4. [A dissipation-based arc-length method for robust simulation of brittle and ductile failure](https://onlinelibrary.wiley.com/doi/10.1002/nme.2447)
 
-## Dependencies
+## Table of Contents
+* [Dependencies](#dependencies)
+* [Usage](#usage)
+* [Contents in this Repository](#contents)
+* [Validation](#validation)
+* [Theory](#theory)
+
+
+## Dependencies <a name="dependencies"></a>
 This package relies on FEniCS 2019.1.0. (Note that this is the legacy version NOT FEniCSx). Brief installation instructions are outline below. For mopre information see the [offical FEniCS installation instructions.](https://fenicsproject.org/download/archive/)
 
 ### FEniCS on Windows
@@ -65,16 +73,30 @@ To use this arc-length solver, download and append this repository to the python
         sys.path.append('path/to/fenics_arclength')
 
 
-## Contents in this repository
+## Contents in this repository <a name="contents"></a>
 
 | Folder| Contents of the folder|
 |-------|--------|
 |[arc_length](arc_length)| contains the code for our arc-length implementation; both force and displacement control solvers are contained there |
 |[docs](docs)| the build and source files for our [readthedocs documentation](https://fenics-arclength.readthedocs.io/en/latest/) |
 |[examples](examples) | contains Jupyter notebook examples to use our arc-length implementation. Note that Jupyter notebooks has to be installed in the FEniCS environment for the notebooks to run. | 
-|[validation](validation)| contains python scripts to compare our solver with analytical solutions/solutions in literature. <br><br> To run the scripts run: <br> <br> ``python3 validation/validate_xx.py`` <br><br> from the project root directory.  |
+|[validation](validation)| contains python scripts to compare our solver with analytical solutions/solutions in literature. <br><br> To run the scripts run: <br> <br> ``python3 validation/validate_xx.py`` <br><br> from the project root directory. More information in section [Validation](#validation) |
 
-## Theory
+## Validation <a name="validation"></a>
+To validate that our arc-length solver works we provide 3 validation examples. To run the examples go to the root directory and run ``python3 validate/validate_xx.py``. The available python scripts are:
+* ``validate_3Dbeamsmall.py``
+    * This script solves a clamped cantilever beam with a small applied force and moment at the free end. The solution (i.e. the reaction shear, moment, and curvature) of from the arc-length solver is compared with linear beam theory.
+    * *Outputs:* The outputs of the script is the percent differences between the analytical solution and arc-length solution for reaction shear, reaction moment, and beam curvature. If the solutions are within 1% difference, then the validation is complete.
+* ``validate_3Dbeamlarge.py``
+    * This script solves a clamped cantilever beam with a large applied force and moment at the free end. The curvature of the beam in the same direction of the applied moment is compared with the moment-curvature relation ($\\kappa = \frac{M}{EI}$) since the beam constitutive model is linear elastic and does not couple deformation modes. 
+    * *Outputs:* The outputs of the script is the percent differences between the analytical solution and arc-length solution for beam curvature. If the solutions are within 1% difference, then the validation is complete.
+* ``validate_leeframe.py``
+    * This scripts solves Lee's frame, a popular benchmarking problem in nonlinear solid mechanics. The resulting equilibrium path and critical buckling mode is compared with literature obtained [here](https://www.sciencedirect.com/science/article/pii/S014102962034356X).
+    * *Outputs:* The outputs of the script are the Pearson correlation coefficient of the equilibrium paths between our arc-length solver and the solution from literature. Both of the equilibrium paths are also plotted and saved in ``valiation/validation_leeframe.png``.
+    
+ **Note that the validation scripts should be fast to run (~5 secs for small deformation and Lee's frame, ~ 1 min for large deformation).**
+
+## Theory <a name="theory"></a>
 Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.
 ### Nonlinear Finite Elements
 A nonlinear finite element problem seeks to minimize the residual vector that comes from discretizing the weak form of the energy balance equation (e.g. continuum for beam balance equations). In general the residual cannot be solved exactly and must be approximated through linearization. A common method to solve nonlinear finite element problems uses the Newton-Raphson method:

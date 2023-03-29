@@ -156,23 +156,23 @@ solver = force_control(psi=psi, tol=tol, lmbda0=lmbda0, max_iter=max_iter, u=v,
 
 # Lists to store solution vectors
 disp = [v.vector()[:]]
-lmbda = [0]
+lmbda = [0.0]
+force_disp = [0.0] # displacement at force application
 
-# solver iteration
-for ii in range(47):
-    solver.solve()
-    if solver.converged: # We only want to save the solution step if the solver coverges       
-        disp.append(v.vector()[:])
-        lmbda.append(load.t)
-
-# Get displacment at force application
-force_disp = []
-for ii in range(len(disp)):
-    force_disp.append(-disp[ii][force_dof])
 #---------------------------Compare Solution with literature solution--------------------------#
 # Get solution from literature (https://www.sciencedirect.com/science/article/pii/S014102962034356X)
 
 paper_eq = np.loadtxt(os.getcwd()+'/examples/force_control/beam/beam_2D/lit_soln/path_lee.dat')
+paper_disp = -paper_eq[:,2]
+paper_load = paper_eq[:,0]
+
+# solver iteration
+while (-v.vector()[force_dof] <= paper_disp[-1]) or (solver.converged == False):
+    solver.solve()
+    if solver.converged and (-v.vector()[force_dof] <= paper_disp[-1]): # We only want to save the solution step if the solver covergesand within range of paper solution
+        disp.append(v.vector()[:])
+        force_disp.append(-disp[-1][force_dof])
+        lmbda.append(load.t)
 
 
 # Plot and compare solutions

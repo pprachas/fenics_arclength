@@ -1,2 +1,5 @@
 examples/force_control/beam/beam_2D/leeframe_fenics_arclength_New copy.ipynb
 examples/displacement_control/fiber_network_copy.ipynb
+example.py
+example2.py
+example.png

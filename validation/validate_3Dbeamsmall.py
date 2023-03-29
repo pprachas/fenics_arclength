@@ -218,5 +218,5 @@ else:
 if np.all(val):
     print('3D beam small deformation validation complete!')
 else:
-    print('D beam small deformation did not pass validation test')
+    print('3D beam small deformation did not pass validation test')
     print('Passed test:', val)

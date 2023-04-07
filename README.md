@@ -91,10 +91,13 @@ To validate that our arc-length solver works we provide 3 validation examples. T
     * This script solves a clamped cantilever beam with a large applied force and moment at the free end. The curvature of the beam in the same direction of the applied moment is compared with the moment-curvature relation ($\\kappa = \frac{M}{EI}$) since the beam constitutive model is linear elastic and does not couple deformation modes. 
     * *Outputs:* The outputs of the script is the percent differences between the analytical solution and arc-length solution for beam curvature. If the solutions are within 1% difference, then the validation is complete.
 * ``validate_leeframe.py``
-    * This scripts solves Lee's frame, a popular benchmarking problem in nonlinear solid mechanics. The resulting equilibrium path and critical buckling mode is compared with literature obtained [here](https://www.sciencedirect.com/science/article/pii/S014102962034356X).
+    * This scripts solves Lee's frame, a popular benchmarking problem in nonlinear solid mechanics. The resulting equilibrium path and critical buckling load is compared with literature obtained [here](https://www.sciencedirect.com/science/article/pii/S014102962034356X).
     * *Outputs:* The outputs of the script are the Pearson correlation coefficient of the equilibrium paths between our arc-length solver and the solution from literature. Both of the equilibrium paths are also plotted and saved in ``valiation/validation_leeframe.png``.
+ * ``validate_bilayer.py``
+    * This scripts solve the bilayer wrinkling problem. The resulting wrinkling wavelength and critical buckling strain is compared with literature obtained [here](https://royalsocietypublishing.org/doi/epdf/10.1098/rsta.2016.0163) and [here](https://groups.seas.harvard.edu/hutchinson/papers/WrinklingPhenonmena-JAMF.pdf).
+    * *Outputs:* The outputs of the script are the percent differences between the analytical solutions (critical strain and wavelength) and FEA solution. The comparison plots are also saved in ``valiation/validation_bilayer_stresstrain.png`` and ``valiation/validation_bilayer_wavelength.png``.
     
- **Note that the validation scripts should be fast to run (~5 secs for small deformation and Lee's frame, ~ 1 min for large deformation).**
+ **Note that the beam validation scripts should be fast to run (~5 secs for small deformation and Lee's frame, ~ 1 min for large deformation). The bilayer nwrinkling will take longer to run (~ 25 mins).**
 
 ## Theory <a name="theory"></a>
 Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.

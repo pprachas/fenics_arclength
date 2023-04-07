@@ -516,8 +516,8 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fb479d31670&gt;,
- &lt;matplotlib.lines.Line2D at 0x7fb479d31b50&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f4de52fd730&gt;,
+ &lt;matplotlib.lines.Line2D at 0x7f4de52fdbe0&gt;]
 </pre></div>
 </div>
 <img alt="../../_images/bf318c8383638e421576a7e3a1a11fd9079de4306cb1d2c11e26335882e8d30f.png" src="../../_images/bf318c8383638e421576a7e3a1a11fd9079de4306cb1d2c11e26335882e8d30f.png" />
@@ -552,7 +552,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7fb479d6a670&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7f4de526ed60&gt;
 </pre></div>
 </div>
 <img alt="../../_images/84bbdb30bb2ccd745912085b17c0623a43e9bcd1a54ed184c6aa38a167262808.png" src="../../_images/84bbdb30bb2ccd745912085b17c0623a43e9bcd1a54ed184c6aa38a167262808.png" />
@@ -1256,23 +1256,33 @@ Iteration: 5
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">strain_crit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="p">((</span><span class="mi">3</span><span class="o">*</span><span class="n">mu_s</span><span class="o">/</span><span class="n">mu_f</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
-<span class="linenos">2</span>
-<span class="linenos">3</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
-<span class="linenos">4</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lmbda</span><span class="p">)</span><span class="o">/</span><span class="n">L</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f_reac</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">Hs</span><span class="o">+</span><span class="n">Hf</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Equilibrium Path&#39;</span><span class="p">)</span>
-<span class="linenos">5</span><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">strain_crit</span><span class="p">,</span> <span class="n">ls</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Analytical Critical Strain&#39;</span><span class="p">)</span>
-<span class="linenos">6</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Applied Strain&#39;</span><span class="p">)</span>
-<span class="linenos">7</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Stress per unit depth&#39;</span><span class="p">)</span>
-<span class="linenos">8</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Equilibrium path&#39;</span><span class="p">)</span>
-<span class="linenos">9</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">strain_crit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="p">((</span><span class="mi">3</span><span class="o">*</span><span class="n">mu_s</span><span class="o">/</span><span class="n">mu_f</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">test_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f_reac</span><span class="p">))</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">test_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lmbda</span><span class="p">)</span><span class="o">/</span><span class="n">L</span><span class="p">)</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">fea_soln</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanargmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f_reac</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">/</span><span class="p">(</span><span class="n">Hs</span><span class="o">+</span><span class="n">Hf</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lmbda</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span><span class="o">/</span><span class="n">L</span><span class="p">))))))</span> <span class="c1"># find the inflection point from FEA solution and use that as critical strain</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="linenos">10</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lmbda</span><span class="p">)</span><span class="o">/</span><span class="n">L</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f_reac</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">Hs</span><span class="o">+</span><span class="n">Hf</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Equilibrium Path&#39;</span><span class="p">)</span>
+<span class="linenos">11</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lmbda</span><span class="p">[</span><span class="n">fea_soln</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span><span class="o">/</span><span class="n">L</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f_reac</span><span class="p">[</span><span class="n">fea_soln</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">Hs</span><span class="o">+</span><span class="n">Hf</span><span class="p">),</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="p">,</span> <span class="n">ls</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;FEA critical strain&#39;</span><span class="p">)</span>
+<span class="linenos">12</span><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">strain_crit</span><span class="p">,</span> <span class="n">ls</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Analytical Critical Strain&#39;</span><span class="p">)</span>
+<span class="linenos">13</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Applied Strain&#39;</span><span class="p">)</span>
+<span class="linenos">14</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Stress per unit depth&#39;</span><span class="p">)</span>
+<span class="linenos">15</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Equilibrium path&#39;</span><span class="p">)</span>
+<span class="linenos">16</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="n">percent_diff_crit_strain</span> <span class="o">=</span> <span class="p">((</span><span class="n">strain_crit</span><span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lmbda</span><span class="p">[</span><span class="n">fea_soln</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span><span class="o">/</span><span class="n">L</span><span class="p">))</span><span class="o">/</span><span class="n">strain_crit</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="linenos">19</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Percent Error between analytical critical strain and FEA critical strain:&#39;</span><span class="p">,</span><span class="n">percent_diff_crit_strain</span><span class="p">,</span><span class="s1">&#39;%&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fb442cb2be0&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Percent Error between analytical critical strain and FEA critical strain: 1.5933169703227894 %
 </pre></div>
 </div>
-<img alt="../../_images/d7aa1d7f54e1740fa06ac688e2818fff9fb49a4e45e9321a3e2a1482af838841.png" src="../../_images/d7aa1d7f54e1740fa06ac688e2818fff9fb49a4e45e9321a3e2a1482af838841.png" />
+<img alt="../../_images/a0e5fe10e1b873b2228f379ead126777948f7783d8e8c16d4f62767da9966003.png" src="../../_images/a0e5fe10e1b873b2228f379ead126777948f7783d8e8c16d4f62767da9966003.png" />
 </div>
 </div>
 <p>Here we extract and compare the post-bifurcation wrinkling wavelength from FEA and analytical solution.</p>
@@ -1550,39 +1560,39 @@ input[type=range].anim-slider {
 </style>
 
 <div class="animation">
-  <img id="_anim_img4362a70c26a1485e9b5dc0bbf08d414c">
+  <img id="_anim_img88add858d0624eba91fc6732d4840821">
   <div class="anim-controls">
-    <input id="_anim_slider4362a70c26a1485e9b5dc0bbf08d414c" type="range" class="anim-slider"
+    <input id="_anim_slider88add858d0624eba91fc6732d4840821" type="range" class="anim-slider"
            name="points" min="0" max="1" step="1" value="0"
-           oninput="anim4362a70c26a1485e9b5dc0bbf08d414c.set_frame(parseInt(this.value));"></input>
+           oninput="anim88add858d0624eba91fc6732d4840821.set_frame(parseInt(this.value));"></input>
     <div class="anim-buttons">
-      <button onclick="anim4362a70c26a1485e9b5dc0bbf08d414c.slower()"><i class="fa fa-minus"></i></button>
-      <button onclick="anim4362a70c26a1485e9b5dc0bbf08d414c.first_frame()"><i class="fa fa-fast-backward">
+      <button onclick="anim88add858d0624eba91fc6732d4840821.slower()"><i class="fa fa-minus"></i></button>
+      <button onclick="anim88add858d0624eba91fc6732d4840821.first_frame()"><i class="fa fa-fast-backward">
           </i></button>
-      <button onclick="anim4362a70c26a1485e9b5dc0bbf08d414c.previous_frame()">
+      <button onclick="anim88add858d0624eba91fc6732d4840821.previous_frame()">
           <i class="fa fa-step-backward"></i></button>
-      <button onclick="anim4362a70c26a1485e9b5dc0bbf08d414c.reverse_animation()">
+      <button onclick="anim88add858d0624eba91fc6732d4840821.reverse_animation()">
           <i class="fa fa-play fa-flip-horizontal"></i></button>
-      <button onclick="anim4362a70c26a1485e9b5dc0bbf08d414c.pause_animation()"><i class="fa fa-pause">
+      <button onclick="anim88add858d0624eba91fc6732d4840821.pause_animation()"><i class="fa fa-pause">
           </i></button>
-      <button onclick="anim4362a70c26a1485e9b5dc0bbf08d414c.play_animation()"><i class="fa fa-play"></i>
+      <button onclick="anim88add858d0624eba91fc6732d4840821.play_animation()"><i class="fa fa-play"></i>
           </button>
-      <button onclick="anim4362a70c26a1485e9b5dc0bbf08d414c.next_frame()"><i class="fa fa-step-forward">
+      <button onclick="anim88add858d0624eba91fc6732d4840821.next_frame()"><i class="fa fa-step-forward">
           </i></button>
-      <button onclick="anim4362a70c26a1485e9b5dc0bbf08d414c.last_frame()"><i class="fa fa-fast-forward">
+      <button onclick="anim88add858d0624eba91fc6732d4840821.last_frame()"><i class="fa fa-fast-forward">
           </i></button>
-      <button onclick="anim4362a70c26a1485e9b5dc0bbf08d414c.faster()"><i class="fa fa-plus"></i></button>
+      <button onclick="anim88add858d0624eba91fc6732d4840821.faster()"><i class="fa fa-plus"></i></button>
     </div>
-    <form action="#n" name="_anim_loop_select4362a70c26a1485e9b5dc0bbf08d414c" class="anim-state">
-      <input type="radio" name="state" value="once" id="_anim_radio1_4362a70c26a1485e9b5dc0bbf08d414c"
+    <form action="#n" name="_anim_loop_select88add858d0624eba91fc6732d4840821" class="anim-state">
+      <input type="radio" name="state" value="once" id="_anim_radio1_88add858d0624eba91fc6732d4840821"
              >
-      <label for="_anim_radio1_4362a70c26a1485e9b5dc0bbf08d414c">Once</label>
-      <input type="radio" name="state" value="loop" id="_anim_radio2_4362a70c26a1485e9b5dc0bbf08d414c"
+      <label for="_anim_radio1_88add858d0624eba91fc6732d4840821">Once</label>
+      <input type="radio" name="state" value="loop" id="_anim_radio2_88add858d0624eba91fc6732d4840821"
              checked>
-      <label for="_anim_radio2_4362a70c26a1485e9b5dc0bbf08d414c">Loop</label>
-      <input type="radio" name="state" value="reflect" id="_anim_radio3_4362a70c26a1485e9b5dc0bbf08d414c"
+      <label for="_anim_radio2_88add858d0624eba91fc6732d4840821">Loop</label>
+      <input type="radio" name="state" value="reflect" id="_anim_radio3_88add858d0624eba91fc6732d4840821"
              >
-      <label for="_anim_radio3_4362a70c26a1485e9b5dc0bbf08d414c">Reflect</label>
+      <label for="_anim_radio3_88add858d0624eba91fc6732d4840821">Reflect</label>
     </form>
   </div>
 </div>
@@ -1592,9 +1602,9 @@ input[type=range].anim-slider {
   /* Instantiate the Animation class. */
   /* The IDs given should match those used in the template above. */
   (function() {
-    var img_id = "_anim_img4362a70c26a1485e9b5dc0bbf08d414c";
-    var slider_id = "_anim_slider4362a70c26a1485e9b5dc0bbf08d414c";
-    var loop_select_id = "_anim_loop_select4362a70c26a1485e9b5dc0bbf08d414c";
+    var img_id = "_anim_img88add858d0624eba91fc6732d4840821";
+    var slider_id = "_anim_slider88add858d0624eba91fc6732d4840821";
+    var loop_select_id = "_anim_loop_select88add858d0624eba91fc6732d4840821";
     var frames = new Array(36);
     
   frames[0] = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA2AAAAFoCAYAAAAxXpjgAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz\
@@ -18943,7 +18953,7 @@ D6c815FRHaIcAAAAAElFTkSuQmCC\
     /* set a timeout to make sure all the above elements are created before
        the object is initialized. */
     setTimeout(function() {
-        anim4362a70c26a1485e9b5dc0bbf08d414c = new Animation(frames, img_id, slider_id, 40.0,
+        anim88add858d0624eba91fc6732d4840821 = new Animation(frames, img_id, slider_id, 40.0,
                                  loop_select_id);
     }, 0);
   })()

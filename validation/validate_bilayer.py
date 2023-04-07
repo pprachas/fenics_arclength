@@ -1,43 +1,32 @@
-# %% [markdown]
-# # Bilayer Wrinkling
-# 
-# The problem provided in this example is a bilayer wrinkling problem. The domain is a thin stiff film resting on top of a substrate. A small point-force perturbation is applied to the substrate to instigate the instability. The domain is compressed well after the onset of instability. 
-# 
-# <img src="imgs/bilayer.png" width="700">
-# 
-
-# %%
-%matplotlib inline
 from dolfin import *
 from mshr import *
 import numpy as np
 import matplotlib.pyplot as plt
-import os
-os.chdir('../..') # change directory to main module directory
+import sys
+import time
+from scipy import optimize
+sys.path.append('.')
 from arc_length.displacement_control_solver import displacement_control # import displacement control formulation of arc-length solver
 
 
+init_time = time.time() # use to time code
+# FEniCS solver parameters
 parameters["form_compiler"]["cpp_optimize"] = True
 ffc_options = {"optimize": True, \
                "eliminate_zeros": True, \
                "precompute_basis_const": True, \
                "precompute_ip_const": True}
 
-# %% [markdown]
-# ## Define domain and function spaces
-# 
-# We also split the domain into substrate and film. We To make sure all the assumptions of a bilayer system are valid, we construct the doamin width and depth based on the analytical wavelength.
-
-# %%
 # Stiffness ratio
 SR = 100
 
 # Elasticity parameters (Plane strain assumptions)
 E, nu = 10.0, 0.45
+
 # Lame Constants
 mu_f, lmbda_f = Constant(SR*E/(2*(1 + nu))), Constant(SR*E*nu/((1 + nu)*(1 - 2*nu)))
 mu_s, lmbda_s = Constant(E/(2*(1 + nu))), Constant(E*nu/((1 + nu)*(1 - 2*nu)))
-# define mesh based on analytical wavelength
+# Define mesh based on analytical wavelength
 Hf = 1.0 # film height
 ana_wavelength = float(2*np.pi*Hf*((mu_f)/(3*mu_s))**(1/3))
 Hs = ana_wavelength*4.0
@@ -52,7 +41,6 @@ V = VectorFunctionSpace(mesh, "Lagrange", 2)
 plt.figure(figsize=(7,7))
 plot(mesh)
 
-# %%
 # Define Variational Form
 du = TrialFunction(V)            # Incremental displacement
 v  = TestFunction(V)             # Test function
@@ -72,33 +60,6 @@ def Substrate(x, on_boundary):
 AutoSubDomain(Film).mark(domain_markers,0)
 AutoSubDomain(Substrate).mark(domain_markers,1)
 
-# Check Domain
-plt.figure(figsize=(7,7))
-plt.title('Domain')
-plot(domain_markers)
-
-
-# %% [markdown]
-# ## Define Dirichlet Boundary Conditions
-# 
-# **Note that for the case of displacement control, the FEniCS expression for the applied displacement mujst have be positive to prevent convergence issues.**
-# 
-# For example:
-# 
-# ```
-# apply_disp = Expression("t", t = 0.0, degree = 0)
-# ```
-# is valid and will not have convergence issues while
-# ```
-# apply_disp = Expression("-t", t = 0.0, degree = 0)
-# ```
-# can cause convergence issues.
-# 
-# The direction of applied loading will be determined by the initial load step.
-# 
-# 
-
-# %%
 # Dirichlet boundary conditions
 def Left(x, on_boundary):
     return on_boundary and near(x[0], 0, 1e-6)
@@ -111,18 +72,13 @@ def Bottom(x, on_boundary):
 
 #-----------------Applied Displacement-----------------------#
 apply_disp = Expression("t",t = 0.0, degree = 0) 
-#--------------Nonhomogenous Dirichlet Boundary Conditions------------------------------#
+#---------Nonhomogenous Dirichlet Boundary Conditions---------#
 bc1 = DirichletBC(V.sub(0), Constant(0), Left)
 bc2 = DirichletBC(V.sub(0), apply_disp, Right)
 bc3 = DirichletBC(V.sub(1), Constant(0), Bottom)
 bcs = [bc1, bc2, bc3]
 
-# %% [markdown]
-# ## Define Function for Point Load
-# Note that this is an approximation of a point load since the FEniCS UserExpression will be projected into a discontinuous space. To approach a point load the area near the point load will need to have fine mesh. In our case it is not neccessary since the point load is just a perturbation.
-
-# %%
-# Function for Point 
+# Define function for point load (the perturbation)
 class PointLoad(UserExpression):
     def __init__(self, x0, f, tol,**kwargs):
         super().__init__(**kwargs)
@@ -139,10 +95,6 @@ class PointLoad(UserExpression):
     def value_shape(self):
         return (2,)
 
-# %% [markdown]
-# ## Kinematics and Weak form
-
-# %%
 # Kinematics
 I = variable(Identity(mesh.topology().dim()))  # Identity tensor
 F = variable(I + grad(u))                        # Deformation gradient
@@ -152,7 +104,6 @@ C = variable(F.T*F)                              # Right Cauchy-Green tensor
 Ic = tr(C)
 J  = det(F)
 
-# %%
 # Define Variational Form
 dx = Measure('dx', domain=mesh, subdomain_data=domain_markers)
 
@@ -171,33 +122,6 @@ F_ext = derivative(dot(B, u)*dx + dot(T,u)*ds + dot(-P,u)*ds , u, v)
 residual = F_int-F_ext
 J = derivative(residual, u, du)
 
-# %% [markdown]
-# ## Solver
-# To use our solver we first have to define the type of solver (i.e. displacement control or force control) and solver parameters before using the solver. Note that the correct type of solver has to first be imported (see first cell).
-# ### Solver parameters
-# Here the parameters for both types of solvers:
-# 
-# >* `psi` : the scalar arc-legth parameter. When `psi` = 1, the method becomes the shperical arc-length method and when `psi` = 0 the method becomes the cylindrical arc-length method
-# >* `tol` : tolerance for the linear solver
-# >* `lmbda0` : the initial load parameter
-# >* `max_iter` : maximum number of iterations for the linear solver
-# >* `solver` : (optional): type of linear solver for the FEniCS linear solve function -- default FEniCS linear solver is used if no argument is used.
-# 
-# Aside from these solver parameters, the arguments need to solve the FEA problem must also be passed into the solver:
-# >* `u` : the solution function
-# >* `F_int` : First variation of strain energy (internal nodal forces)
-# >* `F_ext` : Externally applied load (external applied force)
-# >* `J` : The Jacobian of the residual with respect to the deformation (tangential stiffness matrix)
-# >* `displacement_factor` : The incremental load factor 
-# 
-# The solver can be called by:
-# `solver = force_control(psi,tol,lmbda0,max_iter,u,F_int,F_ext,bcs,J,load_factor,solver)`
-# 
-# ### Using the solver
-# 1. Initialize the solver by calling solver.initialize()
-# 2. Iteratively call solver.solve() until desired stopping condition
-
-# %%
 # Solver Parameters
 psi = 1.0
 tol = 1.0e-6
@@ -208,9 +132,9 @@ max_iter = 30
 solver = displacement_control(psi=psi, tol=tol, lmbda0=lmbda0, max_iter=max_iter, u=u,
                        F_int=F_int, F_ext=F_ext, bcs=bcs, J=J, displacement_factor=apply_disp)
 
-# %%
 disp = [u.vector().copy()]
 lmbda = [0]
+
 # Function space to compute reaction force at each iteration
 v_reac = Function(V)
 bcRx = DirichletBC(V.sub(0), Constant(1.0), Left) # take reaction force from the left boundary
@@ -228,33 +152,12 @@ while np.abs(apply_disp.t) < strain_crit*L*1.2 and solver.converged:
         bcRx.apply(v_reac.vector())
         f_reac.append(assemble(action(residual,v_reac)))
 
-# %% [markdown]
-# ## Optional: Stop at at specific criterion
-# To strongly impose the stop condition, we add Newton solver at the end with a specific prescribed displacement and replace the final solution with the solution from the Newton Solver. In this case, we enforced the stop criterion with the applied displacement is slightly over the analytical critical strain.
-
-# %%
 apply_disp.t = -strain_crit*L*1.2 # stop simulation after bifurcation
-problem = NonlinearVariationalProblem(residual, u, bcs, J)
-newton_solver = NonlinearVariationalSolver(problem)
-newton_solver.solve()
 
-disp.pop()
-lmbda.pop()
-f_reac.pop()
-disp.append(u.vector())
-lmbda.append(apply_disp.t)
-f_reac.append(assemble(action(residual,v_reac)))
 
-# %% [markdown]
-# ## Post Processing
-# Here we plot the final deformed shape, equilibrium path, and the wavelength. We obtain the analytical solutions from: https://royalsocietypublishing.org/doi/epdf/10.1098/rsta.2016.0163 and https://groups.seas.harvard.edu/hutchinson/papers/WrinklingPhenonmena-JAMF.pdf
+# Post Processing (validate with analytical solution)
+# Here we plot and compare the final deformed shape, equilibrium path, and the wavelength. We obtain the analytical solutions from: https://royalsocietypublishing.org/doi/epdf/10.1098/rsta.2016.0163 and https://groups.seas.harvard.edu/hutchinson/papers/WrinklingPhenonmena-JAMF.pdf
 
-# %%
-plt.figure(figsize=(7,7))
-plot(u, mode = 'displacement', cmap='Reds', edgecolor = 'k', linewidth = 0.2)
-plt.title('Final Deformation')
-
-# %%
 strain_crit = float((1/4)*((3*mu_s/mu_f))**(2/3))
 
 test_y = np.diff(np.array(f_reac))
@@ -272,13 +175,13 @@ plt.ylabel('Stress per unit depth')
 plt.title('Equilibrium path')
 plt.legend()
 
+plt.savefig('validation/validate_bilayer_stressstrain.png')
+
 percent_diff_crit_strain = ((strain_crit-(-np.array(lmbda[fea_soln+2])/L))/strain_crit) * 100
 print('Percent Error between analytical critical strain and FEA critical strain:',percent_diff_crit_strain,'%')
 
-# %% [markdown]
 # Here we extract and compare the post-bifurcation wrinkling wavelength from FEA and analytical solution.
 
-# %%
 post_bif = np.argwhere(-np.array(lmbda)/L > strain_crit).reshape(-1) # get index after bifurcation
 # get solution after onset of bifurcation:
 disp_bif = disp[post_bif[0]]
@@ -295,16 +198,14 @@ dof_coords = dofs.reshape((-1, 2))
 
 x_nodal_coord = dof_coords[x_dofs][:,0]
 y_nodal_coord = dof_coords[y_dofs][:,1]
-# Get nodal values 
 
+# Get nodal values of the top layer 
 top_layer = np.argwhere(np.abs(y_nodal_coord-(Hs+Hf)) < 1e-6)
 
 # Plot displacement field
 disp_x = x_nodal_coord[top_layer].reshape(-1)#(x_nodal_coord + u_bif.vector()[x_dofs])[top_layer].reshape(-1)
 disp_y = (y_nodal_coord + u_bif.vector()[y_dofs])[top_layer].reshape(-1)
 
-# Fit to sine functions
-from scipy import optimize
 
 def fit_func(x, amp, wave, phi, offset):
     return amp * np.cos((2*np.pi)/wave * x + phi) + offset
@@ -322,41 +223,16 @@ plt.xlabel('x displacement')
 plt.ylabel('y displacement')
 plt.legend(loc = (1.01,0.5))
 
-print('Percent Error between analytical wavelength and fitted FEM wavelength:',((params[1]-ana_wavelength)/ana_wavelength)*100, '%')
+plt.savefig('validation/validate_bilayer_wavelength.png')
 
+percent_diff_wavelength=((params[1]-ana_wavelength)/ana_wavelength)*100
+print('Percent Error between analytical wavelength and fitted FEM wavelength:',percent_diff_wavelength, '%')
 
-# %% [markdown]
-# ## Optional: Creating an animation from solution snapshots
+val = np.array([percent_diff_crit_strain, percent_diff_wavelength])
+if np.all(val):
+    print('Bilayer wrinkling validation complete!')
+else:
+    print('Bilayer wrinkling did not pass validation test')
+    print('Passed test:', val)
 
-# %% [markdown]
-# 
-
-# %%
-from matplotlib import animation, rc
-
-plt.rcParams["animation.html"] = "jshtml"
-
-u_plot = Function(V)
-
-fig = plt.figure(figsize=(12,5))
-ax = fig.gca()
-
-ax.set_xlim([0,L])
-ax.set_ylim([(Hf+Hs)/3,Hs+Hf+5])
-
-def drawframe(n):
-    fig.clf()
-    ax = fig.gca()
-    ax.set_xlim([0,L])
-    ax.set_ylim([(Hf+Hs)/3,Hf+Hs+5])
-    u_plot = Function(V)
-    u_plot.vector()[:] = disp[n][:]
-    return plot(u_plot, mode = 'displacement', cmap = 'Reds'),
-# blit=True re-draws only the parts that have changed.
-anim = animation.FuncAnimation(fig, drawframe, frames=len(lmbda), interval=40, blit=True)
-anim
-
-# %%
-
-
-
+print('Elapse time:', (time.time()-init_time)/60, 'minutes')

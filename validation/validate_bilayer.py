@@ -180,6 +180,10 @@ plt.savefig('validation/validate_bilayer_stressstrain.png')
 percent_diff_crit_strain = ((strain_crit-(-np.array(lmbda[fea_soln+2])/L))/strain_crit) * 100
 print('Percent Error between analytical critical strain and FEA critical strain:',percent_diff_crit_strain,'%')
 
+if percent_diff_crit_strain < 2.0:
+    val = [True]
+else:
+    val= [False]
 # Here we extract and compare the post-bifurcation wrinkling wavelength from FEA and analytical solution.
 
 post_bif = np.argwhere(-np.array(lmbda)/L > strain_crit).reshape(-1) # get index after bifurcation
@@ -227,6 +231,11 @@ plt.savefig('validation/validate_bilayer_wavelength.png')
 
 percent_diff_wavelength=((params[1]-ana_wavelength)/ana_wavelength)*100
 print('Percent Error between analytical wavelength and fitted FEM wavelength:',percent_diff_wavelength, '%')
+
+if percent_diff_wavelength < 2.0:
+    val.append(True)
+else:
+    val.append(False)
 
 val = np.array([percent_diff_crit_strain, percent_diff_wavelength])
 if np.all(val):

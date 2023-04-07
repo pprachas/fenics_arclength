@@ -95,7 +95,7 @@ To validate that our arc-length solver works we provide 3 validation examples. T
     * *Outputs:* The outputs of the script are the Pearson correlation coefficient of the equilibrium paths between our arc-length solver and the solution from literature. Both of the equilibrium paths are also plotted and saved in ``valiation/validation_leeframe.png``.
  * ``validate_bilayer.py``
     * This scripts solve the bilayer wrinkling problem. The resulting wrinkling wavelength and critical buckling strain is compared with literature obtained [here](https://royalsocietypublishing.org/doi/epdf/10.1098/rsta.2016.0163) and [here](https://groups.seas.harvard.edu/hutchinson/papers/WrinklingPhenonmena-JAMF.pdf).
-    * *Outputs:* The outputs of the script are the percent different between the analytical solutions and FEA solution. The comparison plots are also saved in ``valiation/validation_bilayer_stresstrain.png`` and ``valiation/validation_bilayer_wavelength.png``.
+    * *Outputs:* The outputs of the script are the percent differences between the analytical solutions (critical strain and wavelength) and FEA solution. The comparison plots are also saved in ``valiation/validation_bilayer_stresstrain.png`` and ``valiation/validation_bilayer_wavelength.png``.
     
  **Note that the beam validation scripts should be fast to run (~5 secs for small deformation and Lee's frame, ~ 1 min for large deformation). The bilayer nwrinkling will take longer to run (~ 25 mins).**
 

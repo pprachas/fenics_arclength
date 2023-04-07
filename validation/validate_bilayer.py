@@ -222,7 +222,7 @@ plt.scatter(disp_x,fit_func(disp_x, params[0], ana_wavelength, params[2], params
 plt.xlabel('x displacement')
 plt.ylabel('y displacement')
 plt.legend(loc = (1.01,0.5))
-
+plt.tight_layout()
 plt.savefig('validation/validate_bilayer_wavelength.png')
 
 percent_diff_wavelength=((params[1]-ana_wavelength)/ana_wavelength)*100

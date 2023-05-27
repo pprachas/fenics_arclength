@@ -47,7 +47,7 @@ The simplest way to install FEniCS on Windows 10 is to install [WSL2](https://le
         source activate fenicsproject
 
 ### FEniCS on Docker (Windows, Mac, Linux)
-First install [Docker Desktop](https://fenicsproject.org/download/archive/) then run the followng command:
+First install [Docker Desktop](https://fenicsproject.org/download/archive/) then run the following command:
 
         curl -s https://get.fenicsproject.org | bash
 You also can start the Docker container with the following command:

@@ -47,7 +47,7 @@ The simplest way to install FEniCS on Windows 10 is to install [WSL2](https://le
         source activate fenicsproject
 
 ### FEniCS on Docker (Windows, Mac, Linux)
-First install [Docker Desktop](https://fenicsproject.org/download/archive/) then run the followng command:
+First install [Docker Desktop](https://fenicsproject.org/download/archive/) then run the following command:
 
         curl -s https://get.fenicsproject.org | bash
 You also can start the Docker container with the following command:
@@ -97,16 +97,16 @@ To validate that our arc-length solver works we provide 3 validation examples. T
     * This scripts solve the bilayer wrinkling problem. The resulting wrinkling wavelength and critical buckling strain is compared with literature obtained [here](https://royalsocietypublishing.org/doi/epdf/10.1098/rsta.2016.0163) and [here](https://groups.seas.harvard.edu/hutchinson/papers/WrinklingPhenonmena-JAMF.pdf).
     * *Outputs:* The outputs of the script are the percent differences between the analytical solutions (critical strain and wavelength) and FEA solution. The comparison plots are also saved in ``valiation/validation_bilayer_stresstrain.png`` and ``valiation/validation_bilayer_wavelength.png``.
     
- **Note that the beam validation scripts should be fast to run (~5 secs for small deformation and Lee's frame, ~ 1 min for large deformation). The bilayer nwrinkling will take longer to run (~ 25 mins).**
+ ** Note that the beam validation scripts should be fast to run ($\sim$ 5 secs for small deformation and Lee's frame, $\sim$ 1 min for large deformation). The bilayer nwrinkling will take longer to run ($\sim$ 25 mins). **
 
 ## Theory <a name="theory"></a>
 Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.
 ### Nonlinear Finite Elements
 A nonlinear finite element problem seeks to minimize the residual vector that comes from discretizing the weak form of the energy balance equation (e.g. continuum for beam balance equations). In general the residual cannot be solved exactly and must be approximated through linearization. A common method to solve nonlinear finite element problems uses the Newton-Raphson method:
 
- $$
+ ```math
 \mathcal{R}(\mathbf{u}_{n+1}) = \mathcal{R}(\mathbf{u}_{n})+\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}\Delta u
- $$
+ ```
  
  
 where $\Delta u = \mathbf{u}_{n+1}-\mathbf{u}_n$.
@@ -115,16 +115,16 @@ Newton's method is solved incrementally until the desired convergence criterion.
 is typically called the tangential stiffness matrix $K_T$. The first term $\mathcal R(\mathbf u_n)$ is the externally applied force $F^{ext}$, while the second term
 $\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta u$ is the internal force $F^{int}$ the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor $\lambda^k$ where $k$ is the increment. Putting it all together, the nonlinear problem can be written as:
 
-$$
+```math
 \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n},\lambda_{n+1})-\lambda_{n+1} F^{ext}(\mathbf{u}_{n})
-$$
+ ```
 
 #### Conservative Loading
 In most cases the external force does not depend on the solution $u$ (i.e. $F^{ext} (u_n) = F^{ext}$ ). These cases are called conservative loading. The problem than can be simplified to:
 
-$$
+```math
 \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n})-\lambda^k F^{ext}
-$$
+```
 
 In this case the tangential stiffness matrix $K_T$ can be contructed using just the internal energy (i.e. $K_T = \frac{\partial F^{int}(\mathbf u_{n+1};\mathbf u_n)}{\partial \mathbf{u}_n}$)
 
@@ -136,37 +136,41 @@ One of the main drawbacks of Newton's method is its inability to trace equilibri
 #### Force Control
 The additional arc-length contraint for force control is:
 
-$$
+```math
 \mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-\Delta s
-$$
+```
 
 where $\Delta s$ determines how far to search for the next equilibrium point and $\psi$ is the arc length parameter that gives you different arc-length solver schemes. When $\psi = 1$ (as like the examples in this repository), the arc-length equation is also known as the *spherical arc-length method*, and when $\psi = 0$ the *cylindrical arc-length* method is recovered.
 
 #### Displacement Control
 Sometimes instead of prescribing traction, the problem has a boundary contition with presecribed non-zero displacement (i.e. nonhomogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and we construct a constraint matrix $C$ such that: 
 
-$$
+```math
 \mathbf{u} = C\mathbf{u}_f+\lambda \mathbf{u}_p
-$$
+```
 
 where $u_f$ and $u_p$ are the free and prescribed displacement nodes respectively, and $\lambda$ is the incremental displacement factor.
 
 
 The arc length equation needs to be modified and now becomes:
 
-$$\mathcal{A}(\mathbf{u}_f,\lambda) = \Delta\mathbf{u}_f^T\Delta\mathbf{u}_f + \psi\Delta\lambda^2Q^TQ-\Delta l$$
+```math
+ \mathcal{A}(\mathbf{u}_f,\lambda) = \Delta\mathbf{u}_f^T\Delta\mathbf{u}_f + \psi\Delta\lambda^2Q^TQ-\Delta l
+ ```
 
 where:
 
-$$Q = C^TK_T\mathbf{u}_p$$
+```math
+ Q = C^TK_T\mathbf{u}_p
+```
 
 ### Predictor-Corrector Scheme
 The predictor our arc-length implementation for both the force and displacement control scheme follows the implementation from Ref.3. The prediction step takes in the previous solution and extrapolates where:
 
-$$
+```math
 \mathbf{u}_{n+1}^{predicted} = [1+\alpha] \mathbf{u}_{n} -\alpha u_{n-1} \\
 \lambda_{n+1}^{predicted} = [1+\alpha] \lambda_n -\alpha \lambda_{n-1}
-$$
+```
 
 where $\alpha=\frac{\Delta s_n}{\Delta s_{n-1}}$ is the extrapolation parameter that depends on the arc-length parameter for the previous and current step. Using this extrapolation scheme both provides a good initial guess for the next equilibrium solution as well as identifies the correct direction for the next point in the equilibrium path. Our implementation allows for easy modification of this extrapolation scheme, as seen in the 3D beam example.
 
@@ -188,13 +192,13 @@ K_T & -F^{ext} \\
 
 where 
 
-$$
+```math
 \Delta \mathbf{u}_{n+1} = \Delta \mathbf{u}_n + \delta \mathbf{u}  
-$$
+```
 
-$$
+```math
 \Delta \lambda_{n+1} = \Delta \lambda_n + \delta \lambda
-$$
+```
 
 The displacement control corrector scheme modifies the above equation to:
 

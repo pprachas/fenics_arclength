@@ -57,13 +57,13 @@ You also can start the Docker container with the following command:
         docker run -ti -p 127.0.0.1:8000:8000 -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
 A more comprehensive and detailed intructions on Docker installation can be found here: [Docker Installation Instructions](https://fenics.readthedocs.io/projects/containers/en/latest/introduction.html).
  
-#### Other useful libraries
+## Other useful libraries
 While only FEniCS is required to use the arc-length solver, additional libraries can be useful for visualization of results and post-processing. Jupyter notebooks is also required to run our examples. For the conda installation numpy, scipy, and matplotlib must also be install seperately through conda-forge. An environment.yml file is provided in this repository to facilitate installation of all optional libraries (i.e. numpy, scipy, matplotlib, jupyter) in a conda environment. To create a conda environment using the environment.yml file run the following command after cloning the repository and navigating to the root directory:
  
        conda env create -f environment.yml
 Note that in this case the conda environment name will be ``fenics_arclength``.
 
-For Docker installation, numpy, scipy, and matplotlib should be installed alongside FEniCS by default. To enable jupyter notebooks for FEniCS, please see this link: [Jupyter notebooks for Docker installation of FEniCS](https://fenics.readthedocs.io/projects/containers/en/latest/jupyter.html).
+**Note: For Docker installation, numpy, scipy, and matplotlib should be installed alongside FEniCS by default. To enable jupyter notebooks for FEniCS, please see this link: [Jupyter notebooks for Docker installation of FEniCS](https://fenics.readthedocs.io/projects/containers/en/latest/jupyter.html). However, the scripts in the ``validation`` can be run without Jupyter notebooks.**
  
 ## Usage
 To use this arc-length solver, download and append this repository to the python path. Two common methods to do this are:
@@ -108,7 +108,7 @@ To validate that our arc-length solver works we provide 3 validation examples. T
     * This scripts solve the bilayer wrinkling problem. The resulting wrinkling wavelength and critical buckling strain is compared with literature obtained [here](https://royalsocietypublishing.org/doi/epdf/10.1098/rsta.2016.0163) and [here](https://groups.seas.harvard.edu/hutchinson/papers/WrinklingPhenonmena-JAMF.pdf).
     * *Outputs:* The outputs of the script are the percent differences between the analytical solutions (critical strain and wavelength) and FEA solution. The comparison plots are also saved in ``valiation/validation_bilayer_stresstrain.png`` and ``valiation/validation_bilayer_wavelength.png``.
     
- ** Note that the beam validation scripts should be fast to run ($\sim$ 5 secs for small deformation and Lee's frame, $\sim$ 1 min for large deformation). The bilayer nwrinkling will take longer to run ($\sim$ 25 mins). **
+ **Note that the beam validation scripts should be fast to run ($\sim$ 5 secs for small deformation and Lee's frame, $\sim$ 1 min for large deformation). The bilayer nwrinkling will take longer to run ($\sim$ 25 mins).**
 
 ## Theory <a name="theory"></a>
 Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.
@@ -118,7 +118,6 @@ A nonlinear finite element problem seeks to minimize the residual vector that co
  ```math
 \mathcal{R}(\mathbf{u}_{n+1}) = \mathcal{R}(\mathbf{u}_{n})+\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}\Delta u
  ```
- 
  
 where $\Delta u = \mathbf{u}_{n+1}-\mathbf{u}_n$.
 

@@ -58,7 +58,7 @@ You also can start the Docker container with the following command:
 A more comprehensive and detailed intructions on Docker installation can be found here: [Docker Installation Instructions](https://fenics.readthedocs.io/projects/containers/en/latest/introduction.html).
  
 ## Other useful libraries
-While only FEniCS is required to use the arc-length solver, additional libraries can be useful for visualization of results and post-processing. Jupyter notebooks is also required to run our examples. For the conda installation numpy, scipy, and matplotlib must also be install seperately through conda-forge. An environment.yml file is provided in this repository to facilitate installation of all optional libraries (i.e. numpy, scipy, matplotlib, jupyter) in a conda environment. To create a conda environment using the environment.yml file run the following command after cloning the repository and navigating to the root directory:
+While only FEniCS is required to use the arc-length solver, additional libraries can be useful for visualization of results and post-processing. Jupyter notebooks is also required to run our examples. For the conda installation numpy, scipy, and matplotlib must also be installed seperately through conda-forge. An environment.yml file is provided in this repository to facilitate installation of all optional libraries (i.e. numpy, scipy, matplotlib, jupyter) in a conda environment. To create a conda environment using the environment.yml file run the following command after cloning the repository and navigating to the root directory:
  
        conda env create -f environment.yml
 Note that in this case the conda environment name will be ``fenics_arclength``.
@@ -72,8 +72,9 @@ To use this arc-length solver, download and append this repository to the python
 
 - On Ubuntu or Mac:
 
-        export PYTHONPATH <path/to/fenics_arclength>:$PYTHONPATH
-
+        export PYTHONPATH=<path/to/fenics_arclength>:$PYTHONPATH
+  Note that you might have to first find your python path in the computer and add it to the bash profile first. 
+ 
 - On Windows:
 
         set PYTHONPATH=<path/to/fenics_arclength>;%PYTHONPATH%
@@ -89,12 +90,12 @@ To use this arc-length solver, download and append this repository to the python
 | Folder| Contents of the folder|
 |-------|--------|
 |[arc_length](arc_length)| contains the code for our arc-length implementation; both force and displacement control solvers are contained there |
-|[docs](docs)| the build and source files for our [readthedocs documentation](https://fenics-arclength.readthedocs.io/en/latest/) |
+|[docs](docs)| the build files for our [readthedocs documentation](https://fenics-arclength.readthedocs.io/en/latest/) |
 |[examples](examples) | contains Jupyter notebook examples to use our arc-length implementation. Note that Jupyter notebooks has to be installed in the FEniCS environment for the notebooks to run. | 
 |[validation](validation)| contains python scripts to compare our solver with analytical solutions/solutions in literature. <br><br> To run the scripts run: <br> <br> ``python3 validation/validate_xx.py`` <br><br> from the project root directory. More information in section [Validation](#validation) |
 
 ## Validation <a name="validation"></a>
-To validate that our arc-length solver works we provide 3 validation examples. To run the examples go to the root directory and run ``python3 validate/validate_xx.py``. The available python scripts are:
+To validate that our arc-length solver works we provide 3 validation examples. To run the examples go to the root directory and run ``python3 validation/validate_xx.py``. The available python scripts are:
 * ``validate_3Dbeamsmall.py``
     * This script solves a clamped cantilever beam with a small applied force and moment at the free end. The solution (i.e. the reaction shear, moment, and curvature) of from the arc-length solver is compared with linear beam theory.
     * *Outputs:* The outputs of the script is the percent differences between the analytical solution and arc-length solution for reaction shear, reaction moment, and beam curvature. If the solutions are within 1% difference, then the validation is complete.

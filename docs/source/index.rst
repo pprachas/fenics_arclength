@@ -7,7 +7,7 @@ Fenics-arclength Documentation
 ============================================
 
 **fenics-arclength** is a Python implementation of the arclength solver built on top of FEniCS. 
-The Arc Length Method, sometimes referred to as the Riks Method, is a method used to solve solid mechanics problems with geometric nonlinearity. 
+The Arc Length Method, sometimes referred to as the Riks Method, is a method used to solve solid mechanics problems with geometric nonlinearity
 with complex equilibrium paths. 
 The library aims to keep the usage as similiar to `FEniCS <https://fenicsproject.org/download/archive/>`_ (version 2019.1.0) to allow
 for off-the-shelf implementation and integration with other FEniCS workflows.
@@ -83,8 +83,8 @@ Arc-Length solvers in this package
 Notebook Examples
 ----------------------------------
 To execute the Jupyter Notebooks in this repository, please download the
-`<repository>`_ and use the notebooks in the ``examples`` folder. Note that downloading
-the notebook directly will not guarantee that the examples will run since the files will be
+`repository <https://github.com/pprachas/fenics_arclength>`_ and use the notebooks in the ``examples`` folder. Note that downloading
+the notebook directly from ReadTheDocs will not guarantee that the examples will run since the files will be
 missing other components (i.e. meshes, other scripts).  
 
 .. toctree::

@@ -46,7 +46,14 @@ The simplest way to install FEniCS on Windows 10 is to install [WSL2](https://le
         conda create -n fenicsproject -c conda-forge fenics
         source activate fenicsproject
  
-Note that there might be issues with the conda installation with the Apple M1 macbook. In this case the Docker installation is recommended. 
+Note that there might be issues with the conda installation with the Apple M1 Macbook. 
+A workaround for M1 Macbooks is to first set the environment configurations *before* installing FEniCS, i.e.:
+ 
+        conda create -n fenicsproject
+        conda activate fenicsproject
+        conda config --env --set subdir osx-64
+        conda config --append channels conda-forge
+        conda install -c conda-forge fenics     
  
 ### FEniCS on Docker (Windows, Mac, Linux)
 First install [Docker Desktop](https://fenicsproject.org/download/archive/) then run the following command:

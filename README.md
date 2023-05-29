@@ -117,14 +117,14 @@ Here is outline the basic theory of solving nonlinear finite elements and our im
 A nonlinear finite element problem seeks to minimize the residual vector that comes from discretizing the weak form of the energy balance equation (e.g. continuum for beam balance equations). In general the residual cannot be solved exactly and must be approximated through linearization. A common method to solve nonlinear finite element problems uses the Newton-Raphson method:
 
  ```math
-\mathcal{R}(\mathbf{u}_{n+1}) = \mathcal{R}(\mathbf{u}_{n})+\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}\Delta u
+\mathcal{R}(\mathbf{u}_{n+1}) = \mathcal{R}(\mathbf{u}_{n})+\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}\Delta \mathbf{u}
  ```
  
 where $\Delta u = \mathbf{u}_{n+1}-\mathbf{u}_n$.
 
 Newton's method is solved incrementally until the desired convergence criterion. The term $\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}$
 is typically called the tangential stiffness matrix $K_T$. The first term $\mathcal R(\mathbf u_n)$ is the externally applied force $F^{ext}$, while the second term
-$\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta u$ is the internal force $F^{int}$ the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor $\lambda^k$ where $k$ is the increment. Putting it all together, the nonlinear problem can be written as:
+$\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta \mathbf u$ is the internal force $F^{int}$ the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor $\lambda^k$ where $k$ is the increment. Putting it all together, the nonlinear problem can be written as:
 
 ```math
 \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n},\lambda_{n+1})-\lambda_{n+1} F^{ext}(\mathbf{u}_{n})
@@ -216,7 +216,7 @@ The displacement control corrector scheme modifies the above equation to:
 ```math
 \begin{bmatrix}
 C^\top K_T C & C^\top K \mathbf{u}_p \\
-\frac{\partial \mathcal{A}}{\partial u_f} & \frac{\partial \mathcal{A}}{\partial \lambda}
+\frac{\partial \mathcal{A}}{\partial \mathbf{u}_f} & \frac{\partial \mathcal{A}}{\partial \lambda}
 \end{bmatrix} 
 \begin{bmatrix}
 \delta \mathbf{u} \\ \delta \lambda

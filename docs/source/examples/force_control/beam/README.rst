@@ -8,7 +8,7 @@ Introduction
 Geometrically exact beams: kinematic assumptions are based on 3D continuum theory while the consitutive law is postulated.
 Some useful resources papers:
 
-#. `Review on geometrically exact beam formulations nomenclature <https://link.springer.com/content/pdf/10.1007/s11831-017-9232-5.pdf>`_
+#. `Review on geometrically exact beam formulations and circumventing objectivity issues <https://link.springer.com/content/pdf/10.1007/s11831-017-9232-5.pdf>`_
 #. `Paper with good notes on geometrically exact beams with finite rotations <https://www.sciencedirect.com/science/article/pii/S0045782519307030>`_
 #. `Geometrically Exact beams + contact formulation <https://www.sciencedirect.com/science/article/pii/S0020768317303372>`_
 #. `Cristfield's notes on strain objectiviy. Also contains a good derivation of the strains and principle of virtual work in the Appendix. <https://royalsocietypublishing.org/doi/epdf/10.1098/rspa.1999.0352>`_
@@ -64,7 +64,8 @@ and the rotation of the material triads are:
 Constructing Initial Beam Triads
 --------------------------------
 The inital beam traids are constructed as follows.
- The first direction is the beam tangent direction:
+
+* The first direction is the beam tangent direction:
 
 .. math::
     \mathbf{g}_{01} = \mathbf{r}_{0,s}
@@ -73,12 +74,12 @@ where `\dots_{,s}` is the directional derivative with respect to the beam tangen
 
 (e.g. `\mathbf r_{0,s} =  \frac{d \mathbf r_0}{d s}`)
 
-#. Find `\mathbf g_{02}` by finding a vector that is both perpendicular to `\mathbf g_{01}` and `\mathbf e_3`. E.g.:
+* Find `\mathbf g_{02}` by finding a vector that is both perpendicular to `\mathbf g_{01}` and `\mathbf e_3`. E.g.:
 
 .. math::
     \mathbf g_{02} = \mathbf e_3 \times \mathbf g_{01}
 
-#. Find `\mathbf g_{03}` by finding a vecor that is both perpendicular to `\mathbf g_{02}` and `\mathbf g_{01}`. E.g.:
+* Find `\mathbf g_{03}` by finding a vecor that is both perpendicular to `\mathbf g_{02}` and `\mathbf g_{01}`. E.g.:
 
 .. math::
     \mathbf g_{03} = \mathbf g_{01} \times \mathbf g_{02}
@@ -318,8 +319,9 @@ and the rotational strain measures are:
 .. math::
     \mathbf{\chi}_{n+1} = \mathbf{\chi}_n+\mathbf{\Lambda}_0^\top \mathbf{\Lambda}_n\mathbf{H}^\top\mathbf{\theta}_{,s}
 
-
 At the end of each iteration the converged solution is saved and the incremental solutions is zeroed for the next increment.
+We note that this choice of rotation interpolation is path-dependent and not objective; however, these issues disappear with sufficient load-step and mesh refinement. 
+Other strategies of rotation interpolation can also be considered to circumvent this issue entirely (See Ref.1). 
 
 Lock-free elements
 ------------------
@@ -331,10 +333,10 @@ Arc-length Implementation
 
 The predictor and corrector step of our arc-length implementation follows the paper `A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics <https://www.sciencedirect.com/science/article/pii/S014102962034356X>`_ . 
 
-In brief, the predictor step proposed in the paper above is an extrapolator that takes in the previous two converged solution `u_{n}` and `u_{n-1}` to predict the new equilibrium configuration `u_{n+1}` such that:
+In brief, the predictor step proposed in the paper above is an extrapolator that takes in the previous two converged solution `\mathbf{u}_{n}` and `\mathbf{u}_{n-1}` to predict the new equilibrium configuration `u_{n+1}` such that:
 
 .. math::
-    u_{n+1}^{predicted} = [1+\alpha] u_n -\alpha u_{n-1}
+    \mathbf{u}_{n+1}^{predicted} = [1+\alpha] \mathbf{u}_n -\alpha \mathbf{u}_{n-1}
 
 
 where `\alpha` is the parameter that controls the adaptive load size and depends on the arc-length increment.
@@ -348,6 +350,6 @@ While the continuum problems and 2D beam formulations are able to use the predic
 .. math::
     \mathbf{\Lambda}_{n+1} = \mathbf{\Lambda\Lambda}_n
 
-where `u_n` smd `\Lambda_n` denotes the solution of the previous step and `u` and `\Lambda` are now the incremental solution (that we are solving for) with respect to the previous solution.
+where `\mathbf{u}_n` smd `\mathbf{\Lambda}_n` denotes the solution of the previous step and `\mathbf{u}` and `\mathbf{\Lambda}` are now the incremental solution (that we are solving for) with respect to the previous solution.
 
-To take into account the incremental solution in the arc-length update scheme, `u_{n-1} = 0` while `u_n` stays the same. This is analougous to zeroing the solution after each converged Newton iteration.
+To take into account the incremental solution in the arc-length update scheme, `\mathbf{u}_{n-1} = 0` while `\mathbf{u}_n` stays the same. This is analougous to zeroing the solution after each converged Newton iteration.

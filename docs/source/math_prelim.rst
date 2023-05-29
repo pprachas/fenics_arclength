@@ -11,18 +11,18 @@ A nonlinear finite element problem seeks to minimize the residual vector that co
 
 .. math:: \mathcal{R}(\mathbf{u}_{n+1}) = \mathcal{R}(\mathbf{u}_{n})+\frac{\partial \mathcal{R}(\mathbf{u}_{n})}{\partial \mathbf{u}_{n}}\Delta u
  
-where `\Delta u = \mathbf{u}_{n+1}-\mathbf{u}_n`.
+where `\Delta \mathbf{u} = \mathbf{u}_{n+1}-\mathbf{u}_n`.
 
 Newton's method is solved incrementally until the desired convergence criterion. The term `\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}`
-is typically called the tangential stiffness matrix `K_T`. The first term `\mathcal R(\mathbf u_n)` is the externally applied force `F^{ext}`, while the second term
-`\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta u` is the internal force `F^{int}` the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor `\lambda^k` where `k` is the increment. Putting it all together, the nonlinear problem can be written as:
+is typically called the tangential stiffness matrix `K_T`. The first term `\mathcal R(\mathbf{u_n})` is the externally applied force `F^{ext}`, while the second term
+`\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta \mathbf{u}` is the internal force `F^{int}` the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor `\lambda^k` where `k` is the increment. Putting it all together, the nonlinear problem can be written as:
 
 .. math:: \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n},\lambda_{n+1})-\lambda_{n+1} F^{ext}(\mathbf{u}_{n})
 
 Conservative Loading
 #####################
 
-In most cases the external force does not depend on the solution `u` (i.e. `F^{ext} (u_n) = F^{ext}` ). These cases are called conservative loading. The problem than can be simplified to:
+In most cases the external force does not depend on the solution `\mathbf{u}` (i.e. `F^{ext} (\mathbf{u}_n) = F^{ext}` ). These cases are called conservative loading. The problem than can be simplified to:
 
 .. math:: \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n})-\lambda^k F^{ext}
 
@@ -30,13 +30,16 @@ In this case the tangential stiffness matrix `K_T` can be contructed using just 
 
 Non-conservative loading
 ########################
-In the case where the external force depends on the solution `u`, the above assumption cannot be made and the whole residual must be taken into account when constructing the tangential stiffness matrix `K_T`. As a result, `K_T` will be non-symmetric. Examples of these specific special cases are applied moments around a fixed axis, follower loads (i.e. loads that change direction based on the deformed configuration), pressure loads, etc.
+In the case where the external force depends on the solution `\mathbf{u}`, the above assumption cannot be made and the whole residual must be taken into account when constructing the tangential stiffness matrix `K_T`. As a result, `K_T` will be non-symmetric. Examples of these specific special cases are applied moments around a fixed axis, follower loads (i.e. loads that change direction based on the deformed configuration), pressure loads, etc.
 
 The Arc-length method
 ---------------------
 
 One of the main drawbacks of Newton's method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter `\lambda_n` is now also an unknown parameter at each increment, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
-#### Force Control
+
+Force Control
+#############
+
 The additional arc-length contraint for force control is:
 
 .. math:: \mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-\Delta s
@@ -50,7 +53,7 @@ Sometimes instead of prescribing traction, the problem has a boundary contition 
 
 .. math:: \mathbf{u} = C\mathbf{u}_f+\lambda \mathbf{u}_p
 
-where `u_f` and `u_p` are the free and prescribed displacement nodes respectively, and `\lambda` is the incremental displacement factor.
+where `\mathbf{u}_f` and `\mathbf{u}_p` are the free and prescribed displacement nodes respectively, and `\lambda` is the incremental displacement factor.
 
 
 The arc length equation needs to be modified and now becomes:
@@ -75,7 +78,7 @@ Following Ref.3 and Ref.4 (see below), force control corrector scheme solves the
 .. math:: 
     \begin{bmatrix} 
     K_T & -F^{ext} \\ 
-    \frac{\partial \mathcal{A}}{\partial u} & \frac{\partial \mathcal{A}}{\partial \lambda}
+    \frac{\partial \mathcal{A}}{\partial \mathbf{u}} & \frac{\partial \mathcal{A}}{\partial \lambda}
      \end{bmatrix} \begin{bmatrix} \delta \mathbf{u} \\ \delta \lambda \end{bmatrix} = \begin{bmatrix} \mathcal{R} \\ \mathcal{A} \end{bmatrix}
 
 where 
@@ -89,7 +92,7 @@ The displacement control corrector scheme modifies the above equation to:
 .. math::
     \begin{bmatrix}
     C^\top K_T C & C^\top K \mathbf{u}_p \\
-    \frac{\partial \mathcal{A}}{\partial u_f} & \frac{\partial \mathcal{A}}{\partial \lambda}
+    \frac{\partial \mathcal{A}}{\partial \mathbf{u}_f} & \frac{\partial \mathcal{A}}{\partial \lambda}
     \end{bmatrix} 
     \begin{bmatrix}
     \delta \mathbf{u} \\ \delta \lambda

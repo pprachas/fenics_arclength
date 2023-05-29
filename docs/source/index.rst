@@ -31,8 +31,7 @@ Dependencies
 ############
 
 This package solely depends on FEniCS 2019.1.0. It is not tested on other packages.
-`Instructions to install FEniCS (legacy) can be found here <https://fenicsproject.org/download/archive/>`_
-Our Github repository also contains additional links to facilitate installation of FEniCS and other useful libraries (i.e. Jupyter notebooks to run our examples).
+`Instructions to install FEniCS (legacy) can be found here. <https://fenicsproject.org/download/archive/>`_
 
 Package Installation
 ####################

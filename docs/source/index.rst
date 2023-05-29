@@ -32,6 +32,7 @@ Dependencies
 
 This package solely depends on FEniCS 2019.1.0. It is not tested on other packages.
 `Instructions to install FEniCS (legacy) can be found here <https://fenicsproject.org/download/archive/>`_
+Our Github repository also contains additional links to facilitate installation of FEniCS and other useful libraries (i.e. Jupyter notebooks to run our examples).
 
 Package Installation
 ####################
@@ -39,11 +40,11 @@ To use our arc-length solver, download and append our `repository <https://githu
 
 * Add directory to ``PYTHONPATH``:
 
-   * On Ubuntu or Mac:
-
+   * On Ubuntu or Mac (Note that you might have to first find your python path in the computer and add it to the bash profile first.):
+   
    .. code-block:: bash
 
-      export PYTHONPATH <path/to/fenics_arclength>:$PYTHONPATH
+      export PYTHONPATH=<path/to/fenics_arclength>:$PYTHONPATH
 
 
    * On Windows:

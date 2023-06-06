@@ -8,7 +8,7 @@ from arc_length.rotation_parametrization import ExponentialMap # import rotation
 from arc_length.force_control_solver import force_control # import force control formulation of arc-length solver
 
 parameters["form_compiler"]["cpp_optimize"] = True
-parameters["form_compiler"]["quadrature_degree"] = 4
+parameters["form_compiler"]["quadrature_degree"] = 3
 parameters['reorder_dofs_serial'] = False
 
 mesh = Mesh()

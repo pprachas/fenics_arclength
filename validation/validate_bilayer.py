@@ -140,8 +140,8 @@ v_reac = Function(V)
 bcRx = DirichletBC(V.sub(0), Constant(1.0), Left) # take reaction force from the left boundary
 f_reac = [0.0]
 
-strain_crit = float((1/3)*((3*mu_s/mu_f))**(2/3))# critial strain
-while np.abs(apply_disp.t) < strain_crit*L*1.2 and solver.converged:
+strain_crit = float((1/4)*((3*mu_s/mu_f))**(2/3))# critial strain
+while np.abs(apply_disp.t) < strain_crit*L*1.1 and solver.converged:
     solver.solve()
     if solver.converged:
         # Store whole displacement field
@@ -152,13 +152,11 @@ while np.abs(apply_disp.t) < strain_crit*L*1.2 and solver.converged:
         bcRx.apply(v_reac.vector())
         f_reac.append(assemble(action(residual,v_reac)))
 
-apply_disp.t = -strain_crit*L*1.2 # stop simulation after bifurcation
+apply_disp.t = -strain_crit*L*1.1 # stop simulation after bifurcation
 
 
 # Post Processing (validate with analytical solution)
 # Here we plot and compare the final deformed shape, equilibrium path, and the wavelength. We obtain the analytical solutions from: https://royalsocietypublishing.org/doi/epdf/10.1098/rsta.2016.0163 and https://groups.seas.harvard.edu/hutchinson/papers/WrinklingPhenonmena-JAMF.pdf
-
-strain_crit = float((1/4)*((3*mu_s/mu_f))**(2/3))
 
 test_y = np.diff(np.array(f_reac))
 

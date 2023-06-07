@@ -7,7 +7,9 @@ import time
 from scipy import optimize
 sys.path.append('.')
 from arc_length.displacement_control_solver import displacement_control # import displacement control formulation of arc-length solver
-
+import sys
+from pathlib import Path
+import argparse
 
 init_time = time.time() # use to time code
 # FEniCS solver parameters
@@ -124,12 +126,12 @@ J = derivative(residual, u, du)
 
 # Solver Parameters
 psi = 1.0
-tol = 1.0e-6
+abs_tol = 1.0e-6
 lmbda0 = -0.07
 max_iter = 30
 
 # Set up arc-length solver
-solver = displacement_control(psi=psi, tol=tol, lmbda0=lmbda0, max_iter=max_iter, u=u,
+solver = displacement_control(psi=psi, abs_tol=abs_tol, lmbda0=lmbda0, max_iter=max_iter, u=u,
                        F_int=F_int, F_ext=F_ext, bcs=bcs, J=J, displacement_factor=apply_disp)
 
 disp = [u.vector().copy()]
@@ -141,6 +143,24 @@ bcRx = DirichletBC(V.sub(0), Constant(1.0), Left) # take reaction force from the
 f_reac = [0.0]
 
 strain_crit = float((1/4)*((3*mu_s/mu_f))**(2/3))# critial strain
+
+#Setup command line arguments
+parser = argparse.ArgumentParser(description='Optional paraview saving')
+parser.add_argument('-p', '--paraview', 
+                    default = False, required = False, action = 'store_true',
+                    help = 'True/False to save paraview files') 
+args = parser.parse_args()
+
+# Setup directory and save file if needed
+if args.paraview:
+    # Create directory if it doesn't exist
+    Path("validation/paraview").mkdir(parents=True, exist_ok=True)
+    # Initialize file
+    out_file = XDMFFile('validation/paraview/validate_bilayer.xdmf')
+    out_file.parameters['functions_share_mesh'] = True
+    out_file.parameters['flush_output'] = True
+
+ii = 0
 while np.abs(apply_disp.t) < strain_crit*L*1.1 and solver.converged:
     solver.solve()
     if solver.converged:
@@ -152,9 +172,11 @@ while np.abs(apply_disp.t) < strain_crit*L*1.1 and solver.converged:
         bcRx.apply(v_reac.vector())
         f_reac.append(assemble(action(residual,v_reac)))
 
-apply_disp.t = -strain_crit*L*1.1 # stop simulation after bifurcation
+        ii+=1
+        out_file.write(u, ii)
 
-
+if args.paraview:
+    out_file.close()
 # Post Processing (validate with analytical solution)
 # Here we plot and compare the final deformed shape, equilibrium path, and the wavelength. We obtain the analytical solutions from: https://royalsocietypublishing.org/doi/epdf/10.1098/rsta.2016.0163 and https://groups.seas.harvard.edu/hutchinson/papers/WrinklingPhenonmena-JAMF.pdf
 
@@ -164,6 +186,10 @@ test_x = np.diff(-np.array(lmbda)/L)
 
 fea_soln = np.nanargmax(np.abs((np.diff(np.diff(((np.array(f_reac[1:])/(Hs+Hf))/(-np.array(lmbda[1:]))/L)))))) # find the inflection point from FEA solution and use that as critical strain
 
+# Create directory if it doesn't exist
+Path("validation/plots").mkdir(parents=True, exist_ok=True)
+
+# Plot comparison with analytical solutions
 plt.figure(figsize=(7,5))
 plt.plot(-np.array(lmbda)/L, np.array(f_reac)/(Hs+Hf), c='k', marker = 'o', label = 'Equilibrium Path')
 plt.plot(-np.array(lmbda[fea_soln+2])/L, np.array(f_reac[fea_soln+2])/(Hs+Hf), marker = 'd', c =(0.4,0,0) , ls = 'None', markersize = 10, label='FEA critical strain')
@@ -173,7 +199,7 @@ plt.ylabel('Stress per unit depth')
 plt.title('Equilibrium path')
 plt.legend()
 
-plt.savefig('validation/validate_bilayer_stressstrain.png')
+plt.savefig('validation/plots/validate_bilayer_stressstrain.png')
 
 percent_diff_crit_strain = ((strain_crit-(-np.array(lmbda[fea_soln+2])/L))/strain_crit) * 100
 print('Percent Error between analytical critical strain and FEA critical strain:',percent_diff_crit_strain,'%')
@@ -225,7 +251,7 @@ plt.xlabel('x displacement')
 plt.ylabel('y displacement')
 plt.legend(loc = (1.01,0.5))
 plt.tight_layout()
-plt.savefig('validation/validate_bilayer_wavelength.png')
+plt.savefig('validation/plots/validate_bilayer_wavelength.png')
 
 percent_diff_wavelength=((params[1]-ana_wavelength)/ana_wavelength)*100
 print('Percent Error between analytical wavelength and fitted FEM wavelength:',percent_diff_wavelength, '%')

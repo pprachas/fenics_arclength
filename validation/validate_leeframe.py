@@ -8,12 +8,12 @@ import os
 import sys
 sys.path.append('.')
 from arc_length.force_control_solver import force_control # import force control formulation of arc-length solver
-
+from pathlib import Path
+import argparse
 
 parameters["form_compiler"]["cpp_optimize"] = True
 parameters["form_compiler"]["quadrature_degree"] = 1
 parameters['reorder_dofs_serial'] = False
-
 
 ffc_options = {"optimize": True, \
                "eliminate_zeros": True, \
@@ -23,7 +23,6 @@ ffc_options = {"optimize": True, \
 mesh = Mesh()
 with XDMFFile(os.getcwd()+'/examples/force_control/beam/beam_2D/mesh/lee_frame.xdmf') as infile:
     infile.read(mesh)
-    
 
 Ue = VectorElement("CG", mesh.ufl_cell(), 1, dim=2) # displacement
 Te = FiniteElement("CG", mesh.ufl_cell(), 1) # rotation
@@ -41,7 +40,10 @@ V0 = FunctionSpace(mesh, "DG", 0)
 
 
 Vu = V.sub(0).collapse()
-disp = Function(Vu)
+total_displ = Function(Vu, name="Total displacement")
+
+Vr = V.sub(1).collapse()
+total_rot = Function(Vr, name="Total Rotation")
 
 Jac = Jacobian(mesh)
 gdim = mesh.geometry().dim()
@@ -145,13 +147,13 @@ for ii in y_dofs:
 #----------------------Solving the Nonlinear Problem--------------------------------------#
 # Solver Parameters
 psi = 1.0
-tol = 1.0e-6
+abs_tol = 1.0e-6
 lmbda0 = 0.5
 max_iter = 10
 solver = 'mumps' # optional
 
 # Set up arc-length solver
-solver = force_control(psi=psi, tol=tol, lmbda0=lmbda0, max_iter=max_iter, u=v,
+solver = force_control(psi=psi, abs_tol= abs_tol, lmbda0=lmbda0, max_iter=max_iter, u=v,
                        F_int=F_int, F_ext=F_ext, bcs=bcs, J=tangent_form, load_factor=load, solver=solver)
 
 # Lists to store solution vectors
@@ -166,15 +168,39 @@ paper_eq = np.loadtxt(os.getcwd()+'/examples/force_control/beam/beam_2D/lit_soln
 paper_disp = -paper_eq[:,2]
 paper_load = paper_eq[:,0]
 
+#Setup command line arguments
+parser = argparse.ArgumentParser(description='Optional paraview saving')
+parser.add_argument('-p', '--paraview', 
+                    default = False, required = False, action = 'store_true',
+                    help = 'True/False to save paraview files') 
+args = parser.parse_args()
+
+# Setup directory and save file if needed
+if args.paraview:
+    # Create directory if it doesn't exist
+    Path("validation/paraview").mkdir(parents=True, exist_ok=True)
+    # Initialize file
+    out_file = XDMFFile('validation/paraview/validate_leesframe.xdmf')
+    out_file.parameters['functions_share_mesh'] = True
+    out_file.parameters['flush_output'] = True
+
+ii=0
 # solver iteration
 while (-v.vector()[force_dof] <= paper_disp[-1]) or (solver.converged == False):
     solver.solve()
     if solver.converged and (-v.vector()[force_dof] <= paper_disp[-1]): # We only want to save the solution step if the solver covergesand within range of paper solution
+        total_displ.vector()[:] = v.sub(0,True).vector()[:]
+        total_rot.vector()[:] = v.sub(1,True).vector()[:]
         disp.append(v.vector()[:])
         force_disp.append(-disp[-1][force_dof])
         lmbda.append(load.t)
+        ii+=1
 
-
+        if args.paraview:
+            out_file.write(total_displ, ii)
+            out_file.write(total_rot, ii)
+if args.paraview:
+    out_file.close()
 # Plot and compare solutions
 plt.figure(figsize=(7,7))
 plt.scatter(-paper_eq[:,2], paper_eq[:,0], label = 'Paper implementation', facecolors = 'None', edgecolors = 'r', marker = 's')
@@ -230,4 +256,7 @@ else:
     print('Lee\'s frame did not pass validation test')
     print('Passed test:', val)
 
-plt.savefig('validation/validate_leeframe.png')
+# Create directory if it doesn't exist
+Path("validation/plots").mkdir(parents=True, exist_ok=True)
+
+plt.savefig('validation/plots/validate_leeframe.png')

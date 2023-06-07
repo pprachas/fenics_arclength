@@ -6,6 +6,8 @@ import sys
 sys.path.append('.')
 from arc_length.rotation_parametrization import ExponentialMap # import rotation parameterization for 3D beams
 from arc_length.force_control_solver import force_control # import force control formulation of arc-length solver
+from pathlib import Path
+import argparse
 
 parameters["form_compiler"]["cpp_optimize"] = True
 parameters["form_compiler"]["quadrature_degree"] = 3
@@ -34,7 +36,10 @@ curv_old = Function(V0, name="Previous curvature strain")
 
 
 Vu = V.sub(0).collapse()
-total_displ = Function(Vu, name="Previous total displacement")
+total_displ = Function(Vu, name="Total displacement")
+
+Vr = V.sub(1).collapse()
+total_rot = Function(Vr, name="Total Rotation")
 
 rot_param = ExponentialMap()
 R = rot_param.rotation_matrix(theta)
@@ -123,13 +128,13 @@ tangent_form = derivative(residual, v, dv)
 
 # Solver Parameters
 psi = 1.0 
-tol = 1.0e-6 
+abs_tol = 1.0e-6 
 lmbda0 = 1/3000 
 max_iter = 10
 solver = 'mumps' # Optional -- Type of linear solver
 
 # Set up arc-length solver
-solver = force_control(psi=psi, tol=tol, lmbda0=lmbda0, max_iter=max_iter, u=v, 
+solver = force_control(psi=psi, abs_tol=abs_tol, lmbda0=lmbda0, max_iter=max_iter, u=v, 
                        F_int=F_int, F_ext=F_ext, bcs=bcs, J=tangent_form, load_factor=load, solver=solver)
 
 # Start solver 
@@ -137,11 +142,30 @@ disp = [total_displ.vector()[:]] # displacement solutions
 rot = [v.sub(1,True).vector()[:]] # Rotation solutions
 lmbda = [0] # save load factor
 
+#Setup command line arguments
+parser = argparse.ArgumentParser(description='Optional paraview saving')
+parser.add_argument('-p', '--paraview', 
+                    default = False, required = False, action = 'store_true',
+                    help = 'True/False to save paraview files') 
+args = parser.parse_args()
+
+# Setup directory and save file if needed
+if args.paraview:
+    # Create directory if it doesn't exist
+    Path("validation/paraview").mkdir(parents=True, exist_ok=True)
+    # Initialize file
+    out_file = XDMFFile('validation/paraview/validate_3Dbeamlarge.xdmf')
+    out_file.parameters['functions_share_mesh'] = True
+    out_file.parameters['flush_output'] = True
+
+ii=0
 while (solver.load_factor.t < 0.1 and solver.converged) or (solver.converged == False):
     solver.solve()
-    if solver.converged:       
+    if solver.converged:  
+        ii+=1     
         if method == 'incremental':
             total_displ.vector()[:] += v.sub(0,True).vector()[:]
+            total_rot.vector()[:] += v.sub(1,True).vector()[:]
             R_old.assign(project(R * R_old, VR))
             curv_old.assign(project(curv, V0))
 
@@ -151,10 +175,21 @@ while (solver.load_factor.t < 0.1 and solver.converged) or (solver.converged == 
 
             solver.u_n = v.vector().copy()-solver.u_n_1
             solver.u_n_1.zero()
+
+            if args.paraview:
+                out_file.write(total_displ, ii)
+                out_file.write(total_rot, ii)
         else:
+            total_displ,vector()[:] = v.sub(0,True).vector()[:]
+            total_rot.vector()[:] = v.sub(1,True).vector()[:]
             disp.append(v.sub(0,True).vector()[:])
             rot.append(v.sub(1,True).vector()[:])
 
+            if args.paraview:
+                out_file.write(total_displ, ii)
+                out_file.write(total_rot, ii)
+if args.paraview:
+    out_file.close()
 #----------Comparing with analytical curvature (e_2 direction)------------------#
 # get curvature from FEA solution
 curve_e2 = curv_old((0,0,0))[1]

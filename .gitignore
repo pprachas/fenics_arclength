@@ -9,3 +9,6 @@ examples/force_control/beam/beam_2D/arch180_fenics_arclength_New.ipynb
 fd_curve.eps
 arc_length/__pycache__
 docs/build
+validation/plots
+validation/paraview
+validation/__pycache__

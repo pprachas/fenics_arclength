@@ -7,26 +7,36 @@ An FEniCS based arc-length with prescribed traction. The code is heavily based o
 Kadapa, Chennakesava. "A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics." Engineering Structures 234 (2021): 111755.
 
 '''
+
+# This is to avoid sphinx autodoc errors; there is no effect on solver
+try:
+    DOLFIN_EPS
+except:
+    DOLFIN_EPS = None
+######################################################################
+
 class force_control:
-    ''' The arc-length displacement control solver of this library
+    ''' The arc-length force control solver of this library
     
     Args:
         psi: the scalar arc-length parameter. When psi = 1, the method becomes the spherical arc-length method and when psi = 0 the method becomes the cylindrical arc-length method
-        tol : tolerance for the linear solver
         lmbda0 : the initial load parameter
         max_iter : maximum number of iterations for the linear solver
         u : the solution function
         F_int : First variation of strain energy (internal nodal forces)
         F_ext : Externally applied load (external applied force)
         J : The Jacobian of the residual with respect to the deformation (tangential stiffness matrix)
-        displacement_factor : The incremental load factor
-        solver : (optional): type of linear solver for the FEniCS linear solve function -- default FEniCS linear solver is used if no argument is used.
+        load_factor : The incremental load factor
+        abs_tol (optional): absolute residual tolerance for the solver (default value: 1e-10)
+        rel_tol (optional): relative residual tolerance for solver; the relative residual is defined as the ration between the current residual and initial residual of the displacement step (default value: DOLFIN_EPS)
+        solver (optional): type of linear solver for the FEniCS linear solve function -- default FEniCS linear solver is used if no argument is used.
     '''
 
-    def __init__(self, psi, tol, lmbda0, max_iter, u, F_int, F_ext, bcs, J, load_factor, solver='default'):
+    def __init__(self, psi, lmbda0, max_iter, u, F_int, F_ext, bcs, J, load_factor, abs_tol = 1e-10, rel_tol = DOLFIN_EPS, solver='default'):
         # Initialize Variables
         self.psi = psi
-        self.tol = tol
+        self.abs_tol = abs_tol
+        self.rel_tol = rel_tol
         self.lmbda = lmbda0
         self.max_iter = max_iter
         self.F_int = F_int
@@ -76,8 +86,12 @@ class force_control:
             # Assemble and apply BCs
             K,R = assemble_system(self.J, self.residual, self.bcs)
             norm = R.norm('l2')
-            print(f'Iteration {ii}: \nResidual error: {norm:.4e}')
-            if norm < self.tol:
+            # Define relative residual for first iteration
+            if ii == 0:
+                norm0 = norm
+                
+            print(f'Iteration {ii}: | \nAbsolute Residual: {norm:.4e}| Relative Residual: {norm/norm0:.4e}')
+            if norm < self.abs_tol or norm/norm0 < self.rel_tol:
                 self.delta_s = sqrt(self.u.vector().inner(self.u.vector()) + self.psi * self.lmbda**2 * self.FF)
                 self.counter = 1
                 break
@@ -125,8 +139,8 @@ class force_control:
         # Corrector Step(i.e. arc-length solver):
         solver_iter = 0
         norm = 1
-        while norm > self.tol and solver_iter < self.max_iter:
-            solver_iter += 1
+
+        while (norm > self.abs_tol or norm/norm0 > self.abs_tol) and solver_iter < self.max_iter:
             
             # Assemble K and R
             K,R = assemble_system(self.J, self.residual, self.bcs) # assemble system
@@ -138,8 +152,13 @@ class force_control:
             A = delta_u.inner(delta_u) + self.psi * delta_lmbda**2 * self.FF - self.delta_s**2
             R_norm = R.norm('l2')
             norm = sqrt(R_norm**2 + A**2)
-            print(f'Iteration: {solver_iter} \n|Total Norm: {norm:.4e} |Residual Norm: {R_norm:.4e} |A: {A:.4e}|')
-            if norm < self.tol:
+            
+            # Define relative residual for arc-length solver iteration
+            if solver_iter == 0:
+                norm0 = norm
+
+            print(f'Iteration: {solver_iter} \n|Total Norm: {norm:.4e} |Residual: {R_norm:.4e} |A: {A:.4e}| Relative Norm : {norm/norm0:.4e}')
+            if norm < self.abs_tol or norm/norm0 < self.rel_tol:
                 self.converged = True
                 break
 
@@ -159,6 +178,8 @@ class force_control:
 
             self.lmbda += dlmbda
             self.load_factor.t = self.lmbda
+
+            solver_iter += 1
 
          # Solution Update
         if self.converged:

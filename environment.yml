@@ -2,7 +2,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - numpy
+  - fenics
+  - mshr
   - scipy
   - matplotlib
-  - jupyter

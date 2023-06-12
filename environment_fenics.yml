@@ -1,7 +1,0 @@
-name: fenics_arclength
-channels:
-  - conda-forge
-  - defaults
-dependencies:
-  - fenics
-  - mshr

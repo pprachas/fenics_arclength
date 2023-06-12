@@ -45,15 +45,24 @@ The simplest way to install FEniCS on Windows 10 is to install [WSL2](https://le
  
         conda create -n fenicsproject -c conda-forge fenics
         conda activate fenicsproject
+
+However, the conda FEniCS installation is missing a few important libraries (i.e. scipy, mshr). For convenience, we provide can environment.yml file that contains all the dependencies except for Jupyter notebooks. 
+To use the environment.yml file, navigate the to root directory and use the following commands:
  
-Note that there might be issues with the conda installation with the Apple M1 Macbook. 
-A workaround for M1 Macbooks is to first set the environment configurations *before* installing FEniCS, i.e.:
+        conda create -n fenicsproject
+        conda activate fenicsproject
+        conda env update -f environment.yml
+
+ For M1 macs there might be issues with installing FEniCS. As a workaround, you must first set the conda environment variable to osx-64. As such, the full command to install FEniCS and all the dependencies on an M1 Mac are:
  
         conda create -n fenicsproject
         conda activate fenicsproject
         conda config --env --set subdir osx-64
-        conda config --append channels conda-forge
-        conda install -c conda-forge fenics     
+        conda env update -f environment.yml
+ 
+While the validation scripts and the package can be used without Jupyter notebooks, Jupyter notebooks are required to run the examples in the examples directory. To install jupyter notebooks, the following command should be ruin after using the environment.ymk file:
+ 
+        conda install -c conda-forge jupyter
  
 ### FEniCS on Docker (Windows, Mac, Linux)
 First install [Docker Desktop](https://fenicsproject.org/download/archive/) then run the following command:

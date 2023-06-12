@@ -105,7 +105,7 @@ To use this arc-length solver, download and append this repository to the python
 |[validation](validation)| contains python scripts to compare our solver with analytical solutions/solutions in literature. <br><br> To run the scripts run: <br> <br> ``python3 validation/validate_xx.py`` <br><br> from the project root directory. More information in section [Validation](#validation) |
 
 ## Validation <a name="validation"></a>
-To validate that our arc-length solver works we provide 3 validation examples. To run the examples go to the root directory and run ``python3 validation/validate_xx.py``. The available python scripts are:
+To validate that our arc-length solver works we provide 3 validation examples. To run the examples go to the root directory and run ``python3 validation/validate_xx.py``. The output plots will be in the ``validation/plots`` folder. The visualize the paraview files, append ``-p`` at the end of the command line (i.e. ``python3 validation//validate_xx.py -p``). The available python scripts are:
 * ``validate_3Dbeamsmall.py``
     * This script solves a clamped cantilever beam with a small applied force and moment at the free end. The solution (i.e. the reaction shear, moment, and curvature) of from the arc-length solver is compared with linear beam theory.
     * *Outputs:* The outputs of the script is the percent differences between the analytical solution and arc-length solution for reaction shear, reaction moment, and beam curvature. If the solutions are within 1% difference, then the validation is complete.

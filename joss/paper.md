@@ -14,7 +14,7 @@ authors:
     affiliation: 2
   - name: Berkin Dortdivanlioglu
     orcid: 0000-0001-7105-1452
-    affiliation: "3,4"
+    affiliation: "3, 4"
   - name: Emma Lejeune
     orcid: 0000-0001-8099-3468
     corresponding: true

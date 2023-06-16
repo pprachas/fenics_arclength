@@ -8,6 +8,7 @@ tags:
 authors:
   - name: Peerasait Prachaseree
     orcid: 0009-0000-3325-1410
+    equal-contrib: false
     affiliation: 1 
   - name: Saeed Mohammadzadeh
     orcid: 0000-0001-9879-044X
@@ -29,7 +30,7 @@ affiliations:
  - name: Oden Institute for Computational Engineering and Sciences, The University of Texas at Austin, Austin, the United States of America
    index: 4
 date: 16 June 2023
-bibliography: joss/paper.bib
+bibliography: paper.bib
 
 # Summary
 

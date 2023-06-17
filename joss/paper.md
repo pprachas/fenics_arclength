@@ -69,7 +69,7 @@ In Fig. \autoref{fig:leesframe}, we show an example of our arclength implementat
 | -   3D Helical Beam                  |
 +--------------------------------------+
 | **Displacement-controlled Scheme**   |
-+--------------------------------------+
++======================================+
 | *Continuum Elements*                 |
 |                                      |
 | -   Bilayer Wrinkling $^\bigstar$    |

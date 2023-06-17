@@ -46,8 +46,51 @@ Materials and structures that undergo large deformation often exhibit fascinatin
 
 # Examples of FEniCS Arclength
 
-![A demonstration of our arclength solver via the snap-back instability behavior of Lee's frame, a popular benchmark problem in nonlinear structural mechanics: a) The problem definition for Lee's frame; b) The equilibrium path from our solver compared to the literature [@kadapa2021simple]; c) The final deformed configuration from our solver compared to the literature [@kadapa2021simple].\label{fig:leesframe}](joss_arclength.eps)
+![A demonstration of our arclength solver via the snap-back instability behavior of Lee's frame, a popular benchmark problem in nonlinear structural mechanics: a) The problem definition for Lee's frame; b) The equilibrium path from our solver compared to the literature [@kadapa2021simple]; c) The final deformed configuration from our solver compared to the literature [@kadapa2021simple].\label{fig:leesframe}](joss_arclength.png)
 
 In Fig. \autoref{fig:leesframe}, we show an example of our arclength implementation for solving the Lee's frame problem [@lee1968large], a popular benchmark problem in nonlinear structural mechanics. In this problem, the frame is discretized using 2D Simo-Reissner beams [@simo1986three] with mixed elements. The elements have linear Lagrange interpolation functions for both displacement and rotation and use reduced integration to avoid locking. Figure \autoref{fig:leesframe}a) gives an overview of the Lee's frame problem and illustrates the equilibrium path (Figure \autoref{fig:leesframe}b) and the deformed configuration (Figure \autoref{fig:leesframe}c) in comparison with the literature [@kadapa2021simple]. The Lee's frame example demonstrates that our solver is able to trace unstable states, where traditional Newton solvers would fail. Additional validation examples on problems in nonlinear structural mechanics with beam elements (compared to solutions from Kadapa et al. [@kadapa2021simple]), and bilayer wrinkling with continuum elements (compared to analytical solutions [@allensandwich, budday2017wrinkling, cao2012wrinkling]) can be found in the examples folder of the Github Repository (<https://github.com/pprachas/fenics_arclength/tree/master/examples>), or in the ReadTheDocs (<https://fenics-arclength.readthedocs.io/en/latest/index.html#notebook-examples>) documentation. Critically, we demonstrated that our solver is able to trace the complex equilibrium paths of popular benchmark problems such as $215^\circ$ and $180^\circ$ archs (see Table \autoref{tab:examples} for all the provided examples in our documentation). In addition to validation problems, our documentation also contains the solver's API, example usage of our solver for continuum problems, and example usage of our displacement controlled arclength scheme.
+
+::: {#tab:examples}
++--------------------------------------+
+| **Force-controlled Scheme**          |
++:=====================================+
+| *Continuum elements*                 |
+|                                      |
+| -   Lee's Frame (Continuum Elements) |
+|                                      |
+| *Beam elements*                      |
+|                                      |
+| -   Lee's Frame $^\S$                |
+|                                      |
+| -   $215^\circ$ arc $^\S$            |
+|                                      |
+| -   $180^\circ$ arc $^\S$            |
+|                                      |
+| -   3D Helical Beam                  |
++--------------------------------------+
+| **Displacement-controlled Scheme**   |
++--------------------------------------+
+| *Continuum Elements*                 |
+|                                      |
+| -   Bilayer Wrinkling $^\bigstar$    |
+|                                      |
+| *Beam Elements*                      |
+|                                      |
+| -   Random Fiber Network             |
++--------------------------------------+
+
+: A list of all available examples in our GitHub Repository and
+ReadTheDocs documentation. Examples marked with ($\S$) are compared with
+solutions from the literature obtained from [@kadapa2021simple].
+Examples with ($\bigstar$) are compared with solutions from
+[@allensandwich; @budday2017wrinkling; @cao2012wrinkling]
+:::
+
+[]{#tab:examples label="tab:examples"}
+
+# Acknowledgements
+
+This work was made possible with funding through the Boston University David R. Dalton Career Development Professorship, the Hariri Institute Junior Faculty Fellowship, the Haythornthwaite Foundation Research Initiation Grant, and the National Science Foundation Grant CMMI-2127864. This support is gratefully acknowledged.
+
 
 # References

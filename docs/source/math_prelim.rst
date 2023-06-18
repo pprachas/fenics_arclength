@@ -26,7 +26,7 @@ In most cases the external force does not depend on the solution `\mathbf{u}` (i
 
 .. math:: \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n})-\lambda^k F^{ext}
 
-In this case the tangential stiffness matrix `K_T` can be contructed using just the internal energy (i.e. `K_T = \frac{\partial F^{int}(\mathbf u_{n+1};\mathbf u_n)}{\partial \mathbf{u}_n}`)
+In this case the tangential stiffness matrix `K_T` can be constructed using just the internal energy (i.e. `K_T = \frac{\partial F^{int}(\mathbf u_{n+1};\mathbf u_n)}{\partial \mathbf{u}_n}`)
 
 Non-conservative loading
 ########################
@@ -35,12 +35,12 @@ In the case where the external force depends on the solution `\mathbf{u}`, the a
 The Arc-length method
 ---------------------
 
-One of the main drawbacks of Newton's method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter `\lambda_n` is now also an unknown parameter at each increment, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
+One of the main drawbacks of Newton's method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter `\lambda_n` is now also an unknown parameter at each increment, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary conditions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
 
 Force Control
 #############
 
-The additional arc-length contraint for force control is:
+The additional arc-length constraint for force control is:
 
 .. math:: \mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-\Delta s
 
@@ -49,7 +49,7 @@ where `\Delta s` determines how far to search for the next equilibrium point and
 Displacement Control
 #####################
 
-Sometimes instead of prescribing traction, the problem has a boundary contition with presecribed non-zero displacement (i.e. nonhomogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and we construct a constraint matrix `C` such that: 
+Sometimes instead of prescribing traction, the problem has a boundary condition with prescribed non-zero displacement (i.e. non-homogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and we construct a constraint matrix `C` such that: 
 
 .. math:: \mathbf{u} = C\mathbf{u}_f+\lambda \mathbf{u}_p
 

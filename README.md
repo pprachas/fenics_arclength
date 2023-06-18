@@ -2,7 +2,7 @@
 [![Documentation Status](https://readthedocs.org/projects/fenics-arclength/badge/?version=latest)](https://fenics-arclength.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-This repository contains the arc-length Riks solver written with FEniCS. Addtional information, documentation, and example problems can be found our ReadTheDocs documentation:
+This repository contains the arc-length Riks solver written with FEniCS. Additional information, documentation, and example problems can be found our ReadTheDocs documentation:
 
 <div align="center">
 
@@ -28,7 +28,7 @@ More information on the arc-length method and the solution approach can be found
 
 
 ## Dependencies <a name="dependencies"></a>
-This package relies on FEniCS 2019.1.0. (Note that this is the legacy version NOT FEniCSx). Brief installation instructions are outline below. For more information see the [offical FEniCS installation instructions.](https://fenicsproject.org/download/archive/)
+This package relies on FEniCS 2019.1.0. (Note that this is the legacy version NOT FEniCSx). Brief installation instructions are outline below. For more information see the [official FEniCS installation instructions.](https://fenicsproject.org/download/archive/)
 
 ### FEniCS on Windows
 The simplest way to install FEniCS on Windows 10 is to install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) with Ubuntu distribution. Then you can follow the FEniCS installation instructions for a Linux machine.
@@ -71,14 +71,14 @@ First install [Docker Desktop](https://fenicsproject.org/download/archive/) then
 You also can start the Docker container with the following command:
 
         docker run -ti -p 127.0.0.1:8000:8000 -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
-A more comprehensive and detailed intructions on Docker installation can be found here: [Docker Installation Instructions](https://fenics.readthedocs.io/projects/containers/en/latest/introduction.html).
+A more comprehensive and detailed instructions on Docker installation can be found here: [Docker Installation Instructions](https://fenics.readthedocs.io/projects/containers/en/latest/introduction.html).
  
 ## Other useful libraries
-While only FEniCS is required to use the arc-length solver, additional libraries can be useful for visualization of results and post-processing. Jupyter notebooks is also required to run our examples. For the conda installation numpy, scipy, and matplotlib must also be installed seperately through conda-forge. An environment.yml file is provided in this repository to facilitate installation of all optional libraries (i.e. numpy, scipy, matplotlib, jupyter) in a conda environment. To create a conda environment using the environment.yml file run the following command after cloning the repository and navigating to the root directory:
+While only FEniCS is required to use the arc-length solver, additional libraries can be useful for visualization of results and post-processing. Jupyter notebooks is also required to run our examples. For the conda installation numpy, scipy, and matplotlib must also be installed separately through conda-forge. An environment.yml file is provided in this repository to facilitate installation of all optional libraries (i.e. numpy, scipy, matplotlib, jupyter) in a conda environment. To create a conda environment using the environment.yml file run the following command after cloning the repository and navigating to the root directory:
 
        conda env create -f environment_fenics.yml
        conda activate fenics_arclength
-       conda env update -f environement_others.yml --prune
+       conda env update -f environment_others.yml --prune
  
 Note that in this case the conda environment name will be ``fenics_arclength``.
 
@@ -114,7 +114,7 @@ To use this arc-length solver, download and append this repository to the python
 |[validation](validation)| contains python scripts to compare our solver with analytical solutions/solutions in literature. <br><br> To run the scripts run: <br> <br> ``python3 validation/validate_xx.py`` <br><br> from the project root directory. More information in section [Validation](#validation) |
 
 ## Validation <a name="validation"></a>
-To validate that our arc-length solver works we provide 3 validation examples. To run the examples go to the root directory and run ``python3 validation/validate_xx.py``. The output plots will be in the ``validation/plots`` folder. The visualize the paraview files, append ``-p`` at the end of the command line (i.e. ``python3 validation//validate_xx.py -p``). The available python scripts are:
+To validate that our arc-length solver works we provide 3 validation examples. To run the examples go to the root directory and run ``python3 validation/validate_xx.py``. The output plots will be in the ``validation/plots`` folder. The visualize the Paraview files, append ``-p`` at the end of the command line (i.e. ``python3 validation//validate_xx.py -p``). The available python scripts are:
 * ``validate_3Dbeamsmall.py``
     * This script solves a clamped cantilever beam with a small applied force and moment at the free end. The solution (i.e. the reaction shear, moment, and curvature) of from the arc-length solver is compared with linear beam theory.
     * *Outputs:* The outputs of the script is the percent differences between the analytical solution and arc-length solution for reaction shear, reaction moment, and beam curvature. If the solutions are within 1% difference, then the validation is complete.
@@ -128,7 +128,7 @@ To validate that our arc-length solver works we provide 3 validation examples. T
     * This scripts solve the bilayer wrinkling problem. The resulting wrinkling wavelength and critical buckling strain is compared with literature obtained [here](https://royalsocietypublishing.org/doi/epdf/10.1098/rsta.2016.0163) and [here](https://groups.seas.harvard.edu/hutchinson/papers/WrinklingPhenonmena-JAMF.pdf).
     * *Outputs:* The outputs of the script are the percent differences between the analytical solutions (critical strain and wavelength) and FEA solution. The comparison plots are also saved in ``valiation/validation_bilayer_stresstrain.png`` and ``valiation/validation_bilayer_wavelength.png``.
     
- **Note that the beam validation scripts should be fast to run ($\sim$ 5 secs for small deformation and Lee's frame, $\sim$ 1 min for large deformation). The bilayer nwrinkling will take longer to run ($\sim$ 25 mins).**
+ **Note that the beam validation scripts should be fast to run ($\sim$ 5 secs for small deformation and Lee's frame, $\sim$ 1 min for large deformation). The bilayer wrinkling will take longer to run ($\sim$ 25 mins).**
 
 ## Theory <a name="theory"></a>
 Here is outline the basic theory of solving nonlinear finite elements and our implementation of the arc-length solver.
@@ -156,15 +156,15 @@ In most cases the external force does not depend on the solution $u$ (i.e. $F^{e
 \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n})-\lambda^k F^{ext}
 ```
 
-In this case the tangential stiffness matrix $K_T$ can be contructed using just the internal energy (i.e. $K_T = \frac{\partial F^{int}(\mathbf u_{n+1};\mathbf u_n)}{\partial \mathbf{u}_n}$)
+In this case the tangential stiffness matrix $K_T$ can be constructed using just the internal energy (i.e. $K_T = \frac{\partial F^{int}(\mathbf u_{n+1};\mathbf u_n)}{\partial \mathbf{u}_n}$)
 
 #### Non-conservative loading
 In the case where the external force depends on the solution $u$, the above assumption cannot be made and the whole residual must be taken into account when constructing the tangential stiffness matrix $K_T$. As a result, $K_T$ will be non-symmetric. Examples of these specific special cases are applied moments around a fixed axis, follower loads (i.e. loads that change direction based on the deformed configuration), pressure loads, etc.
 
 ### The Arc-length method
-One of the main drawbacks of Newton's method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter $\lambda_n$ is now also an unknown parameter at each increment, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary condtions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
+One of the main drawbacks of Newton's method is its inability to trace equilibrium paths with limit points. As a workaround, the load parameter $\lambda_n$ is now also an unknown parameter at each increment, and additional arc-length constraint is added. In this repository, we implement both the arc-length method for force control (i.e. problems with force boundary conditions) and displacement control (i.e problems with non-homogenous displacement boundary conditions).
 #### Force Control
-The additional arc-length contraint for force control is:
+The additional arc-length constraint for force control is:
 
 ```math
 \mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-\Delta s
@@ -173,7 +173,7 @@ The additional arc-length contraint for force control is:
 where $\Delta s$ determines how far to search for the next equilibrium point and $\psi$ is the arc length parameter that gives you different arc-length solver schemes. When $\psi = 1$ (as like the examples in this repository), the arc-length equation is also known as the *spherical arc-length method*, and when $\psi = 0$ the *cylindrical arc-length* method is recovered.
 
 #### Displacement Control
-Sometimes instead of prescribing traction, the problem has a boundary contition with presecribed non-zero displacement (i.e. nonhomogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and we construct a constraint matrix $C$ such that: 
+Sometimes instead of prescribing traction, the problem has a boundary condition with prescribed non-zero displacement (i.e. non-homogenous Dirichlet boundary conditions). In this case, similar to Ref.2, the problem is formulated similar to a multifreedom constraint and we construct a constraint matrix $C$ such that: 
 
 ```math
 \mathbf{u} = C\mathbf{u}_f+\lambda \mathbf{u}_p

@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
+Note that this code is obtained from https://comet-fenics.readthedocs.io/en/latest/demo/finite_rotation_beam/rotation_parametrization_description.html
+
 Created on Sat Nov 28 14:28:31 2020
 
 @author: bleyerj

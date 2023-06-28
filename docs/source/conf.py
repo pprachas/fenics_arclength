@@ -9,7 +9,7 @@
 project = 'fenics-arclength'
 copyright = '2023, Peerasait Prachaseree, Saeed Mohammadzadeh, Emma Lejeune'
 author = 'Peerasait Prachaseree, Saeed Mohammadzadeh, Emma Lejeune'
-release = '0.0.1'
+release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

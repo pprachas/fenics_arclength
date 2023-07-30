@@ -174,7 +174,6 @@ Since `\mathbf \Lambda^\top \mathbf \Lambda_{,s}` is skew symmetric (easily show
 
 
 `\text{axial}(\mathbf{\Lambda}^\top\mathbf{\Lambda}_{,s}) = \mathbf{\chi} = \mathbf{H}^\top\theta_{,s}`
-``
 
 Where `\mathbf{H}` is:
 

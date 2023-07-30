@@ -39,7 +39,7 @@ The direction of the triad is the tangent direction of the beams and the other t
 The transformation from the global orthogonal basis `\{ \mathbf e_1, \mathbf e_2, \mathbf e_3 \}` to the beam orthogonal basis is:
 
 .. math::
-    \mathbf g_{0i} = \mathbf \Lambda_0 \mathbf E_i
+    \mathbf g_{0i} = \mathbf \Lambda_0 \mathbf e_i
 
 
 Therefore, `\mathbf\Lambda` is constructed by:
@@ -63,7 +63,7 @@ and the rotation of the material triads are:
 
 Constructing Initial Beam Triads
 --------------------------------
-The inital beam traids are constructed as follows.
+The initial beam triads are constructed as follows.
 
 * The first direction is the beam tangent direction:
 
@@ -128,7 +128,7 @@ The objective translational strain measures for the case where the beam tangent 
 Where `\text{axial}(.)` denotes the vector from associated with the skew symmetric matrix s.t.:
 
 .. math::
-    \text{axial}(\mathbf{A}) \mathbf{b} = \mathbf{a} \times \mathbf{b}
+    \text{axial}(\mathbf{A}) \times \mathbf{b} = \mathbf{a} \times \mathbf{b}
 
 with 
 
@@ -173,7 +173,7 @@ with `\mathbf P` being the skew symmetric matrix associated with `\theta`.
 Since `\mathbf \Lambda^\top \mathbf \Lambda_{,s}` is skew symmetric (easily shown with  `\mathbf \Lambda^\top \mathbf \Lambda_{,s}`), we can define a curvature matrix `\mathbf H` s.t.:
 
 
-\text{axial}(\mathbf{\Lambda}^\top\mathbf{\Lambda}_{,s}) = \mathbf{\chi} = \mathbf{H}^\top\theta_{,s} 
+`\text{axial}(\mathbf{\Lambda}^\top\mathbf{\Lambda}_{,s}) = \mathbf{\chi} = \mathbf{H}^\top\theta_{,s}`
 ``
 
 Where `\mathbf{H}` is:
@@ -350,6 +350,6 @@ While the continuum problems and 2D beam formulations are able to use the predic
 .. math::
     \mathbf{\Lambda}_{n+1} = \mathbf{\Lambda\Lambda}_n
 
-where `\mathbf{u}_n` smd `\mathbf{\Lambda}_n` denotes the solution of the previous step and `\mathbf{u}` and `\mathbf{\Lambda}` are now the incremental solution (that we are solving for) with respect to the previous solution.
+where `\mathbf{u}_n` and `\mathbf{\Lambda}_n` denotes the solution of the previous step and `\mathbf{u}` and `\mathbf{\Lambda}` are now the incremental solution (that we are solving for) with respect to the previous solution.
 
-To take into account the incremental solution in the arc-length update scheme, `\mathbf{u}_{n-1} = 0` while `\mathbf{u}_n` stays the same. This is analougous to zeroing the solution after each converged Newton iteration.
+To take into account the incremental solution in the arc-length update scheme, `\mathbf{u}_{n-1} = 0` while `\mathbf{u}_n` stays the same. This is analogous to zeroing the solution after each converged Newton iteration.

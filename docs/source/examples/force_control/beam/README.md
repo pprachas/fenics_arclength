@@ -34,7 +34,7 @@ The direction of the triad is the tangent direction of the beams and the other t
 The transformation from the global orthogonal basis $\{ \mathbf e_1, \mathbf e_2, \mathbf e_3 \}$ to the beam orthogonal basis is:
 
 $$
-\mathbf g_{0i} = \mathbf \Lambda_0 \mathbf E_i
+\mathbf g_{0i} = \mathbf \Lambda_0 \mathbf e_i
 $$
 
 Therefore, $\mathbf\Lambda$ is constructed by:
@@ -57,7 +57,7 @@ $$
 $$
 
 #### Constructing Initial Beam Triads
-The inital beam traids are constructed as follows.
+The initial beam triads are constructed as follows.
 1. The first direction is the beam tangent direction:
 
 $$
@@ -120,7 +120,7 @@ $$
 Where $\text{axial}(.)$ denotes the vector from associated with the skew symmetric matrix s.t.:
 
 $$
-\text{axial}(\mathbf{A}) \mathbf{b} = \mathbf{a} \times \mathbf{b}
+\text{axial}(\mathbf{A}) \times \mathbf{b} = \mathbf{a} \times \mathbf{b}
 $$
 
 with 
@@ -342,7 +342,7 @@ $$
 
 where $u_n$ smd $\Lambda_n$ denotes the solution of the previous step and $u$ and $\Lambda$ are now the incremental solution (that we are solving for) with respect to the previous solution.
 
-To take into account the incremental solution in the arc-length update scheme, $u_{n-1} = 0$ while $u_n$ stays the same. This is analougous to zeroing the solution after each converged Newton iteration.
+To take into account the incremental solution in the arc-length update scheme, $u_{n-1} = 0$ while $u_n$ stays the same. This is analogous to zeroing the solution after each converged Newton iteration.
 
 
 

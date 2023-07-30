@@ -12,3 +12,4 @@ docs/build
 validation/plots
 validation/paraview
 validation/__pycache__
+test.py

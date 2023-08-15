@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "fenics-arclength"
+version = "0.1.0"
+authors = [
+    {name = "Peerasait Prachaseree", email="pprachas@bu.edu"},
+    {name = "Saeed Mohammadzadeh", email="saeedmhz@bu.edu"},
+    {name="Emma Lejeune", email="elejeune@bu.edu" }
+]
+description = "An arc-length Riks solver implemented with FEniCS"
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[tool.setuptools]
+packages = ["arc_length"]
+
+[project.urls]
+"Homepage" = "https://github.com/pprachas/fenics_arclength"
+"Bug Tracker" = "https://github.com/pprachas/fenics_arclength/issues"

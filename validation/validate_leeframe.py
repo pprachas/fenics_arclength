@@ -6,7 +6,7 @@ from scipy.interpolate import interp1d
 from scipy import stats 
 import os
 import sys
-sys.path.append('.')
+# sys.path.append('.')
 from arc_length.force_control_solver import force_control # import force control formulation of arc-length solver
 from pathlib import Path
 import argparse
@@ -21,7 +21,7 @@ ffc_options = {"optimize": True, \
                "precompute_ip_const": True}
 
 mesh = Mesh()
-with XDMFFile(os.getcwd()+'/examples/force_control/beam/beam_2D/mesh/lee_frame.xdmf') as infile:
+with XDMFFile('../examples/force_control/beam/beam_2D/mesh/lee_frame.xdmf') as infile: # os.getcwd()+'/examples/force_control/beam/beam_2D/mesh/lee_frame.xdmf'
     infile.read(mesh)
 
 Ue = VectorElement("CG", mesh.ufl_cell(), 1, dim=2) # displacement
@@ -164,7 +164,7 @@ force_disp = [0.0] # displacement at force application
 #---------------------------Compare Solution with literature solution--------------------------#
 # Get solution from literature (https://www.sciencedirect.com/science/article/pii/S014102962034356X)
 
-paper_eq = np.loadtxt(os.getcwd()+'/examples/force_control/beam/beam_2D/lit_soln/path_lee.dat')
+paper_eq = np.loadtxt('../examples/force_control/beam/beam_2D/lit_soln/path_lee.dat')
 paper_disp = -paper_eq[:,2]
 paper_load = paper_eq[:,0]
 
@@ -178,9 +178,9 @@ args = parser.parse_args()
 # Setup directory and save file if needed
 if args.paraview:
     # Create directory if it doesn't exist
-    Path("validation/paraview").mkdir(parents=True, exist_ok=True)
+    Path("paraview").mkdir(parents=True, exist_ok=True)
     # Initialize file
-    out_file = XDMFFile('validation/paraview/validate_leesframe.xdmf')
+    out_file = XDMFFile('paraview/validate_leesframe.xdmf')
     out_file.parameters['functions_share_mesh'] = True
     out_file.parameters['flush_output'] = True
 
@@ -257,6 +257,6 @@ else:
     print('Passed test:', val)
 
 # Create directory if it doesn't exist
-Path("validation/plots").mkdir(parents=True, exist_ok=True)
+Path("plots").mkdir(parents=True, exist_ok=True)
 
-plt.savefig('validation/plots/validate_leeframe.png')
+plt.savefig('plots/validate_leeframe.png')

@@ -19,8 +19,7 @@ Useful FEniCS tutorials:
 2. 3D Linear Timoshenko Beams: https://comet-fenics.readthedocs.io/en/latest/demo/beams_3D/beams_3D.html
 
 We note that the code for rotation parameterization is obtained from https://comet-fenics.readthedocs.io/en/latest/demo/finite_rotation_beam/rotation_parametrization_description.html
-
-## 3D Geometrically Exact Beams
+## 3D Geometrically Exact Beams 
 
 <img src="Beam_fig.png" width="800">
 
@@ -33,64 +32,63 @@ The direction of the triad is the tangent direction of the beams and the other t
 
 The transformation from the global orthogonal basis $\{ \mathbf e_1, \mathbf e_2, \mathbf e_3 \}$ to the beam orthogonal basis is:
 
-$$
-\mathbf g_{0i} = \mathbf \Lambda_0 \mathbf e_i
-$$
+```math
+\mathbf g_{0i} = \mathbf \Lambda_0 \mathbf E_i
+```
 
 Therefore, $\mathbf\Lambda$ is constructed by:
 
-$$
+```math
 \mathbf \Lambda_0 = \mathbf g_{0i} \otimes \mathbf e_i
-$$
+```
 
 where  $i=2$ for 2D beams and $i=3$ for 3D beams (Note: Einstein summation is implied here).
 Therefore, the motion of the beam can be expressed as:
 
-$$
+```math
 \mathbf r(s) = \mathbf r_0(s) + \mathbf u(s)
-$$
+```
 
 and the rotation of the material triads are:
 
-$$
+```math
 \mathbf g_i(s) = \mathbf \Lambda \mathbf g_{0i} = \mathbf{\Lambda \Lambda}_0 \mathbf e_i
-$$
+```
 
 #### Constructing Initial Beam Triads
-The initial beam triads are constructed as follows.
+The inital beam traids are constructed as follows.
 1. The first direction is the beam tangent direction:
 
-$$
+```math
 \mathbf{g}_{01} = \mathbf{r}_{0,s}
-$$
+```
  
 where $\dots_{,s}$ is the directional derivative with respect to the beam tangent $s$ (e.g. $\mathbf r_{0,s} =  \frac{d \mathbf r_0}{d s} $). 
 
 2. Find $\mathbf g_{02}$ by finding a vector that is both perpendicular to $\mathbf g_{01}$ and $\mathbf e_3$. E.g.:
 
-$$
+```math
 \mathbf g_{02} = \mathbf e_3 \times \mathbf g_{01}
-$$
-
+```
 3. Find $\mathbf g_{03}$ by finding a vecor that is both perpendicular to $\mathbf g_{02}$ and $\mathbf g_{01}$. E.g.:
 
-$$
+```math
 \mathbf g_{03} = \mathbf g_{01} \times \mathbf g_{02}
-$$
+```
 
 #### Translational Strain
 
 The objective *material* translational strain measures for the case where the beam tangent is rotated with respect to $\mathbf{e}_1$ are (See Crisfield's paper for a detailed derivation):
 
-$$
+```math
 \mathbf{\epsilon} = \mathbf{\Lambda}_0^\top \mathbf{\Lambda}^\top \frac{d\mathbf{r}(s)}{d s} - \mathbf{e}_1
-$$
+```
 
 or equivalently (as implemented in the code:)
 
-$$
+```math
 \mathbf{\epsilon} = \mathbf{\Lambda}_0^\top(\mathbf{\Lambda}^\top (\mathbf{u}_{,s} + \mathbf{g}_{01}) - \mathbf{g}_{01})
-$$
+```
 
 Reminder: $\dots_{,s}$ is the directional derivative with respect to the beam tangent $s$ in material coordinates (In the code it is implemented as $\mathbf u_{,s} = \nabla \mathbf u \cdot \frac{d \mathbf r_0}{d s} = \nabla \mathbf u \cdot \mathbf g_{01} $). 
 
@@ -98,30 +96,30 @@ Reminder: $\dots_{,s}$ is the directional derivative with respect to the beam ta
 
 Note that
 
-$$
+```math
 \frac{d \mathbf{r}}{ds} = \frac{d}{ds}(\mathbf{r}_0(s) + \mathbf{u}(s))=\mathbf{u}_{,s} + \mathbf{g}_{01}
-$$
+```
 
 and 
 
-$$
+```math
 \mathbf{\Lambda}_0^\top \mathbf{g}_{01}= \mathbf{e}_1
-$$
+```
 
 by definition. Combining these two equations shows that the FEniCS implementation is equivalent to theory.
 
 #### Rotational Strain
 The objective translational strain measures for the case where the beam tangent is rotated with respect to $\mathbf{e}_1$ are (See Crisfield's paper for a detailed derivation):
 
-$$
+```math
 \mathbf{\chi} = \text{axial}(\mathbf{\Lambda}^\top \mathbf{\Lambda}_{,s} - \mathbf{\Lambda}^\top \mathbf{\Lambda}_{0,s})
-$$
+```
 
 Where $\text{axial}(.)$ denotes the vector from associated with the skew symmetric matrix s.t.:
 
-$$
-\text{axial}(\mathbf{A}) \times \mathbf{b} = \mathbf{a} \times \mathbf{b}
-$$
+```math
+\text{axial}(\mathbf{A}) \mathbf{b} = \mathbf{a} \times \mathbf{b}
+```
 
 with 
 
@@ -141,57 +139,57 @@ a_3
 
 Since in our case the elements are modeled as initially straight, then  $\mathbf{\Lambda}_{0,s}=0$. Then, the rotational strain becomes:
 
-$$
+```math
 \mathbf{\chi} = \text{axial}(\mathbf{\Lambda}^\top\mathbf{\Lambda}_{,s})
-$$
+```
 
 ### Rotation paramaterization
 
 For ease of implementation, the "rotation vector'' based off Euler rotation vector is introduced. The rotation vector $\theta$ as:
 
-$$
+```math
 \mathbf{\theta} = \phi \mathbf{\hat{\omega}}
-$$
+```
 
 Where $\phi=||\mathbf{\theta}||$ and $\mathbf{\hat{\omega}}$ is the unit vector of the rotation axis.
 
 The rotation tensor $\Lambda$ can be parameterized into $\theta$ through the Euler-Rodrigues formula:
 
-$$
+```math
 \mathbf{R} = \mathbf{I}+\frac{\sin \phi}{\phi} \mathbf{P} + \frac{1-\cos \phi}{\phi^2} \mathbf{P} \mathbf{P}
-$$
+```
 
 with $\mathbf P$ being the skew symmetric matrix associated with $\theta$. 
 
 Since $\mathbf \Lambda^\top \mathbf \Lambda_{,s}$ is skew symmetric (easily shown with  $\mathbf \Lambda^\top \mathbf \Lambda_{,s}$), we can define a curvature matrix $\mathbf H$ s.t.:
 
-$$
+```math
 \text{axial}(\mathbf{\Lambda}^\top\mathbf{\Lambda}_{,s}) = \mathbf{\chi} = \mathbf{H}^\top\theta_{,s} 
-$$
+```
 
 Where $\mathbf{H}$ is:
 
-$$
+```math
 \mathbf{H} = \mathbf{I}+\frac{1-\cos \phi}{\phi^2}\mathbf{P}+\frac{\phi-\sin\phi}{\phi^3}\mathbf{P}
 \mathbf{P}
-$$
+```
 
 
 **Small Rotation case:**
 
 In the case of small rotations (e.g. $||\mathbf{\theta}|| = \phi \ll 1$), according to rotation paramaterization , $\mathbf{R} \approx \mathbf{I} + \mathbf{P}$ and $\mathbf{H} \approx \mathbf{I}$. Assuming that the beam lies on the x-axis (e.g. $\mathbf{\Lambda}_0 = 1$), the first-order strain measures yield:
 
-$$
+```math
 \mathbf{\epsilon} = \mathbf{\Lambda}_0^\top(\mathbf{\Lambda}^\top (\mathbf{u}_{,s} + \mathbf{g}_{01}) - \mathbf{g}_{01}) \approx \mathbf{u}_{,s}+\mathbf{P}^\top g_{01} = \begin{bmatrix}
 u_{1,s} \\
 u_{2,s}-\theta_3 \\
 u_{3,s} + \theta_2
 \end{bmatrix}
-$$
+```
 
-$$
+```math
 \mathbf{\chi} = \mathbf{H}^\top \mathbf{\theta}_{,s} \approx \mathbf{\theta}_{,s}
-$$
+```
 
 This corresponds to the Timoshenko beam kinematic relations!!
 
@@ -199,13 +197,13 @@ This corresponds to the Timoshenko beam kinematic relations!!
 
 The constitutive model used in this code is a simple linear elastic constitutive law with no coupling between the stresses. The stress and strains are related by:
 
-$$
+```math
 \mathbf{N} = \mathbf{C}_N \mathbf{\epsilon} 
-$$
+```
 
-$$
+```math
 \mathbf{M} = \mathbf{C}_M \mathbf{\chi}
-$$
+```
 
 where $\mathbf N$ and $\mathbf M$ are the force and moment/torsion vectors repectively and $\mathbf C_N$ and $\mathbf C_M$ are:
 
@@ -231,25 +229,25 @@ where $E$ is Young's modulus, $A$ is the cross-sectional area $\mu$ is the shear
 ### Weak Form
 The internal hyperelastic energy of the beam is:
 
-$$
+```math
 \Pi_{int} = \frac{1}{2} \int_L \mathbf{\epsilon} \cdot \mathbf{C}_N \mathbf{\epsilon} + \mathbf{\chi} \cdot \mathbf{C}_M \mathbf{\chi} \; ds
-$$
+```
 
 Where $L$ is the domain of the element. 
 
 The variation of work of the external loads are:
 
-$$
+```math
 \delta \Pi_{ext} = \int_L (\mathbf{F} \cdot \delta \mathbf{u} + \mathbf{M} \cdot \mathbf{H}\delta\mathbf{\theta}) \; ds + \sum \mathbf{f}\delta \mathbf{u} + \sum \mathbf{m}\delta \mathbf{\theta}
-$$
+```
 
 Where $F$ and $H$ are the distributed force and moment/torsion vector respectively and $\mathbf{f}$ and $\mathbf{m}$ are the pointwise forces and moments/torsions respectively.
 
 The equilibrium solution is obtained by finding the stationary points of the total potential energy:
 
-$$
+```math
 \delta \Pi_{int} - \delta \Pi_{ext} = 0
-$$
+```
 
 Note that the forces and moments are applied in the reference frame. See Cristfields paper for formulations where the forces and moments are applied on the material (e.g. moving) frame of reference. Also note that the moment in this case in non-conservative (e.g. is path dependent) and must be taken into account when constructing the tangential stiffness matrix. See reference number 7 section 2.3.1 for a more detailed explaination.
 
@@ -292,25 +290,25 @@ The formulation above will not work for $\phi > \pi$ or $\phi > 2\pi$ depending 
 
 As such, the incremental updates are:
 
-$$
+```math
 \mathbf{r}_{n+1} = \mathbf{r}_n+\mathbf{u}
-$$
+```
 
-$$
+```math
 \mathbf{\Lambda}_{n+1} = \mathbf{\Lambda\Lambda}_n
-$$
+```
 
 Then the translational strain measures are:
 
-$$
+```math
 \mathbf{\epsilon}_{n+1} = \mathbf{\Lambda}_0^\top(\mathbf{\Lambda}_n^\top \mathbf{\Lambda}^\top (\mathbf{r}_{n,s}+\mathbf{u}_{n,s})-\mathbf{g}_{01})
-$$
+```
 
 and the rotational strain measures are:
 
-$$
+```math
 \mathbf{\chi}_{n+1} = \mathbf{\chi}_n+\mathbf{\Lambda}_0^\top \mathbf{\Lambda}_n\mathbf{H}^\top\mathbf{\theta}_{,s}
-$$
+```
 
 At the end of each iteration the converged solution is saved and the incremental solutions is zeroed for the next increment.
 
@@ -324,25 +322,25 @@ TThe predictor and corrector step of our arc-length implementation follows the p
 
 In brief, the predictor step proposed in the paper above is an extrapolator that takes in the previous two converged solution $u_{n}$ and $u_{n-1}$ to predict the new equilibrium configuration $u_{n+1}$ such that:
 
-$$
-u_{n+1}^{predicted} = [1+\alpha] u_n -\alpha u_{n-1}
-$$
+```math
+\mathbf{u}_{n+1}^{predicted} = [1+\alpha] \mathbf{u}_n -\alpha \mathbf{u}_{n-1}
+```
 
 where $\alpha$ is the parameter that controls the adaptive load size and depends on the arc-length increment.
 
 While the continuum problems and 2D beam formulations are able to use the predictor as is, the 3D beams incremental formulation requires a slight modification for the predictor to work. Recall that the incremental beam formulation store the previous solution such that
 
-$$
+```math
 \mathbf{r}_{n+1} = \mathbf{r}_n+\mathbf{u}
-$$
+```
 
-$$
+```math
 \mathbf{\Lambda}_{n+1} = \mathbf{\Lambda\Lambda}_n
-$$
+```
 
-where $u_n$ smd $\Lambda_n$ denotes the solution of the previous step and $u$ and $\Lambda$ are now the incremental solution (that we are solving for) with respect to the previous solution.
+where $\mathbf u_n$ smd $\mathbf \Lambda_n$ denotes the solution of the previous step and $\mathbf u$ and $\mathbf \Lambda$ are now the incremental solution (that we are solving for) with respect to the previous solution.
 
-To take into account the incremental solution in the arc-length update scheme, $u_{n-1} = 0$ while $u_n$ stays the same. This is analogous to zeroing the solution after each converged Newton iteration.
+To take into account the incremental solution in the arc-length update scheme, $\mathbf u_{n-1} = 0$ while $u_n$ stays the same. This is analougous to zeroing the solution after each converged Newton iteration.
 
 
 

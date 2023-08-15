@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import sys
 import time
 from scipy import optimize
-sys.path.append('.')
 from arc_length.displacement_control_solver import displacement_control # import displacement control formulation of arc-length solver
 import sys
 from pathlib import Path
@@ -154,9 +153,9 @@ args = parser.parse_args()
 # Setup directory and save file if needed
 if args.paraview:
     # Create directory if it doesn't exist
-    Path("validation/paraview").mkdir(parents=True, exist_ok=True)
+    Path("paraview").mkdir(parents=True, exist_ok=True)
     # Initialize file
-    out_file = XDMFFile('validation/paraview/validate_bilayer.xdmf')
+    out_file = XDMFFile('paraview/validate_bilayer.xdmf')
     out_file.parameters['functions_share_mesh'] = True
     out_file.parameters['flush_output'] = True
 
@@ -173,7 +172,9 @@ while np.abs(apply_disp.t) < strain_crit*L*1.1 and solver.converged:
         f_reac.append(assemble(action(residual,v_reac)))
 
         ii+=1
-        out_file.write(u, ii)
+
+        if args.paraview:
+            out_file.write(u, ii)
 
 if args.paraview:
     out_file.close()
@@ -187,7 +188,7 @@ test_x = np.diff(-np.array(lmbda)/L)
 fea_soln = np.nanargmax(np.abs((np.diff(np.diff(((np.array(f_reac[1:])/(Hs+Hf))/(-np.array(lmbda[1:]))/L)))))) # find the inflection point from FEA solution and use that as critical strain
 
 # Create directory if it doesn't exist
-Path("validation/plots").mkdir(parents=True, exist_ok=True)
+Path("plots").mkdir(parents=True, exist_ok=True)
 
 # Plot comparison with analytical solutions
 plt.figure(figsize=(7,5))
@@ -199,7 +200,7 @@ plt.ylabel('Stress per unit depth')
 plt.title('Equilibrium path')
 plt.legend()
 
-plt.savefig('validation/plots/validate_bilayer_stressstrain.png')
+plt.savefig('plots/validate_bilayer_stressstrain.png')
 
 percent_diff_crit_strain = ((strain_crit-(-np.array(lmbda[fea_soln+2])/L))/strain_crit) * 100
 print('Percent Error between analytical critical strain and FEA critical strain:',percent_diff_crit_strain,'%')
@@ -251,7 +252,7 @@ plt.xlabel('x displacement')
 plt.ylabel('y displacement')
 plt.legend(loc = (1.01,0.5))
 plt.tight_layout()
-plt.savefig('validation/plots/validate_bilayer_wavelength.png')
+plt.savefig('plots/validate_bilayer_wavelength.png')
 
 percent_diff_wavelength=((params[1]-ana_wavelength)/ana_wavelength)*100
 print('Percent Error between analytical wavelength and fitted FEM wavelength:',percent_diff_wavelength, '%')

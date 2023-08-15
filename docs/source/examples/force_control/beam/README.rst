@@ -8,7 +8,7 @@ Introduction
 Geometrically exact beams: kinematic assumptions are based on 3D continuum theory while the consitutive law is postulated.
 Some useful resources papers:
 
-#. `Review on geometrically exact beam formulations and circumventing objectivity issues <https://link.springer.com/content/pdf/10.1007/s11831-017-9232-5.pdf>`_
+#. `Review on geometrically exact beam formulations nomenclature <https://link.springer.com/content/pdf/10.1007/s11831-017-9232-5.pdf>`_
 #. `Paper with good notes on geometrically exact beams with finite rotations <https://www.sciencedirect.com/science/article/pii/S0045782519307030>`_
 #. `Geometrically Exact beams + contact formulation <https://www.sciencedirect.com/science/article/pii/S0020768317303372>`_
 #. `Cristfield's notes on strain objectiviy. Also contains a good derivation of the strains and principle of virtual work in the Appendix. <https://royalsocietypublishing.org/doi/epdf/10.1098/rspa.1999.0352>`_
@@ -39,7 +39,7 @@ The direction of the triad is the tangent direction of the beams and the other t
 The transformation from the global orthogonal basis `\{ \mathbf e_1, \mathbf e_2, \mathbf e_3 \}` to the beam orthogonal basis is:
 
 .. math::
-    \mathbf g_{0i} = \mathbf \Lambda_0 \mathbf e_i
+    \mathbf g_{0i} = \mathbf \Lambda_0 \mathbf E_i
 
 
 Therefore, `\mathbf\Lambda` is constructed by:
@@ -63,9 +63,8 @@ and the rotation of the material triads are:
 
 Constructing Initial Beam Triads
 --------------------------------
-The initial beam triads are constructed as follows.
-
-* The first direction is the beam tangent direction:
+The inital beam traids are constructed as follows.
+#. The first direction is the beam tangent direction:
 
 .. math::
     \mathbf{g}_{01} = \mathbf{r}_{0,s}
@@ -74,12 +73,12 @@ where `\dots_{,s}` is the directional derivative with respect to the beam tangen
 
 (e.g. `\mathbf r_{0,s} =  \frac{d \mathbf r_0}{d s}`)
 
-* Find `\mathbf g_{02}` by finding a vector that is both perpendicular to `\mathbf g_{01}` and `\mathbf e_3`. E.g.:
+#. Find `\mathbf g_{02}` by finding a vector that is both perpendicular to `\mathbf g_{01}` and `\mathbf e_3`. E.g.:
 
 .. math::
     \mathbf g_{02} = \mathbf e_3 \times \mathbf g_{01}
 
-* Find `\mathbf g_{03}` by finding a vecor that is both perpendicular to `\mathbf g_{02}` and `\mathbf g_{01}`. E.g.:
+#. Find `\mathbf g_{03}` by finding a vecor that is both perpendicular to `\mathbf g_{02}` and `\mathbf g_{01}`. E.g.:
 
 .. math::
     \mathbf g_{03} = \mathbf g_{01} \times \mathbf g_{02}
@@ -128,7 +127,7 @@ The objective translational strain measures for the case where the beam tangent 
 Where `\text{axial}(.)` denotes the vector from associated with the skew symmetric matrix s.t.:
 
 .. math::
-    \text{axial}(\mathbf{A}) \times \mathbf{b} = \mathbf{a} \times \mathbf{b}
+    \text{axial}(\mathbf{A}) \mathbf{b} = \mathbf{a} \times \mathbf{b}
 
 with 
 
@@ -173,7 +172,8 @@ with `\mathbf P` being the skew symmetric matrix associated with `\theta`.
 Since `\mathbf \Lambda^\top \mathbf \Lambda_{,s}` is skew symmetric (easily shown with  `\mathbf \Lambda^\top \mathbf \Lambda_{,s}`), we can define a curvature matrix `\mathbf H` s.t.:
 
 
-`\text{axial}(\mathbf{\Lambda}^\top\mathbf{\Lambda}_{,s}) = \mathbf{\chi} = \mathbf{H}^\top\theta_{,s}`
+\text{axial}(\mathbf{\Lambda}^\top\mathbf{\Lambda}_{,s}) = \mathbf{\chi} = \mathbf{H}^\top\theta_{,s} 
+``
 
 Where `\mathbf{H}` is:
 
@@ -238,7 +238,7 @@ Weak Form
 The internal hyperelastic energy of the beam is:
 
 .. math::
-    \Pi_{int} = \frac{1}{2} \int_L \mathbf{\epsilon} \cdot \mathbf{C}_{N} \mathbf{\epsilon} + \mathbf{\chi} \cdot \mathbf{C}_{M} \mathbf{\chi} \; ds
+    \Pi_{int} = \frac{1}{2} \int_L \mathbf{\epsilon} \cdot \mathbf{C}_N \mathbf{\epsilon} + \mathbf{\chi} \cdot \mathbf{C}_M \mathbf{\chi} \; ds
 
 Where `L` is the domain of the element. 
 
@@ -257,7 +257,7 @@ The equilibrium solution is obtained by finding the stationary points of the tot
 Note that the forces and moments are applied in the reference frame. See Cristfields paper for formulations where the forces and moments are applied on the material (e.g. moving) frame of reference. Also note that the moment in this case in non-conservative (e.g. is path dependent) and must be taken into account when constructing the tangential stiffness matrix. See reference number 7 section 2.3.1 for a more detailed explaination.
 
 **Note on FEniCS implementation**
-In the FEniCS implementation `dx` is used for line elements, `ds` is used for the point loads on the boundaries and `dS` is used for point loads not on the boundaries. This is because the element is a line element so `dx` acts as integrating over the curve instead of volume, and `ds` and `dS` "integrates" over the point.
+In the FEniCS implementation `dx` is used for line elements, `ds` is used for the point loads on the boundaries and `dS` is used for point loads not on the boundaries. This is because the element is a line element so `dx` acts as integrating over the curve instead of volume, and `ds`/`dS` "integrates" over the point.
 
 The 2D case
 -----------
@@ -318,9 +318,8 @@ and the rotational strain measures are:
 .. math::
     \mathbf{\chi}_{n+1} = \mathbf{\chi}_n+\mathbf{\Lambda}_0^\top \mathbf{\Lambda}_n\mathbf{H}^\top\mathbf{\theta}_{,s}
 
+
 At the end of each iteration the converged solution is saved and the incremental solutions is zeroed for the next increment.
-We note that this choice of rotation interpolation is path-dependent and not objective; however, these issues disappear with sufficient load-step and mesh refinement. 
-Other strategies of rotation interpolation can also be considered to circumvent this issue entirely (See Ref.1). 
 
 Lock-free elements
 ------------------
@@ -330,12 +329,12 @@ The basis functions used in this code are Lagrange elements. To ensure lock-free
 Arc-length Implementation
 ==========================
 
-The predictor and corrector step of our arc-length implementation follows the paper `A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics <https://www.sciencedirect.com/science/article/pii/S014102962034356X>`_ . 
+The predictor and corrector step of our arc-length implementation follows the paper [A simple extrapolated predictor for overcoming the starting and tracking issues in the arc-length method for nonlinear structural mechanics](https://www.sciencedirect.com/science/article/pii/S014102962034356X). 
 
-In brief, the predictor step proposed in the paper above is an extrapolator that takes in the previous two converged solution `\mathbf{u}_{n}` and `\mathbf{u}_{n-1}` to predict the new equilibrium configuration `u_{n+1}` such that:
+In brief, the predictor step proposed in the paper above is an extrapolator that takes in the previous two converged solution `u_{n}` and `u_{n-1}` to predict the new equilibrium configuration `u_{n+1}` such that:
 
 .. math::
-    \mathbf{u}_{n+1}^{predicted} = [1+\alpha] \mathbf{u}_n -\alpha \mathbf{u}_{n-1}
+    u_{n+1}^{predicted} = [1+\alpha] u_n -\alpha u_{n-1}
 
 
 where `\alpha` is the parameter that controls the adaptive load size and depends on the arc-length increment.
@@ -349,6 +348,10 @@ While the continuum problems and 2D beam formulations are able to use the predic
 .. math::
     \mathbf{\Lambda}_{n+1} = \mathbf{\Lambda\Lambda}_n
 
-where `\mathbf{u}_n` and `\mathbf{\Lambda}_n` denotes the solution of the previous step and `\mathbf{u}` and `\mathbf{\Lambda}` are now the incremental solution (that we are solving for) with respect to the previous solution.
+where `u_n` smd `\Lambda_n` denotes the solution of the previous step and `u` and `\Lambda` are now the incremental solution (that we are solving for) with respect to the previous solution.
 
-To take into account the incremental solution in the arc-length update scheme, `\mathbf{u}_{n-1} = 0` while `\mathbf{u}_n` stays the same. This is analogous to zeroing the solution after each converged Newton iteration.
+To take into account the incremental solution in the arc-length update scheme, `u_{n-1} = 0` while `u_n` stays the same. This is analougous to zeroing the solution after each converged Newton iteration.
+
+
+
+

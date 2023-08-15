@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from ufl import diag, Jacobian, shape
 import sys
-sys.path.append('.')
 from arc_length.rotation_parametrization import ExponentialMap # import rotation parameterization for 3D beams
 from arc_length.force_control_solver import force_control # import force control formulation of arc-length solver
 from pathlib import Path
@@ -14,7 +13,7 @@ parameters["form_compiler"]["quadrature_degree"] = 3
 parameters['reorder_dofs_serial'] = False
 
 mesh = Mesh()
-with XDMFFile('examples/force_control/beam/beam_3D/mesh/mesh.xdmf') as infile:
+with XDMFFile('../examples/force_control/beam/beam_3D/mesh/mesh.xdmf') as infile:
     infile.read(mesh)
 
 Ue = VectorElement("CG", mesh.ufl_cell(), 2, dim=3) # displacement
@@ -152,9 +151,9 @@ args = parser.parse_args()
 # Setup directory and save file if needed
 if args.paraview:
     # Create directory if it doesn't exist
-    Path("validation/paraview").mkdir(parents=True, exist_ok=True)
+    Path("paraview").mkdir(parents=True, exist_ok=True)
     # Initialize file
-    out_file = XDMFFile('validation/paraview/validate_3Dbeamlarge.xdmf')
+    out_file = XDMFFile('paraview/validate_3Dbeamlarge.xdmf')
     out_file.parameters['functions_share_mesh'] = True
     out_file.parameters['flush_output'] = True
 

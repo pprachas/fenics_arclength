@@ -250,3 +250,5 @@ Similar to Ref. 3 and Ref. 4, we used the Shur complement to solve the system of
 
 If you find any issues, bugs or problems with FEniCS-arclength, please use report them using the [GitHub issue tracker](https://github.com/pprachas/fenics_arclength/issues). For efficiency, please include a minimum working example (to reproduce the error/bug) as well as the error itself.
 
+We also welcome any questions and suggestions in the using [Github Discussions](https://github.com/pprachas/fenics_arclength/discussions)!
+

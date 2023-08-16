@@ -39,8 +39,8 @@ Package Installation
 ####################
 To use the arc-length solver, you can install it using pip or by downloading and adding the repository to your Python path.
 
-Install using pip
-*****************
+Install directly using pip
+**************************
 
 The recommended way to install the arc-length solver is to use pip. To do this, run the following command in your terminal:
 
@@ -50,10 +50,10 @@ The recommended way to install the arc-length solver is to use pip. To do this, 
 
 This will install the latest version of the arc-length solver from the master branch of the repository.
 
-Install by downloading and adding to Python path
-************************************************
+Install by cloning the GitHub Repository
+****************************************
 
-If you prefer to download and install the arc-length solver manually, you can do so by following these steps:
+If you prefer to download and install the arc-length solver and run the notebook examples/validation scripts, you can do so by following these steps:
 
 1. Clone the repository to your local machine:
    

@@ -42,7 +42,7 @@ Force Control
 
 The additional arc-length constraint for force control is:
 
-.. math:: \mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-\Delta s
+.. math:: \mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-(\Delta s)^2
 
 where `\Delta s` determines how far to search for the next equilibrium point and `\psi` is the arc length parameter that gives you different arc-length solver schemes. When `\psi = 1` (as like the examples in this repository), the arc-length equation is also known as the *spherical arc-length method*, and when `\psi = 0` the *cylindrical arc-length* method is recovered.
 
@@ -58,7 +58,7 @@ where `\mathbf{u}_f` and `\mathbf{u}_p` are the free and prescribed displacement
 
 The arc length equation needs to be modified and now becomes:
 
-.. math::\mathcal{A}(\mathbf{u}_f,\lambda) = \Delta\mathbf{u}_f^T\Delta\mathbf{u}_f + \psi\Delta\lambda^2Q^TQ-\Delta l
+.. math::\mathcal{A}(\mathbf{u}_f,\lambda) = \Delta\mathbf{u}_f^T\Delta\mathbf{u}_f + \psi\Delta\lambda^2Q^TQ-(\Delta s)^2
 
 where:
 

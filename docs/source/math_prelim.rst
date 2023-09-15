@@ -103,7 +103,7 @@ The displacement control corrector scheme modifies the above equation to:
     \end{bmatrix}
 
 
-Similar to Ref. 3 and Ref. 4, we used the Shur complement to solve the system of equations. For more details refer to the Ref 3 and Ref 4. 
+Similar to Ref. 3 and Ref. 4, we solve the block system of equations by part using the Sherman–Morrison formula. For more details refer to the Ref 3 and Ref 4. 
 
 Additional Resources
 --------------------

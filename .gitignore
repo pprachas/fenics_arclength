@@ -13,3 +13,13 @@ validation/plots
 validation/paraview
 validation/__pycache__
 test.py
+examples/force_control/beam/beam_2D/arc_215.py
+examples/force_control/beam/beam_2D/arc_215.pdf
+examples/force_control/beam/beam_2D/fd_215.pdf
+examples/force_control/beam/beam_2D/arch215_fenics_arclength_gif.ipynb
+examples/force_control/beam/beam_2D/arc_215.gif
+examples/force_control/beam/beam_3D/Helical_beam_New copy.ipynb
+examples/force_control/beam/beam_3D/beam_3D.gif
+examples/force_control/beam/beam_2D/arch215_fenics_arclength_New copy.ipynb
+examples/displacement_control/Bilayer_wrinkling copy.ipynb
+examples/displacement_control/bilayer.gif

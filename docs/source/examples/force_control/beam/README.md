@@ -26,9 +26,9 @@ We note that the code for rotation parameterization is obtained from https://com
 ### Kinematics
 
 
-Following the notation of the figure, the beam configuration defined using a centerline curve of the initial beam configuration $s$ through the centroid of the beams and a field of orthonormal triads $\{\mathbf g_1, \mathbf g_2,  \mathbf g_3 \}$ that determine the cross-section orientation, $\mathbf r_0(s)$ is the vector from the global coordinate frame to a initial configuration of the beam and $\mathbf r(s)$ is the vector from the global coordinate frame to the beam current configuration. The rotation tensor $\Lambda$ maps the rotation from the initial orthornormal triads (e.g. the material triads) $\{\mathbf g_{01}, \mathbf g_{02},  \mathbf g_{03} \}$ to the current orthonormal triads (e.g. the spatial triads) $\{\mathbf g_1, \mathbf g_2,  \mathbf g_3 \}$. 
+Following the notation of the figure, the beam configuration defined using a centerline curve of the initial beam configuration $s \in [0,l]$ through the centroid of the beams, where $l$ is the beam length, and a field of orthonormal triads $\{\mathbf g_1, \mathbf g_2,  \mathbf g_3 \} \in \mathbb{R}^3$ that determine the cross-section orientation, $\mathbf r_0(s) \in \mathbb{R}^3$ is the vector from the global coordinate frame to a initial configuration of the beam and $\mathbf r(s) \in \mathbb{R}^3$ is the vector from the global coordinate frame to the beam current configuration. The rotation tensor $\Lambda \in SO^3$ maps the rotation from the initial orthornormal triads (e.g. the material triads) $\{\mathbf g_{01}, \mathbf g_{02},  \mathbf g_{03} \}$ to the current orthonormal triads (e.g. the spatial triads) $\{\mathbf g_1, \mathbf g_2,  \mathbf g_3 \}$. 
 
-The direction of the triad is the tangent direction of the beams and the other two triads are the principal axes of the beam.
+The direction of the first triad is the tangent direction of the beam and the other two triads are the principal axes of the beam.
 
 The transformation from the global orthogonal basis $\{ \mathbf e_1, \mathbf e_2, \mathbf e_3 \}$ to the beam orthogonal basis is:
 
@@ -238,7 +238,7 @@ Where $L$ is the domain of the element.
 The variation of work of the external loads are:
 
 ```math
-\delta \Pi_{ext} = \int_L (\mathbf{F} \cdot \delta \mathbf{u} + \mathbf{M} \cdot \mathbf{H}\delta\mathbf{\theta}) \; ds + \sum \mathbf{f}\delta \mathbf{u} + \sum \mathbf{m}\delta \mathbf{\theta}
+\delta \Pi_{ext} = \int_l (\mathbf{F} \cdot \delta \mathbf{u} + \mathbf{M} \cdot \mathbf{H}\delta\mathbf{\theta}) \; ds + \sum \mathbf{f}\delta \mathbf{u} + \sum \mathbf{m}\delta \mathbf{\theta}
 ```
 
 Where $F$ and $H$ are the distributed force and moment/torsion vector respectively and $\mathbf{f}$ and $\mathbf{m}$ are the pointwise forces and moments/torsions respectively.

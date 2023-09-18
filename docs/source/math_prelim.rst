@@ -14,8 +14,8 @@ A nonlinear finite element problem seeks to minimize the residual vector that co
 where `\Delta \mathbf{u} = \mathbf{u}_{n+1}-\mathbf{u}_n`.
 
 Newton's method is solved incrementally until the desired convergence criterion. The term `\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}`
-is typically called the tangential stiffness matrix `K_T`. The first term `\mathcal R(\mathbf{u_n})` is the externally applied force `F^{ext}`, while the second term
-`\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta \mathbf{u}` is the internal force `F^{int}` the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor `\lambda^k` where `k` is the increment. Putting it all together, the nonlinear problem can be written as:
+is typically called the tangential stiffness matrix `K_T`. The first term `\mathcal R(\mathbf{u_n})` is the difference between the internal force of the previous step and applied force `F^{ext}`, while the second term
+`\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta \mathbf{u}` is the correction of the internal force `F^{int}`. In general, the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor `\lambda^k` where `k` is the increment. Putting it all together, the nonlinear problem can be written as:
 
 .. math:: \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n},\lambda_{n+1})-\lambda_{n+1} F^{ext}(\mathbf{u}_{n})
 
@@ -42,7 +42,7 @@ Force Control
 
 The additional arc-length constraint for force control is:
 
-.. math:: \mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-\Delta s
+.. math:: \mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-(\Delta s)^2
 
 where `\Delta s` determines how far to search for the next equilibrium point and `\psi` is the arc length parameter that gives you different arc-length solver schemes. When `\psi = 1` (as like the examples in this repository), the arc-length equation is also known as the *spherical arc-length method*, and when `\psi = 0` the *cylindrical arc-length* method is recovered.
 
@@ -58,7 +58,7 @@ where `\mathbf{u}_f` and `\mathbf{u}_p` are the free and prescribed displacement
 
 The arc length equation needs to be modified and now becomes:
 
-.. math::\mathcal{A}(\mathbf{u}_f,\lambda) = \Delta\mathbf{u}_f^T\Delta\mathbf{u}_f + \psi\Delta\lambda^2Q^TQ-\Delta l
+.. math::\mathcal{A}(\mathbf{u}_f,\lambda) = \Delta\mathbf{u}_f^T\Delta\mathbf{u}_f + \psi\Delta\lambda^2Q^TQ-(\Delta s)^2
 
 where:
 
@@ -103,7 +103,7 @@ The displacement control corrector scheme modifies the above equation to:
     \end{bmatrix}
 
 
-Similar to Ref. 3 and Ref. 4, we used the Shur complement to solve the system of equations. For more details refer to the Ref 3 and Ref 4. 
+Similar to Ref. 3 and Ref. 4, we solve the block system of equations by part using the Sherman–Morrison formula. For more details refer to the Ref 3 and Ref 4. 
 
 Additional Resources
 --------------------

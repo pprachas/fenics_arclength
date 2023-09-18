@@ -37,30 +37,47 @@ For conda installations (available only on Mac and Linux), we also provide an en
 
 Package Installation
 ####################
-To use our arc-length solver, download and append our `repository <https://github.com/pprachas/fenics_arclength>`_ to the python path. Common methods to do this are:
+To use the arc-length solver, you can install it using pip or by downloading and adding the repository to your Python path.
 
-* Add directory to ``PYTHONPATH``:
+Install directly using pip
+**************************
 
-   * On Ubuntu or Mac (Note that you might have to first find your python path in the computer and add it to the bash profile first.):
+The recommended way to install the arc-length solver is to use pip. To do this, run the following command in your terminal:
+
+.. code-block:: bash
+
+   pip install git+https://github.com/pprachas/fenics_arclength.git@master
+
+This will install the latest version of the arc-length solver from the master branch of the repository.
+
+Install by cloning the GitHub Repository
+****************************************
+
+If you prefer to download and install the arc-length solver and run the notebook examples/validation scripts, you can do so by following these steps:
+
+1. Clone the repository to your local machine:
    
    .. code-block:: bash
 
-      export PYTHONPATH=<path/to/fenics_arclength>:$PYTHONPATH
+      git clone https://github.com/pprachas/fenics_arclength.git
 
+2. Change directory to the fenics_arclength directory:
+   
+   .. code-block:: bash
 
-   * On Windows:
+      cd fenics_arclength
+
+3. Install the arc-length solver:
 
    .. code-block:: bash
 
-      set PYTHONPATH=<path/to/fenics_arclength>;%PYTHONPATH%
+      pip install .
 
+This will install the arc-length solver from the source code in the fenics_arclength directory.
 
-* Append directory to path in python script:
+In the case of developer's version, the last step can be replaced as ``pip install -e .``
 
-.. code-block:: python
-
-   import sys
-   sys.path.append('path/to/fenics_arclength')
+Once the arc-length solver is installed, you can import it into your Python scripts and use it to solve arc-length problems.
 
 
 Theory

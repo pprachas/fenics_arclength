@@ -1,36 +1,16 @@
 Metadata-Version: 2.1
 Name: fenics-arclength
 Version: 0.1.0
-Summary: An arc-length Riks solver implemented with FEniCS
-Author-email: Peerasait Prachaseree <pprachas@bu.edu>, Saeed Mohammadzadeh <saeedmhz@bu.edu>, Emma Lejeune <elejeune@bu.edu>
-License: MIT License
-        
-        Copyright (c) 2023 Peerasait Prachaseree (Jeffrey)
-        
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
-        
-        The above copyright notice and this permission notice shall be included in all
-        copies or substantial portions of the Software.
-        
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-        SOFTWARE.
-        
-Project-URL: Homepage, https://github.com/pprachas/fenics_arclength
-Project-URL: Bug Tracker, https://github.com/pprachas/fenics_arclength/issues
-Classifier: Programming Language :: Python :: 3
+Summary: A numerical arclength solver written on top of FEniCS
+Author: Peerasait Prachaseree
+Author-email: pprachas@bu.edu
+Maintainer: [('Peerasait Prachaseree', 'pprachas@bu.edu'), ('Saeed Mohammadzadeh', 'saeedmhz@bu.edu'), ('Emma Lejeune', 'elejeune@bu.edu')]
+License: MIT
+Project-URL: Source, https://github.com/pprachas/fenics_arclength
+Project-URL: Documentation, https://fenics-arclength.readthedocs.io/en/latest/
 Classifier: License :: OSI Approved :: MIT License
-Classifier: Operating System :: OS Independent
-Requires-Python: >=3.8
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
@@ -59,10 +39,11 @@ More information on the arc-length method and the solution approach can be found
 
 ## Table of Contents
 * [Dependencies](#dependencies)
-* [Usage](#usage)
+* [Installation](#installation)
 * [Contents in this Repository](#contents)
 * [Validation](#validation)
 * [Theory](#theory)
+* [Community Contributions](#community)
 
 
 ## Dependencies <a name="dependencies"></a>
@@ -122,24 +103,19 @@ Note that in this case the conda environment name will be ``fenics_arclength``.
 
 **Note: For Docker installation, numpy, scipy, and matplotlib should be installed alongside FEniCS by default. To enable jupyter notebooks for FEniCS, please see this link: [Jupyter notebooks for Docker installation of FEniCS](https://fenics.readthedocs.io/projects/containers/en/latest/jupyter.html). However, the scripts in the ``validation`` can be run without Jupyter notebooks.**
  
-## Usage
-To use this arc-length solver, download and append this repository to the python path. Two common methods to do this are:
+## Installation
+Once FEniCS has been installed, our package can easily be install through pip with the following command:
 
-1. Add directory to `PYTHONPATH`
+    pip install git+https://github.com/pprachas/fenics_arclength.git@master
 
-- On Ubuntu or Mac:
+In cases where the whole github repository is needed, the github repo can first be cloned before installation:
 
-        export PYTHONPATH=<path/to/fenics_arclength>:$PYTHONPATH
-  Note that you might have to first find your python path in the computer and add it to the bash profile first. 
- 
-- On Windows:
+    git clone https://github.com/pprachas/fenics_arclength.git
+    cd fenics_arclength
+    pip install .
 
-        set PYTHONPATH=<path/to/fenics_arclength>;%PYTHONPATH%
+In the case of developer's version, the last line can be replaced with ``pip install -e .``
 
-2. Append directory to path in python script:
-
-        import sys
-        sys.path.append('path/to/fenics_arclength')
 
 
 ## Contents in this repository <a name="contents"></a>
@@ -149,10 +125,10 @@ To use this arc-length solver, download and append this repository to the python
 |[arc_length](arc_length)| contains the code for our arc-length implementation; both force and displacement control solvers are contained there |
 |[docs](docs)| the build files for our [readthedocs documentation](https://fenics-arclength.readthedocs.io/en/latest/) |
 |[examples](examples) | contains Jupyter notebook examples to use our arc-length implementation. Note that Jupyter notebooks has to be installed in the FEniCS environment for the notebooks to run. | 
-|[validation](validation)| contains python scripts to compare our solver with analytical solutions/solutions in literature. <br><br> To run the scripts run: <br> <br> ``python3 validation/validate_xx.py`` <br><br> from the project root directory. More information in section [Validation](#validation) |
+|[validation](validation)| contains python scripts to compare our solver with analytical solutions/solutions in literature. |
 
 ## Validation <a name="validation"></a>
-To validate that our arc-length solver works we provide 3 validation examples. To run the examples go to the root directory and run ``python3 validation/validate_xx.py``. The output plots will be in the ``validation/plots`` folder. The visualize the Paraview files, append ``-p`` at the end of the command line (i.e. ``python3 validation//validate_xx.py -p``). The available python scripts are:
+To validate that our arc-length solver works we provide 3 validation examples. To run the examples go to the ``validation`` directory and run ``python3 validate_xx.py``. The output plots will be in the ``plots`` folder. The visualize the Paraview files, append ``-p`` at the end of the command line (i.e. ``python3 validate_xx.py -p``). The available python scripts are:
 * ``validate_3Dbeamsmall.py``
     * This script solves a clamped cantilever beam with a small applied force and moment at the free end. The solution (i.e. the reaction shear, moment, and curvature) of from the arc-length solver is compared with linear beam theory.
     * *Outputs:* The outputs of the script is the percent differences between the analytical solution and arc-length solution for reaction shear, reaction moment, and beam curvature. If the solutions are within 1% difference, then the validation is complete.
@@ -164,7 +140,7 @@ To validate that our arc-length solver works we provide 3 validation examples. T
     * *Outputs:* The outputs of the script are the Pearson correlation coefficient of the equilibrium paths between our arc-length solver and the solution from literature. Both of the equilibrium paths are also plotted and saved in ``valiation/validation_leeframe.png``.
  * ``validate_bilayer.py``
     * This scripts solve the bilayer wrinkling problem. The resulting wrinkling wavelength and critical buckling strain is compared with literature obtained [here](https://royalsocietypublishing.org/doi/epdf/10.1098/rsta.2016.0163) and [here](https://groups.seas.harvard.edu/hutchinson/papers/WrinklingPhenonmena-JAMF.pdf).
-    * *Outputs:* The outputs of the script are the percent differences between the analytical solutions (critical strain and wavelength) and FEA solution. The comparison plots are also saved in ``valiation/validation_bilayer_stresstrain.png`` and ``valiation/validation_bilayer_wavelength.png``.
+    * *Outputs:* The outputs of the script are the percent differences between the analytical solutions (critical strain and wavelength) and FEA solution. The comparison plots are also saved in ``plots/validation_bilayer_stresstrain.png`` and ``plots/validation_bilayer_wavelength.png``.
     
  **Note that the beam validation scripts should be fast to run ($\sim$ 5 secs for small deformation and Lee's frame, $\sim$ 1 min for large deformation). The bilayer wrinkling will take longer to run ($\sim$ 25 mins).**
 
@@ -180,8 +156,8 @@ A nonlinear finite element problem seeks to minimize the residual vector that co
 where $\Delta u = \mathbf{u}_{n+1}-\mathbf{u}_n$.
 
 Newton's method is solved incrementally until the desired convergence criterion. The term $\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}$
-is typically called the tangential stiffness matrix $K_T$. The first term $\mathcal R(\mathbf u_n)$ is the externally applied force $F^{ext}$, while the second term
-$\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta \mathbf u$ is the internal force $F^{int}$ the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor $\lambda^k$ where $k$ is the increment. Putting it all together, the nonlinear problem can be written as:
+is typically called the tangential stiffness matrix $K_T$. The first term $\mathcal R(\mathbf u_n)$ is the difference between the internal force of the previous step $F^{ext}$, while the second term
+$\frac{\partial \mathcal R(\mathbf u_n)}{\partial \mathbf u_n}\Delta \mathbf u$ is the correction of the internal force $F^{int}$, In general, the nonlinear problem is too difficult for the Newton solver to converge. As such, the external load is applied incrementally with the load factor $\lambda^k$ where $k$ is the increment. Putting it all together, the nonlinear problem can be written as:
 
 ```math
 \mathcal{R}(\mathbf{u}_{n+1},\lambda_{n+1}) = F^{int}(\mathbf{u}_{n+1};\mathbf{u}_{n},\lambda_{n+1})-\lambda_{n+1} F^{ext}(\mathbf{u}_{n})
@@ -205,7 +181,7 @@ One of the main drawbacks of Newton's method is its inability to trace equilibri
 The additional arc-length constraint for force control is:
 
 ```math
-\mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-\Delta s
+\mathcal{A}(\mathbf{\mathbf{u}_{n+1}},\lambda_{n+1}) = \Delta\mathbf{u}^T\Delta\mathbf{u} + \psi\Delta\lambda^2 F_{ext}(\mathbf{u}_{n})^T F_{ext}(\mathbf{u}_{n})-(\Delta s)^2
 ```
 
 where $\Delta s$ determines how far to search for the next equilibrium point and $\psi$ is the arc length parameter that gives you different arc-length solver schemes. When $\psi = 1$ (as like the examples in this repository), the arc-length equation is also known as the *spherical arc-length method*, and when $\psi = 0$ the *cylindrical arc-length* method is recovered.
@@ -223,7 +199,7 @@ where $u_f$ and $u_p$ are the free and prescribed displacement nodes respectivel
 The arc length equation needs to be modified and now becomes:
 
 ```math
- \mathcal{A}(\mathbf{u}_f,\lambda) = \Delta\mathbf{u}_f^T\Delta\mathbf{u}_f + \psi\Delta\lambda^2Q^TQ-\Delta l
+ \mathcal{A}(\mathbf{u}_f,\lambda) = \Delta\mathbf{u}_f^T\Delta\mathbf{u}_f + \psi\Delta\lambda^2Q^TQ-(\Delta s)^2
  ```
 
 where:
@@ -284,4 +260,11 @@ C^\top K_T C & C^\top K \mathbf{u}_p \\
 \end{bmatrix}
 ```
 
-Similar to Ref. 3 and Ref. 4, we used the Shur complement to solve the system of equations. For more details refer to the Ref 3 and Ref 4. 
+Similar to Ref. 3 and Ref. 4, we solve the block system of equations by part using the Sherman–Morrison formula. For more details refer to the Ref 3 and Ref 4. 
+
+## Community Contributions
+
+If you find any issues, bugs or problems with FEniCS-arclength, please use report them using the [GitHub issue tracker](https://github.com/pprachas/fenics_arclength/issues). For efficiency, please include a minimum working example (to reproduce the error/bug) as well as the error itself.
+
+We also welcome any questions and suggestions in the using [Github Discussions](https://github.com/pprachas/fenics_arclength/discussions)!
+

@@ -1,6 +1,6 @@
 LICENSE
 README.md
-pyproject.toml
+setup.py
 arc_length/__init__.py
 arc_length/displacement_control_solver.py
 arc_length/force_control_solver.py

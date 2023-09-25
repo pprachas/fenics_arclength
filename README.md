@@ -92,6 +92,7 @@ Once FEniCS has been installed, our package can easily be install through pip wi
 
     pip install git+https://github.com/pprachas/fenics_arclength.git@master
 
+Note that in the case of Docker installation, you might have to add the option --user to use pip installation (i.e. ``pip install --user git+https://github.com/pprachas/fenics_arclength.git@master``).
 In cases where the whole github repository is needed, the github repo can first be cloned before installation:
 
     git clone https://github.com/pprachas/fenics_arclength.git

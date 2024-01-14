@@ -43,8 +43,10 @@ The simplest way to install FEniCS on Windows 10 is to install [WSL2](https://le
         sudo add-apt-repository ppa:fenics-packages/fenics
         sudo apt-get update
         sudo apt-get install fenics
+
+**Note that due to recent ufl updates and its issues with legacy dolfin there may be issues running fenics-arclength if you install FEniCS through PPA. See [here](https://fenicsproject.discourse.group/t/announcement-ufl-legacy-and-legacy-dolfin/11583) about known issues and solutions to ufl and legacy dolfin.**
         
-### FEniCS on Anaconda (Linux and Mac only):
+### FEniCS on Anaconda (Linux and Mac only) *Recommended*:
  
         conda create -n fenicsproject -c conda-forge fenics
         conda activate fenicsproject

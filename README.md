@@ -75,15 +75,6 @@ You also can start the Docker container with the following command:
 
         docker run -ti -p 127.0.0.1:8000:8000 -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
 A more comprehensive and detailed instructions on Docker installation can be found here: [Docker Installation Instructions](https://fenics.readthedocs.io/projects/containers/en/latest/introduction.html).
- 
-## Other useful libraries
-While only FEniCS is required to use the arc-length solver, additional libraries can be useful for visualization of results and post-processing. Jupyter notebooks is also required to run our examples. For the conda installation numpy, scipy, and matplotlib must also be installed separately through conda-forge. An environment.yml file is provided in this repository to facilitate installation of all optional libraries (i.e. numpy, scipy, matplotlib, jupyter) in a conda environment. To create a conda environment using the environment.yml file run the following command after cloning the repository and navigating to the root directory:
-
-       conda env create -f environment_fenics.yml
-       conda activate fenics_arclength
-       conda env update -f environment_others.yml --prune
- 
-Note that in this case the conda environment name will be ``fenics_arclength``.
 
 **Note: For Docker installation, numpy, scipy, and matplotlib should be installed alongside FEniCS by default. To enable jupyter notebooks for FEniCS, please see this link: [Jupyter notebooks for Docker installation of FEniCS](https://fenics.readthedocs.io/projects/containers/en/latest/jupyter.html). However, the scripts in the ``validation`` can be run without Jupyter notebooks.**
  

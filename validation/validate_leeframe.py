@@ -1,7 +1,6 @@
 from dolfin import *
 import numpy as np
 import matplotlib.pyplot as plt
-from ufl import diag, Jacobian, shape
 from scipy.interpolate import interp1d
 from scipy import stats 
 import os
@@ -10,6 +9,12 @@ import sys
 from arc_length.force_control_solver import force_control # import force control formulation of arc-length solver
 from pathlib import Path
 import argparse
+
+# Dealing with ufl legacy
+try:
+    from ufl import diag, Jacobian, shape
+except:
+    from ufl_legacy import diag, Jacobian, shape
 
 parameters["form_compiler"]["cpp_optimize"] = True
 parameters["form_compiler"]["quadrature_degree"] = 1

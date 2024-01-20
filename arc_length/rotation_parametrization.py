@@ -4,10 +4,17 @@ Note that this code is obtained from https://comet-fenics.readthedocs.io/en/late
 Created on Sat Nov 28 14:28:31 2020
 
 @author: bleyerj
+
+Note: this script as been modified to deal with ufl legacy issue in https://fenicsproject.discourse.group/t/announcement-ufl-legacy-and-legacy-dolfin/11583
+
 """
-from ufl import sqrt, dot, sin, cos, tan, as_matrix, Identity
 from dolfin import Constant, DOLFIN_EPS
 
+# Deal with ufl_legacy
+try:
+    from ufl import sqrt, dot, sin, cos, tan, as_matrix, Identity
+except:
+    from ufl_legacy import sqrt, dot, sin, cos, tan, as_matrix, Identity
 
 def Skew(n):
     """Antisymmetric tensor associated with a vector n"""

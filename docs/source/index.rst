@@ -88,7 +88,7 @@ The general concepts behind non-linear finite element analysis (FEA) are introdu
    :maxdepth: 1
 
    math_prelim
-   examples/force_control/beam/README
+   examples/force_control/beam/README.rst
 
 Arc-Length solvers in this package
 ----------------------------------

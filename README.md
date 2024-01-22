@@ -1,11 +1,12 @@
 # FEniCS Implementation of the Arc-length Method
 [![Documentation Status](https://readthedocs.org/projects/fenics-arclength/badge/?version=latest)](https://fenics-arclength.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/12Ss1RN7Smyrnn2671JloGphtiO1r_67J#scrollTo=AHwJEykSdkGp)
 [![status](https://joss.theoj.org/papers/c4791755683fc95dd5ccd9c8e8708a08/status.svg)](https://joss.theoj.org/papers/c4791755683fc95dd5ccd9c8e8708a08)
 
 
 This repository contains the arc-length Riks solver written with FEniCS. Additional information, documentation, and example problems can be found our ReadTheDocs documentation:
-
+  
 <div align="center">
 
  |[ **Link to ReadTheDocs Documentation** ](https://fenics-arclength.readthedocs.io/en/latest/index.html)|
@@ -94,7 +95,9 @@ In cases where the whole github repository is needed, the github repo can first 
 
 In the case of developer's version, the last line can be replaced with ``pip install -e .``
 
-
+## Running FEniCS-arclength on Google Colab
+Our notebooks in the [examples directory](https://github.com/pprachas/fenics_arclength/tree/master/examples) can be run on Google Colab! 
+Simply navigate to the notebook in the GitHub repository and change the domain from ``github.com`` to ``githubtocolab.com`` and run the notebook!
 
 ## Contents in this repository <a name="contents"></a>
 

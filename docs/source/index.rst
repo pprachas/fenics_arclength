@@ -79,6 +79,10 @@ In the case of developer's version, the last step can be replaced as ``pip insta
 
 Once the arc-length solver is installed, you can import it into your Python scripts and use it to solve arc-length problems.
 
+Google Colab
+****************************************
+Our notebooks in the `examples directory <https://github.com/pprachas/fenics_arclength/tree/master/examples>`_ can be run on Google Colab! 
+Simply navigate to the notebook in the GitHub repository and change the domain from ``github.com`` to ``githubtocolab.com`` and run the notebook!
 
 Theory
 --------------------------

@@ -33,7 +33,7 @@ Dependencies
 This package solely depends on FEniCS 2019.1.0. It is not tested on other packages.
 `Instructions to install FEniCS (legacy) can be found here. <https://fenicsproject.org/download/archive/>`_
 Our `GitHub repository <https://github.com/pprachas/fenics_arclength>`_ also contains more detailed installation instructions. 
-For conda installations (available only on Mac and Linux), we also provide an environment.yml file in our GitHub repository.
+For conda installations (available only on Mac and Linux), we also provide an ``environment.yml`` file in our GitHub repository.
 
 Package Installation
 ####################

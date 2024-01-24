@@ -2,6 +2,7 @@
 [![Documentation Status](https://readthedocs.org/projects/fenics-arclength/badge/?version=latest)](https://fenics-arclength.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/12Ss1RN7Smyrnn2671JloGphtiO1r_67J#scrollTo=AHwJEykSdkGp)
+[![DOI](https://zenodo.org/badge/590268096.svg)](https://zenodo.org/doi/10.5281/zenodo.10563094)
 [![status](https://joss.theoj.org/papers/c4791755683fc95dd5ccd9c8e8708a08/status.svg)](https://joss.theoj.org/papers/c4791755683fc95dd5ccd9c8e8708a08)
 
 

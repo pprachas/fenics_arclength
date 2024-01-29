@@ -60,11 +60,11 @@ In \autoref{fig:leesframe}, we show an example of our arclength implementation f
 |                                      |
 | *Beam elements*                      |
 |                                      |
-| -   Lee's Frame $^\S$                |
+| -   Lee's Frame $^\times$                |
 |                                      |
-| -   $215^\circ$ arc $^\S$            |
+| -   $215^\circ$ arc $^\times$            |
 |                                      |
-| -   $180^\circ$ arc $^\S$            |
+| -   $180^\circ$ arc $^\times$            |
 |                                      |
 | -   3D Helical Beam                  |
 +--------------------------------------+
@@ -80,13 +80,11 @@ In \autoref{fig:leesframe}, we show an example of our arclength implementation f
 +--------------------------------------+
 
 : A list of all available examples in our GitHub Repository and
-ReadTheDocs documentation. Examples marked with ($\S$) are compared with
+ReadTheDocs documentation. Examples marked with ($\times$) are compared with
 solutions from the literature obtained from [@kadapa2021simple].
 Examples with ($\bigstar$) are compared with solutions from
 [@allensandwich; @budday2017wrinkling; @cao2012wrinkling] \label{tab:examples}
 :::
-
-[]{#tab:examples label="tab:examples"}
 
 # Acknowledgements
 

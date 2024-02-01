@@ -61,9 +61,9 @@ In \autoref{fig:leesframe}, we show an example of our arclength implementation f
 |                                      |
 | -   Lee's Frame $^\times$            |
 |                                      |
-| -   $215^\circ$ arch $^\times$        |
+| -   $215^\circ$ arch $^\times$       |
 |                                      |
-| -   $180^\circ$ arch $^\times$        |
+| -   $180^\circ$ arch $^\times$       |
 |                                      |
 | -   3D Helical Beam                  |
 +--------------------------------------+

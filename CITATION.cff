@@ -1,0 +1,50 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Prachaseree
+  given-names: Peerasait
+  orcid: "https://orcid.org/0009-0000-3325-1410"
+- family-names: Mohammadzadeh
+  given-names: Saeed
+  orcid: "https://orcid.org/0000-0001-9879-044X"
+- family-names: Dortdivanlioglu
+  given-names: Berkin
+  orcid: "https://orcid.org/0000-0001-7105-1452"
+- family-names: Lejeune
+  given-names: Emma
+  orcid: "https://orcid.org/0000-0001-8099-3468"
+contact:
+- family-names: Lejeune
+  given-names: Emma
+  orcid: "https://orcid.org/0000-0001-8099-3468"
+doi: 10.5281/zenodo.10563095
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Prachaseree
+    given-names: Peerasait
+    orcid: "https://orcid.org/0009-0000-3325-1410"
+  - family-names: Mohammadzadeh
+    given-names: Saeed
+    orcid: "https://orcid.org/0000-0001-9879-044X"
+  - family-names: Dortdivanlioglu
+    given-names: Berkin
+    orcid: "https://orcid.org/0000-0001-7105-1452"
+  - family-names: Lejeune
+    given-names: Emma
+    orcid: "https://orcid.org/0000-0001-8099-3468"
+  date-published: 2024-02-02
+  doi: 10.21105/joss.05727
+  issn: 2475-9066
+  issue: 94
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 5727
+  title: "FEniCS-arclength: A numerical continuation package in FEniCS
+    for nonlinear problems in solid mechanics"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.05727"
+  volume: 9
+title: "FEniCS-arclength: A numerical continuation package in FEniCS for
+  nonlinear problems in solid mechanics"

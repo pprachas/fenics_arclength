@@ -250,3 +250,17 @@ If you find any issues, bugs or problems with FEniCS-arclength, please use repor
 
 We also welcome any questions and suggestions in the using [Github Discussions](https://github.com/pprachas/fenics_arclength/discussions)!
 
+## Citation
+If you find this repository helpful, we would appreciate it if you cite us!
+```
+@article{Prachaseree_FEniCS-arclength_A_numerical_2024,
+author = {Prachaseree, Peerasait and Mohammadzadeh, Saeed and Dortdivanlioglu, Berkin and Lejeune, Emma},doi = {10.21105/joss.05727},
+journal = {Journal of Open Source Software},
+month = feb,
+number = {94},
+pages = {5727},
+title = {{FEniCS-arclength: A numerical continuation package in FEniCS for nonlinear problems in solid mechanics}},
+url = {https://joss.theoj.org/papers/10.21105/joss.05727},
+volume = {9},
+year = {2024}}
+```

@@ -6,3 +6,4 @@ dependencies:
   - mshr
   - scipy
   - matplotlib
+  -meshio

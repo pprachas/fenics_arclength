@@ -1,4 +1,9 @@
 version: 2
+
+sphinx:
+  # Path to your Sphinx configuration file.
+  configuration: docs/conf.py
+  
 formats: all
 
 build:
@@ -11,4 +16,3 @@ python:
     - requirements: docs/requirements.txt
 formats:
   - htmlzip
-  

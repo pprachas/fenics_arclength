@@ -1,5 +1,7 @@
 examples/force_control/beam/beam_2D/leeframe_fenics_arclength_New copy.ipynb
 examples/displacement_control/fiber_network_copy.ipynb
+examples/displacement_control/fiber_network_HR.ipynb
+
 example.py
 example2.py
 example.png
@@ -23,3 +25,4 @@ examples/force_control/beam/beam_3D/beam_3D.gif
 examples/force_control/beam/beam_2D/arch215_fenics_arclength_New copy.ipynb
 examples/displacement_control/Bilayer_wrinkling copy.ipynb
 examples/displacement_control/bilayer.gif
+build

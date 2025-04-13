@@ -54,7 +54,6 @@ Therefore, the motion of the beam can be expressed as:
 .. math::
     \mathbf r(s) = \mathbf r_0(s) + \mathbf u(s)
 
-
 and the rotation of the material triads are:
 
 .. math::
@@ -63,8 +62,9 @@ and the rotation of the material triads are:
 
 Constructing Initial Beam Triads
 --------------------------------
-The inital beam traids are constructed as follows.
-#. The first direction is the beam tangent direction:
+The initial beam triads are constructed as follows.
+
+1. The first direction is the beam tangent direction:
 
 .. math::
     \mathbf{g}_{01} = \mathbf{r}_{0,s}
@@ -73,12 +73,12 @@ where `\dots_{,s}` is the directional derivative with respect to the beam tangen
 
 (e.g. `\mathbf r_{0,s} =  \frac{d \mathbf r_0}{d s}`)
 
-#. Find `\mathbf g_{02}` by finding a vector that is both perpendicular to `\mathbf g_{01}` and `\mathbf e_3`. E.g.:
+2. Find `\mathbf g_{02}` by finding a vector that is both perpendicular to `\mathbf g_{01}` and `\mathbf e_3`. E.g.:
 
 .. math::
     \mathbf g_{02} = \mathbf e_3 \times \mathbf g_{01}
 
-#. Find `\mathbf g_{03}` by finding a vecor that is both perpendicular to `\mathbf g_{02}` and `\mathbf g_{01}`. E.g.:
+3. Find `\mathbf g_{03}` by finding a vector that is both perpendicular to `\mathbf g_{02}` and `\mathbf g_{01}`. E.g.:
 
 .. math::
     \mathbf g_{03} = \mathbf g_{01} \times \mathbf g_{02}
@@ -89,13 +89,13 @@ Translational Strain
 The objective *material* translational strain measures for the case where the beam tangent is rotated with respect to `\mathbf{e}_1` are (See Crisfield's paper for a detailed derivation):
 
 .. math::
-    \mathbf{\epsilon} = \mathbf{\Lambda}_0^\top \mathbf{\Lambda}^\top \frac{d\mathbf{r}(s)}{d s} - \mathbf{e}_1
+    \mathbf{\epsilon} = \mathbf{\Lambda}_0^T \mathbf{\Lambda}^T \frac{d\mathbf{r}(s)}{d s} - \mathbf{e}_1
 
 
 or equivalently (as implemented in the code:)
 
 .. math::
-    \mathbf{\epsilon} = \mathbf{\Lambda}_0^\top(\mathbf{\Lambda}^\top (\mathbf{u}_{,s} + \mathbf{g}_{01}) - \mathbf{g}_{01})
+    \mathbf{\epsilon} = \mathbf{\Lambda}_0^T(\mathbf{\Lambda}^T (\mathbf{u}_{,s} + \mathbf{g}_{01}) - \mathbf{g}_{01})
 
 
 Reminder: `\dots_{,s}` is the directional derivative with respect to the beam tangent `s` in material coordinates 
@@ -112,7 +112,7 @@ Note that
 and 
 
 .. math::
-    \mathbf{\Lambda}_0^\top \mathbf{g}_{01}= \mathbf{e}_1
+    \mathbf{\Lambda}_0^T \mathbf{g}_{01}= \mathbf{e}_1
 
 by definition. Combining these two equations shows that the FEniCS implementation is equivalent to theory.
 
@@ -122,7 +122,7 @@ Rotational Strain
 The objective translational strain measures for the case where the beam tangent is rotated with respect to `\mathbf{e}_1` are (See Crisfield's paper for a detailed derivation):
 
 .. math::
-    \mathbf{\chi} = \text{axial}(\mathbf{\Lambda}^\top \mathbf{\Lambda}_{,s} - \mathbf{\Lambda}^\top \mathbf{\Lambda}_{0,s})
+    \mathbf{\chi} = \text{axial}(\mathbf{\Lambda}^T \mathbf{\Lambda}_{,s} - \mathbf{\Lambda}^T \mathbf{\Lambda}_{0,s})
 
 Where `\text{axial}(.)` denotes the vector from associated with the skew symmetric matrix s.t.:
 
@@ -148,7 +148,7 @@ with
 Since in our case the elements are modeled as initially straight, then  `\mathbf{\Lambda}_{0,s}=0`. Then, the rotational strain becomes:
 
 .. math::
-    \mathbf{\chi} = \text{axial}(\mathbf{\Lambda}^\top\mathbf{\Lambda}_{,s})
+    \mathbf{\chi} = \text{axial}(\mathbf{\Lambda}^T\mathbf{\Lambda}_{,s})
 
 
 Rotation paramaterization
@@ -169,10 +169,10 @@ The rotation tensor `\Lambda` can be parameterized into `\theta` through the Eul
 
 with `\mathbf P` being the skew symmetric matrix associated with `\theta`. 
 
-Since `\mathbf \Lambda^\top \mathbf \Lambda_{,s}` is skew symmetric (easily shown with  `\mathbf \Lambda^\top \mathbf \Lambda_{,s}`), we can define a curvature matrix `\mathbf H` s.t.:
+Since `\mathbf \Lambda^T \mathbf \Lambda_{,s}` is skew symmetric (easily shown with  `\mathbf \Lambda^T \mathbf \Lambda_{,s}`), we can define a curvature matrix `\mathbf H` s.t.:
 
 
-\text{axial}(\mathbf{\Lambda}^\top\mathbf{\Lambda}_{,s}) = \mathbf{\chi} = \mathbf{H}^\top\theta_{,s} 
+\text{axial}(\mathbf{\Lambda}^T\mathbf{\Lambda}_{,s}) = \mathbf{\chi} = \mathbf{H}^T\theta_{,s} 
 ``
 
 Where `\mathbf{H}` is:
@@ -188,7 +188,7 @@ Where `\mathbf{H}` is:
 In the case of small rotations (e.g. `||\mathbf{\theta}|| = \phi \ll 1`), according to rotation paramaterization , `\mathbf{R} \approx \mathbf{I} + \mathbf{P}` and `\mathbf{H} \approx \mathbf{I}`. Assuming that the beam lies on the x-axis (e.g. `\mathbf{\Lambda}_0 = 1`), the first-order strain measures yield:
 
 .. math::
-    \mathbf{\epsilon} = \mathbf{\Lambda}_0^\top(\mathbf{\Lambda}^\top (\mathbf{u}_{,s} + \mathbf{g}_{01}) - \mathbf{g}_{01}) \approx \mathbf{u}_{,s}+\mathbf{P}^\top g_{01} = \begin{bmatrix}
+    \mathbf{\epsilon} = \mathbf{\Lambda}_0^T(\mathbf{\Lambda}^T (\mathbf{u}_{,s} + \mathbf{g}_{01}) - \mathbf{g}_{01}) \approx \mathbf{u}_{,s}+\mathbf{P}^T g_{01} = \begin{bmatrix}
     u_{1,s} \\
     u_{2,s}-\theta_3 \\
     u_{3,s} + \theta_2
@@ -196,7 +196,7 @@ In the case of small rotations (e.g. `||\mathbf{\theta}|| = \phi \ll 1`), accord
 
 
 .. math::
-    \mathbf{\chi} = \mathbf{H}^\top \mathbf{\theta}_{,s} \approx \mathbf{\theta}_{,s}
+    \mathbf{\chi} = \mathbf{H}^T \mathbf{\theta}_{,s} \approx \mathbf{\theta}_{,s}
 
 
 This corresponds to the Timoshenko beam kinematic relations!!
@@ -310,13 +310,13 @@ As such, the incremental updates are:
 Then the translational strain measures are:
 
 .. math::
-    \mathbf{\epsilon}_{n+1} = \mathbf{\Lambda}_0^\top(\mathbf{\Lambda}_n^\top \mathbf{\Lambda}^\top (\mathbf{r}_{n,s}+\mathbf{u}_{n,s})-\mathbf{g}_{01})
+    \mathbf{\epsilon}_{n+1} = \mathbf{\Lambda}_0^T(\mathbf{\Lambda}_n^T \mathbf{\Lambda}^T (\mathbf{r}_{n,s}+\mathbf{u}_{n,s})-\mathbf{g}_{01})
 
 
 and the rotational strain measures are:
 
 .. math::
-    \mathbf{\chi}_{n+1} = \mathbf{\chi}_n+\mathbf{\Lambda}_0^\top \mathbf{\Lambda}_n\mathbf{H}^\top\mathbf{\theta}_{,s}
+    \mathbf{\chi}_{n+1} = \mathbf{\chi}_n+\mathbf{\Lambda}_0^T \mathbf{\Lambda}_n\mathbf{H}^T\mathbf{\theta}_{,s}
 
 
 At the end of each iteration the converged solution is saved and the incremental solutions is zeroed for the next increment.

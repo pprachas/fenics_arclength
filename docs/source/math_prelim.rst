@@ -91,7 +91,7 @@ The displacement control corrector scheme modifies the above equation to:
 
 .. math::
     \begin{bmatrix}
-    C^\top K_T C & C^\top K \mathbf{u}_p \\
+    C^T K_T C & C^T K \mathbf{u}_p \\
     \frac{\partial \mathcal{A}}{\partial \mathbf{u}_f} & \frac{\partial \mathcal{A}}{\partial \lambda}
     \end{bmatrix} 
     \begin{bmatrix}

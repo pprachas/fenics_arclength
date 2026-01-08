@@ -324,7 +324,7 @@ At the end of each iteration the converged solution is saved and the incremental
 Lock-free elements
 ------------------
 
-The basis functions used in this code are Lagrange elements. To ensure lock-free elements, we use a reduced integration scheme. For linear displacement and rotational interpolation schemes, we use 1 Gauss integration point. For quadratic displacement and linear rotational interpolation schemes, we use 4 Gauss integration points. These rules apply for both the 3D and 2D case.
+The basis functions used in this code are Lagrange elements. To ensure lock-free elements, we use a reduced integration scheme. For linear displacement and rotational interpolation schemes, we use 1 Gauss integration point. For quadratic displacement and linear rotational interpolation schemes, we use 3 Gauss integration points. These rules apply for both the 3D and 2D case.
 
 Arc-length Implementation
 ==========================
